@@ -1,0 +1,16 @@
+# UnrealEngine Generated Files
+Etheria/.vs/
+Etheria/Binaries/
+Etheria/DerivedDataCache/
+Etheria/Intermediate/
+
+
+# VS Generated Files
+Etheria/suo
+Etheria/db
+Etheria/Etheria.sln
+Etheria/.vsconfig
+
+
+# StartContent (too heavy)
+Etheria/Content/StarterContent/
