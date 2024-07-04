@@ -1,0 +1,47 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "NPC_Base.generated.h"
+
+UCLASS()
+class ETHERIA_API ANPC_Base : public ACharacter
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this character's properties
+	ANPC_Base();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+	UFUNCTION()
+	void QuestAvailable_Callback(int QuestID);
+
+	UFUNCTION()
+	void QuestClearable_Callback(int QuestID);
+
+public:
+	int NPCID = -1;
+
+	TMap<int, FQuestStruct*> UnavailableQuests;
+	TMap<int, FQuestStruct*> AvailableQuests;
+	TMap<int, FQuestStruct*> ProgressingQuests;
+	TMap<int, FQuestStruct*> ClearableQuests;
+	TMap<int, FQuestStruct*> ClearedQuests;
+
+private:
+	class UQuestSubSystem* QuestSubSystem;
+};

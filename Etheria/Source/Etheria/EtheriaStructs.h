@@ -15,9 +15,14 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 
 	FQuestStruct(const FQuestStruct& other)
 	{
+		NPCID = other.NPCID;
 		QuestID = other.QuestID;
 		QuestName = other.QuestName;
 		QuestDescription = other.QuestDescription;
+
+		Require_Level = other.Require_Level;
+		Require_Items = other.Require_Items;
+		Require_Quests = other.Require_Quests;
 
 		Progress_Monster = other.Progress_Monster;
 		Progress_Monster_RequireNum = other.Progress_Monster_RequireNum;
@@ -30,9 +35,14 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 
 	FQuestStruct& operator=(const FQuestStruct& other)
 	{
+		NPCID = other.NPCID;
 		QuestID = other.QuestID;
 		QuestName = other.QuestName;
 		QuestDescription = other.QuestDescription;
+
+		Require_Level = other.Require_Level;
+		Require_Items = other.Require_Items;
+		Require_Quests = other.Require_Quests;
 
 		Progress_Monster = other.Progress_Monster;
 		Progress_Monster_RequireNum = other.Progress_Monster_RequireNum;
@@ -45,6 +55,9 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 	}
 
 	// Äù½ºÆ® Á¤º¸
+
+		// NPC ID
+		int NPCID;
 
 		// Äù½ºÆ® ID
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -93,7 +106,7 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 		TArray<int>  Progress_Item_RequireNum;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FName>  Progress_Item_ID;
+		TArray<int>  Progress_Item_ID;
 
 
 
