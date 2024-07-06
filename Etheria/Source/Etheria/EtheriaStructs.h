@@ -99,3 +99,114 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 	// 퀘스트 보상
 
 };
+
+// 아이템 등급
+UENUM()
+enum class EItemQuality : uint8
+{
+	Normal UMETA(DisplayName = "Normal"),	// 일반
+	Rear UMETA(DisplayName = "Rear"),	// 레어
+	Epic UMETA(DisplayName = "Epic"),	// 희귀
+	Legend UMETA(DisplayName = "Legend"),	// 전설
+	Special UMETA(DisplayName = "Special"),	// 특별
+};
+
+// 아이템 타입
+UENUM()
+enum class EItemType : uint8
+{
+	Ingredient UMETA(DisplayName = "Ingredient"), // 재료 아이템
+	Weapon UMETA(DisplayName = "Weapon"),	// 무기
+	Consumable UMETA(DisplayName = "Consumable"),	// 소비 아이템
+	Quest UMETA(DisplayName = "Quest"),	// 퀘스트 아이템
+};
+
+// 아이템 수치 정보
+USTRUCT()
+struct FItemStatistics
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere)
+	float ArmorRating;
+
+	UPROPERTY(EditAnywhere)
+	float DamageValue;
+
+	UPROPERTY(EditAnywhere)
+	float RestorationAmount;
+
+	UPROPERTY(EditAnywhere)
+	float SellValue;
+};
+
+USTRUCT()
+struct FItemTextData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere)
+	FText Name;
+
+	UPROPERTY(EditAnywhere)
+	FText Descriptioin;
+
+	UPROPERTY(EditAnywhere)
+	FText InteractionText;
+
+	UPROPERTY(EditAnywhere)
+	FText UsageText;
+};
+
+// 수치형 데이터
+USTRUCT()
+struct FItemNumericData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere)
+	float Weight;
+
+	UPROPERTY(EditAnywhere)
+	int32 MaxStackSize;
+
+	UPROPERTY(EditAnywhere)
+	bool bIsStackable;
+};
+
+// 아이콘, 메쉬 정보
+USTRUCT()
+struct FItemAssetData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere)
+	UTexture2D* Icon;
+
+	UPROPERTY(EditAnywhere)
+	UStaticMesh* Mesh;
+};
+
+USTRUCT()
+struct FItemData : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	EItemType ItemType;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	EItemQuality ItemQuality;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemStatistics FItemStatistics;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemTextData TextData;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemNumericData NumericData;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemAssetData AssetData;
+};
