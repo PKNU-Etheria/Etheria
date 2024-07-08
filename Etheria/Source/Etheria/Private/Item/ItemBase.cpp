@@ -27,6 +27,6 @@ void UItemBase::SetQuantity(const int32 NewQuantity)
 {
 }
 
-void UItemBase::Use(AECharacter* Character)
+void UItemBase::Use(AEtheriaCharacter* Character)
 {
 }

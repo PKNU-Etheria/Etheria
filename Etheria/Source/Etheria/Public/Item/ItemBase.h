@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EtheriaStructs.h"
-#include "Character/ECharacter.h"
+#include "EtheriaCharacter.h"
 #include "ItemBase.generated.h"
 
 /**
@@ -48,7 +48,7 @@ public:
 	/// </summary>
 	UItemBase();
 
-	UItemBase* CreateItemCopy();
+	UItemBase* CreateItemCopy() const;
 
 	UFUNCTION(Category = "Item")
 	FORCEINLINE float GetItemStackWeight() const {
@@ -69,7 +69,7 @@ public:
 	void SetQuantity(const int32 NewQuantity);
 
 	UFUNCTION(Category = "Item")
-	virtual void Use(AECharacter* Character);
+	virtual void Use(AEtheriaCharacter* Character);
 
 protected:
 	bool operator==(const FName& OtherID) const
