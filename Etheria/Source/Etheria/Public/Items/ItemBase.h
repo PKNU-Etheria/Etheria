@@ -19,6 +19,10 @@ public:
 	/// <summary>
 	/// Properties & Variables
 	/// </summary>
+	
+	//UPROPERTY()
+	//UInventoryComponent* OwningInvectory;
+
 	UPROPERTY(VisibleAnywhere, Category = "Item Data", meta = (UIMin = 1, UIMax = 100))
 	int32 Quantity;
 
