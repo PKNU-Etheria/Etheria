@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/NPC/NPC_Base.h"
+#include "Character/NPC/NeutralNPC/NPC_Base.h"
 #include "Quest/QuestSubSystem.h"
 
 // Sets default values
@@ -9,8 +9,17 @@ ANPC_Base::ANPC_Base()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+}
 
+// Called when the game starts or when spawned
+void ANPC_Base::BeginPlay()
+{
+	Super::BeginPlay();
+	
 	UGameInstance* GameInst = GetGameInstance();
+
+	if (!GameInst) return;
+
 	QuestSubSystem = GameInst->GetSubsystem<UQuestSubSystem>();
 	if (!QuestSubSystem)
 	{
@@ -24,13 +33,6 @@ ANPC_Base::ANPC_Base()
 	QuestSubSystem->InitializeNPC(this);
 }
 
-// Called when the game starts or when spawned
-void ANPC_Base::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
 // Called every frame
 void ANPC_Base::Tick(float DeltaTime)
 {
@@ -42,6 +44,11 @@ void ANPC_Base::Tick(float DeltaTime)
 void ANPC_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ANPC_Base::Interact_With_Implementation(UQuestComponent* QuestComponent)
+{
+	UE_LOG(LogTemp, Display, TEXT("ANPC_Base : Interact_With_Implementation"));
 }
 
 void ANPC_Base::QuestAvailable_Callback(int QuestID)

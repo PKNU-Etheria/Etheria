@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "NPCInterface.h"
+#include "EtheriaStructs.h"
 #include "NPC_Base.generated.h"
 
 UCLASS()
-class ETHERIA_API ANPC_Base : public ACharacter
+class ETHERIA_API ANPC_Base : public ACharacter, public INPCInterface
 {
 	GENERATED_BODY()
 
@@ -26,6 +28,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+	// Interact
+public:
+	virtual void Interact_With_Implementation(class UQuestComponent* QuestComponent) override;
+
+
+	// CallBack
 public:
 	UFUNCTION()
 	void QuestAvailable_Callback(int QuestID);

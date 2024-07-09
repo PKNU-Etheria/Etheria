@@ -3,7 +3,7 @@
 
 #include "Quest/QuestSubSystem.h"
 #include "QuestSubSystem.h"
-#include "Character/NPC/NPC_Base.h"
+#include "Character/NPC/NeutralNPC/NPC_Base.h"
 
 UQuestSubSystem::UQuestSubSystem()
 {
