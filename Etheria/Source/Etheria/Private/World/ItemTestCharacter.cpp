@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AItemTestCharacter::AItemTestCharacter()
@@ -43,6 +44,12 @@ AItemTestCharacter::AItemTestCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	// 상호작용 변수들 초기화
+	InteractionCheckFrequency = 0.1f;
+	InteractionCheckDistance = 225.0f;
+
+	BaseEyeHeight = 74.0f;	 // Pawn 변수. 원래 64의 값으로 폰의 목부분에서 나타남.
 }
 
 // Called when the game starts or when spawned
@@ -58,6 +65,77 @@ void AItemTestCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+}
+
+void AItemTestCharacter::PerformInteractionCheck()
+{	// line trace
+	InteractionData.LastInteractionCheckTime = GetWorld()->GetTimeSeconds();
+
+	FVector TraceStart{ GetPawnViewLocation()};
+	FVector TraceEnd{ TraceStart + (GetViewRotation().Vector() * InteractionCheckDistance) };	// 회전은 폰 메시가 아닌 캐릭터 컨트롤러에서 이루어짐. -> 마우스로 카메라 위치를 변경.
+
+	// 벡터 내적. 정면 벡터와 회전 벡터.
+	float LookDirection = FVector::DotProduct(GetActorForwardVector(), GetViewRotation().Vector());
+	// 폰이 바라보고 있는 방향과 같은 방향을 바라보고 있지 않는 한 라인 트레이스를 전혀 진행하지 않음.
+	if (LookDirection > 0) // 양수는 같은 방향, 음수는 다른 방향
+	{
+		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 1.0f, 0, 2.0f);
+
+		FCollisionQueryParams QueryParams;	// tracing하는 구조체.
+		QueryParams.AddIgnoredActor(this);	// 나 자신은 감지되어선 안됌
+		FHitResult TraceHit;	// trace 결과 저장
+		// 직선을 이용한 충돌 판정
+		if (GetWorld()->LineTraceSingleByChannel(TraceHit, TraceStart, TraceEnd, ECC_Visibility, QueryParams))
+		{	// 충돌하는 액터가 상호작용 인터페이스가 존재할 시에
+			if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
+			{
+				const float Distance = (TraceStart - TraceHit.ImpactPoint).Size();
+				// 현재 상호작용 데이터와 다를 시. 현재 액터로 교체
+				if (TraceHit.GetActor() != InteractionData.CurrentInteractable && Distance <= InteractionCheckDistance)
+				{
+					FoundInteractable(TraceHit.GetActor());
+					return;
+				}
+				// 동일 시 스킵.
+				if (TraceHit.GetActor() == InteractionData.CurrentInteractable)
+				{
+					return;
+				}
+			}
+		}
+	}
+	// 상호작용 가능한 액터가 없음.
+	NoInteractableFound();
+}
+
+void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
+{
+}
+
+void AItemTestCharacter::NoInteractableFound()
+{
+}
+
+void AItemTestCharacter::BeginInteract()
+{
+}
+
+void AItemTestCharacter::EndInteract()
+{
+}
+
+void AItemTestCharacter::Interact()
+{
+}
+
+void AItemTestCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (GetWorld()->TimeSince(InteractionData.LastInteractionCheckTime) > InteractionCheckFrequency)
+	{
+		PerformInteractionCheck();
 	}
 }
 

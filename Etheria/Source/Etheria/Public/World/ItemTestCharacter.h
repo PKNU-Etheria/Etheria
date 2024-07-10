@@ -5,7 +5,26 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Public/Interfaces/InteractionInterface.h"
 #include "ItemTestCharacter.generated.h"
+
+USTRUCT()
+struct FInteractionData	// 상호작용에 대한 데이터
+{
+	GENERATED_USTRUCT_BODY()
+
+	FInteractionData() : CurrentInteractable(nullptr), LastInteractionCheckTime(0.0f)
+	{
+
+	};
+
+	UPROPERTY()
+	AActor* CurrentInteractable;	// 상호작용 액터
+
+	UPROPERTY()
+	float LastInteractionCheckTime;
+};
+
 
 UCLASS(config = Game)
 class ETHERIA_API AItemTestCharacter : public ACharacter
@@ -48,13 +67,40 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// To add mapping context
 	virtual void BeginPlay();
+
+	void PerformInteractionCheck();
+
+	void FoundInteractable(AActor* NewInteractable);
+
+	void NoInteractableFound();
+
+	void BeginInteract();
+
+	void EndInteract();
+
+	void Interact();
+
+	virtual void Tick(float DeltaSeconds) override;
+
+	/// <summary>
+	/// variables
+	/// </summary>
+
+	UPROPERTY(VisibleAnywhere, Category = "Character | Interaction")
+	TScriptInterface<IInteractionInterface> TargetInteractable;	// 상호작용 가능한 항목들
+
+	float InteractionCheckFrequency;	// 상호작용 주기
+
+	float InteractionCheckDistance;	// 상호작용 거리
+
+	FTimerHandle TimerHandle_INteraction;	// 체크 주기
+
+	FInteractionData InteractionData;	// 상호작용 가능한 항목 -> 최근에 접촉
 
 public:
 	/** Returns CameraBoom subobject **/
