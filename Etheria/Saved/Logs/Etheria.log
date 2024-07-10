@@ -1234,3 +1234,4 @@ LogConfig: Set CVar [[r.Shadow.DetectVertexShaderLayerAtRuntime:1]]
 [2024.07.10-15.08.08:436][412]LogPackageName: Warning: DoesPackageExist called on PackageName that will always return false. Reason: '' 입력이 비었습니다.
 [2024.07.10-15.08.08:448][413]LogPlayLevel: Display: Destroying online subsystem :Context_1
 [2024.07.10-15.08.08:453][413]LogPackageName: Warning: DoesPackageExist called on PackageName that will always return false. Reason: '' 입력이 비었습니다.
+[2024.07.10-15.09.35:511][795]LogDerivedDataCache: C:/Users/user/AppData/Local/UnrealEngine/Common/DerivedDataCache: Maintenance finished in +00:00:02.264 and deleted 0 files with total size 0 MiB and 0 empty folders. Scanned 1634 files in 2508 folders with total size 82 MiB.
