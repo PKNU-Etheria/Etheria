@@ -3,6 +3,7 @@
 
 #include "Character/NPC/NeutralNPC/NPC_Base.h"
 #include "Quest/QuestSubSystem.h"
+#include "Components/QuestComponent.h"
 
 // Sets default values
 ANPC_Base::ANPC_Base()
@@ -29,6 +30,8 @@ void ANPC_Base::BeginPlay()
 
 	QuestSubSystem->Available_Delegate.AddUObject(this, &ANPC_Base::QuestAvailable_Callback);
 	QuestSubSystem->Clearable_Delegate.AddUObject(this, &ANPC_Base::QuestClearable_Callback);
+	QuestSubSystem->Accept_Delegate.AddUObject(this, &ANPC_Base::AcceptQuest_Callback);
+	QuestSubSystem->Clear_Delegate.AddUObject(this, &ANPC_Base::ClearQuest_Callback);
 
 	QuestSubSystem->InitializeNPC(this);
 }
@@ -58,13 +61,14 @@ void ANPC_Base::Interact_With_Implementation(UQuestComponent* QuestComponent)
 		UE_LOG(LogTemp, Display, TEXT("ANPC_Base : Clear Quest < %s >"), *Quest.Value->QuestName.ToString());
 
 		int QuestID = Quest.Value->QuestID;
+		QuestComponent->TryClearQuest(QuestID);
 
-		// Clearable -> Cleared
-		ClearedQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest.Value));
-		ClearableQuests.Remove(QuestID);
+		//// Clearable -> Cleared
+		//ClearedQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest.Value));
+		//ClearableQuests.Remove(QuestID);
 
-		// Clearing Quest
-		QuestSubSystem->ClearQuest(QuestID);
+		//// Clearing Quest
+		//QuestSubSystem->ClearQuest(QuestID);
 
 		// Show Quest Clear Widget
 
@@ -78,13 +82,14 @@ void ANPC_Base::Interact_With_Implementation(UQuestComponent* QuestComponent)
 		UE_LOG(LogTemp, Display, TEXT("ANPC_Base : Accept Quest < %s >"), *Quest.Value->QuestName.ToString());
 
 		int QuestID = Quest.Value->QuestID;
+		QuestComponent->TryAcceptQuest(QuestID);
 
-		// Available -> Progressing
-		ProgressingQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest.Value));
-		AvailableQuests.Remove(QuestID);
+		//// Available -> Progressing
+		//ProgressingQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest.Value));
+		//AvailableQuests.Remove(QuestID);
 
-		// Accepting Quest
-		QuestSubSystem->AcceptQuest(QuestID);
+		//// Accepting Quest
+		//QuestSubSystem->AcceptQuest(QuestID);
 
 
 		// Show Quest Accept Widget
@@ -95,14 +100,6 @@ void ANPC_Base::Interact_With_Implementation(UQuestComponent* QuestComponent)
 	// Normal Interact
 
 
-}
-
-void ANPC_Base::AcceptQuest()
-{
-}
-
-void ANPC_Base::ClearQuest()
-{
 }
 
 void ANPC_Base::QuestAvailable_Callback(int InNPCID, int InQuestID)
@@ -141,5 +138,43 @@ void ANPC_Base::QuestClearable_Callback(int InNPCID, int InQuestID)
 	ClearableQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
 
 	// if(ClearableQuests.Num() > 0)
+}
+
+void ANPC_Base::AcceptQuest_Callback(int InNPCID, int InQuestID)
+{
+	if (NPCID != InNPCID)
+		return;
+
+	FQuestStruct** QuestPPtr = AvailableQuests.Find(InQuestID);
+	if (!QuestPPtr) return;
+
+	FQuestStruct* Quest = *QuestPPtr;
+	if (!Quest) return;
+
+	// Available -> Progressing
+	ProgressingQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
+	AvailableQuests.Remove(InQuestID);
+
+	// Accepting Quest
+	// QuestSubSystem->AcceptQuest(InQuestID);
+}
+
+void ANPC_Base::ClearQuest_Callback(int InNPCID, int InQuestID)
+{
+	if (NPCID != InNPCID)
+		return;
+
+	FQuestStruct** QuestPPtr = ClearableQuests.Find(InQuestID);
+	if (!QuestPPtr) return;
+
+	FQuestStruct* Quest = *QuestPPtr;
+	if (!Quest) return;
+
+	// Clearable -> Cleared
+	ClearedQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
+	ClearableQuests.Remove(InQuestID);
+
+	// Clearing Quest
+	// QuestSubSystem->ClearQuest(InQuestID);
 }
 

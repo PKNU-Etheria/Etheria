@@ -160,6 +160,9 @@ void UQuestSubSystem::AcceptQuest(int QuestID)
 	AvailableQuests.Remove(QuestID);
 	ProgressingQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest));
 
+	// Accept BroadCast
+	Accept_Delegate.Broadcast(Quest->NPCID, QuestID);
+
 	// Check Quest is Clearable
 	if (CheckQuestClearable(QuestID))
 	{
@@ -184,6 +187,8 @@ void UQuestSubSystem::ClearQuest(int QuestID)
 	ClearableQuests.Remove(QuestID);
 	ClearedQuests.Add(TTuple<int, FQuestStruct*>(QuestID, QuestPtr));
 
+	// Clear BroadCast
+	Clear_Delegate.Broadcast(QuestPtr->NPCID, QuestID);
 
 	// Unavailable Quests Update
 	for (auto& Quest : UnavailableQuests)

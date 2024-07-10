@@ -49,7 +49,10 @@ void UQuestComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 void UQuestComponent::Interact()
 {
 	if (InteractingStatus != EQuestInteractStatus::EQIS_None)
+	{
 		ShowNextDialgoue();
+		return;
+	}
 
 	ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
 	if (!player) return;
@@ -99,6 +102,8 @@ void UQuestComponent::StartDialogue(int QuestID)
 	const FQuestDialogueDataStruct* DialogueData = QuestSubSystem->GetQuestDialgoue(QuestID);
 	if (!DialogueData) return;
 
+	CurrentDialgoues.Empty();
+
 	if (InteractingStatus == EQuestInteractStatus::EQIS_Accepting)
 	{
 		if (!DialogueData->AcceptDialogueDB) return;
@@ -112,6 +117,8 @@ void UQuestComponent::StartDialogue(int QuestID)
 		DialogueData->ClearDialogueDB->GetAllRows<FDialogueStruct>("UQuestComponent::StartDialogue", CurrentDialgoues);
 	}
 
+	DialogueQuestID = QuestID;
+
 	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx))
 	{
 		UE_LOG(LogTemp, Display, TEXT("%s : %s"), 
@@ -122,6 +129,8 @@ void UQuestComponent::StartDialogue(int QuestID)
 
 void UQuestComponent::ShowNextDialgoue()
 {
+	if (!QuestSubSystem) return;
+
 	// Show Next Dialogue
 	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx))
 	{
@@ -135,15 +144,18 @@ void UQuestComponent::ShowNextDialgoue()
 		if (InteractingStatus == EQuestInteractStatus::EQIS_Accepting)
 		{
 			UE_LOG(LogTemp, Display, TEXT("UQuestComponent : Close Dialogue & Accept Quest"));
-
+			QuestSubSystem->AcceptQuest(DialogueQuestID);
 		}
 		else if (InteractingStatus == EQuestInteractStatus::EQIS_Clearing)
 		{
 			UE_LOG(LogTemp, Display, TEXT("UQuestComponent : Close Dialogue & Clear Quest"));
-
+			QuestSubSystem->ClearQuest(DialogueQuestID);
 		}
 
+
+		DialogueQuestID = -1;
 		CurrentScriptIdx = 0;
+		InteractingStatus = EQuestInteractStatus::EQIS_None;
 	}
 }
 

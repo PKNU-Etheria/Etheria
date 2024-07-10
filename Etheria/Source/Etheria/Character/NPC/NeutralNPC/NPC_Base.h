@@ -34,12 +34,6 @@ public:
 	virtual void Interact_With_Implementation(class UQuestComponent* QuestComponent) override;
 
 
-public:
-	void AcceptQuest();
-	void ClearQuest();
-
-
-
 	// CallBack
 public:
 	UFUNCTION()
@@ -47,6 +41,12 @@ public:
 
 	UFUNCTION()
 	void QuestClearable_Callback(int NPCID, int QuestID);
+
+	UFUNCTION()
+	void AcceptQuest_Callback(int InNPCID, int InQuestID);
+
+	UFUNCTION()
+	void ClearQuest_Callback(int InNPCID, int InQuestID);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

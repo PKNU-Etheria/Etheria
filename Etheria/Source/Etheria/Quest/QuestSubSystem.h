@@ -11,6 +11,9 @@
 DECLARE_MULTICAST_DELEGATE_TwoParams(FQuestAvailable_Delegate, int32, int32)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FQuestClearable_Delegate, int32, int32)
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FQuestAccept_Delegate, int32, int32)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FQuestClear_Delegate, int32, int32)
+
 UCLASS()
 class ETHERIA_API UQuestSubSystem : public UGameInstanceSubsystem
 {
@@ -57,6 +60,8 @@ private:
 public:
 	FQuestAvailable_Delegate Available_Delegate;
 	FQuestClearable_Delegate Clearable_Delegate;
+	FQuestAccept_Delegate Accept_Delegate;
+	FQuestClear_Delegate Clear_Delegate;
 
 private:
 	UPROPERTY()
