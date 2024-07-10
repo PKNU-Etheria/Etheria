@@ -110,7 +110,22 @@ void AItemTestCharacter::PerformInteractionCheck()
 }
 
 void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
-{
+{	// 상호작용하는 경우
+	if (IsInteracting())
+	{
+		EndInteract();
+	}
+
+	if (InteractionData.CurrentInteractable)
+	{
+		TargetInteractable = InteractionData.CurrentInteractable;
+		TargetInteractable->EndFocus();	// 하이라이트 종료
+	}
+
+	InteractionData.CurrentInteractable = NewInteractable;
+	TargetInteractable = NewInteractable;
+
+	TargetInteractable->BeginFocus(); // 하이라이트 시작 (새로운 타겟)
 }
 
 void AItemTestCharacter::NoInteractableFound()
