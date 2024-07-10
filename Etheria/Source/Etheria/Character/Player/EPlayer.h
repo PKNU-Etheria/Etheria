@@ -93,6 +93,10 @@ protected:
 	class UCameraComponent* CameraComp;
 
 
+	// Interact Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Interact, meta = (AllowPrivateAccess = "true"))
+	class UInteractComponent* InteractComp;
+
 	// Input
 	// 나중에 배열로 관리
 	UPROPERTY(VisibleAnywhere, Category = Input)

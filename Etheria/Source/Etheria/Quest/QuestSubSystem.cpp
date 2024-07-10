@@ -7,21 +7,33 @@
 
 UQuestSubSystem::UQuestSubSystem()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> QuestDBRef(TEXT("/Game/Characters/NPC/Quest/Data/DB_Quest.DB_Quest"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> QuestDBRef(TEXT("/Game/Character/NPC/NeutralNPC/Quest/Data/DB_Quest.DB_Quest"));
 	if (QuestDBRef.Succeeded())
 	{
 		QuestDB = QuestDBRef.Object;
+
+		QuestDB->GetAllRows<FQuestStruct>("UQuestSubSystem : GetAllRows", AllQuests);
+
+		for (const auto& Quest : AllQuests)
+		{
+			// 선행 퀘스트 X && 요구사항 X && Level 1 
+			if (Quest->Require_Quests.Num() == 0 && Quest->Require_Items.Num() == 0 && Quest->Require_Level <= 1)
+				AvailableQuests.Add(TTuple<int, FQuestStruct*>(Quest->QuestID, Quest));
+			else
+				UnavailableQuests.Add(TTuple<int, FQuestStruct*>(Quest->QuestID, Quest));
+		}
 	}
 
-	QuestDB->GetAllRows<FQuestStruct>("UQuestSubSystem : GetAllRows", AllQuests);
-
-	for (const auto& Quest : AllQuests)
+	static ConstructorHelpers::FObjectFinder<UDataTable> QuestDialogueDBRef(TEXT("/Game/Character/NPC/NeutralNPC/Quest/Data/DB_QuestDialogues.DB_QuestDialogues"));
+	if (QuestDialogueDBRef.Succeeded())
 	{
-		// 선행 퀘스트 X && 요구사항 X && Level 1 
-		if (Quest->Require_Quests.Num() == 0 && Quest->Require_Items.Num() == 0 && Quest->Require_Level <= 1)
-			AvailableQuests.Add(TTuple<int, FQuestStruct*>(Quest->QuestID, Quest));
-		else
-			UnavailableQuests.Add(TTuple<int, FQuestStruct*>(Quest->QuestID, Quest));
+		QuestDialogueDB = QuestDialogueDBRef.Object;
+
+		TArray<FQuestDialogueDataStruct*> AllQuestDialogues;
+		QuestDialogueDB->GetAllRows<FQuestDialogueDataStruct>("UQuestSubSystem : GetAllRows", AllQuestDialogues);
+
+		for (const auto& Dialgoue : AllQuestDialogues)
+			QuestDialogueMap.Add(TTuple<int, FQuestDialogueDataStruct*>(Dialgoue->QuestID, Dialgoue));
 	}
 }
 
@@ -91,8 +103,8 @@ void UQuestSubSystem::UpdateQuests_Item(int ItemID, int Quantity)
 					if (CheckQuestClearable(Quest.Key))
 					{
 						// Broadcast NPCs that this Quest is clearable.
-						Clearable_Delegate.Broadcast(Quest.Key);
-
+						Clearable_Delegate.Broadcast(Quest.Value->NPCID, Quest.Key);
+						
 						// Unavailable -> Available
 						ClearableQuests.Add(TTuple<int, FQuestStruct*>(Quest.Key, Quest.Value));
 						ProgressingQuests.Remove(Quest.Key);
@@ -124,7 +136,7 @@ void UQuestSubSystem::UpdateQuests_Monster(int MonsterID)
 					if (CheckQuestClearable(Quest.Key))
 					{
 						// Broadcast NPCs that this Quest is clearable.
-						Clearable_Delegate.Broadcast(Quest.Key);
+						Clearable_Delegate.Broadcast(Quest.Value->NPCID, Quest.Key);
 
 						// Unavailable -> Available
 						ClearableQuests.Add(TTuple<int, FQuestStruct*>(Quest.Key, Quest.Value));
@@ -139,17 +151,34 @@ void UQuestSubSystem::UpdateQuests_Monster(int MonsterID)
 void UQuestSubSystem::AcceptQuest(int QuestID)
 {
 	// Available -> Progressing
-	FQuestStruct* Quest = *AvailableQuests.Find(QuestID);
+	FQuestStruct** QuestRefPtr = AvailableQuests.Find(QuestID);
+	if (!QuestRefPtr) return;
+
+	FQuestStruct* Quest = *(QuestRefPtr);
 	if (!Quest) return;
 
 	AvailableQuests.Remove(QuestID);
 	ProgressingQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest));
+
+	// Check Quest is Clearable
+	if (CheckQuestClearable(QuestID))
+	{
+		// Broadcast NPCs that this Quest is clearable.
+		Clearable_Delegate.Broadcast(Quest->NPCID, QuestID);
+
+		// Unavailable -> Available
+		ClearableQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest));
+		ProgressingQuests.Remove(QuestID);
+	}
 }
 
 void UQuestSubSystem::ClearQuest(int QuestID)
 {
 	// Clearable -> Cleared
-	FQuestStruct* QuestPtr = *ClearableQuests.Find(QuestID);
+	FQuestStruct** QuestRefPtr = ClearableQuests.Find(QuestID);
+	if (!QuestRefPtr) return;
+
+	FQuestStruct* QuestPtr = *(QuestRefPtr);
 	if (!QuestPtr) return;
 
 	ClearableQuests.Remove(QuestID);
@@ -166,7 +195,7 @@ void UQuestSubSystem::ClearQuest(int QuestID)
 				if (CheckQuestAvailable(QuestID))
 				{
 					// Broadcast NPCs that this Quest is available.
-					Available_Delegate.Broadcast(QuestID);
+					Available_Delegate.Broadcast(Quest.Value->NPCID, QuestID);
 
 					// Unavailable -> Available
 					AvailableQuests.Add(TTuple<int, FQuestStruct*>(Quest.Key, Quest.Value));
@@ -177,10 +206,15 @@ void UQuestSubSystem::ClearQuest(int QuestID)
 	}
 }
 
-bool UQuestSubSystem::CheckQuestAvailable(int QuestID)
+bool UQuestSubSystem::CheckQuestAvailable(int QuestID) 
 {
-	const FQuestStruct* Quest = *UnavailableQuests.Find(QuestID);
-	if (!Quest) return false;
+	FQuestStruct** QuestRefPtr = UnavailableQuests.Find(QuestID);
+	if (!QuestRefPtr)
+		return false;
+
+	FQuestStruct* Quest = *(QuestRefPtr);
+	if (!Quest)
+		return false;
 
 	// Check Require Level is achieved
 
@@ -203,8 +237,19 @@ bool UQuestSubSystem::CheckQuestAvailable(int QuestID)
 
 bool UQuestSubSystem::CheckQuestClearable(int QuestID)
 {
-	const FQuestStruct* Quest = *ProgressingQuests.Find(QuestID);
-	if (!Quest) return false;
+	FQuestStruct** QuestRefPtr = ProgressingQuests.Find(QuestID);
+	if (!QuestRefPtr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UQuestSubSystem : Failed to get Quest (CheckQuestClearable)"));
+		return false;
+	}
+
+	FQuestStruct* Quest = *(QuestRefPtr);
+	if (!Quest) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UQuestSubSystem : Failed to get Quest (CheckQuestClearable)"));
+		return false;
+	}
 
 	for (int i = 0; i < Quest->Progress_Item.Num(); i++)
 	{
@@ -221,4 +266,12 @@ bool UQuestSubSystem::CheckQuestClearable(int QuestID)
 	}
 
 	return true;
+}
+
+const FQuestDialogueDataStruct* UQuestSubSystem::GetQuestDialgoue(int QuestID) 
+{
+	FQuestDialogueDataStruct** DialogueRef = QuestDialogueMap.Find(QuestID);
+	if (!DialogueRef) return nullptr;
+
+	return (*DialogueRef);
 }

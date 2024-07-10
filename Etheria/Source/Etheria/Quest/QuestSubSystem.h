@@ -8,8 +8,8 @@
 #include "EtheriaStructs.h"
 #include "QuestSubSystem.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FQuestAvailable_Delegate, int32)
-DECLARE_MULTICAST_DELEGATE_OneParam(FQuestClearable_Delegate, int32)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FQuestAvailable_Delegate, int32, int32)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FQuestClearable_Delegate, int32, int32)
 
 UCLASS()
 class ETHERIA_API UQuestSubSystem : public UGameInstanceSubsystem
@@ -69,4 +69,14 @@ private:
 	TMap<int, FQuestStruct*> ProgressingQuests;
 	TMap<int, FQuestStruct*> ClearableQuests;
 	TMap<int, FQuestStruct*> ClearedQuests;
+
+
+public:
+	const FQuestDialogueDataStruct* GetQuestDialgoue(int QuestID);
+
+private:
+	UPROPERTY()
+	UDataTable* QuestDialogueDB;
+
+	TMap<int, FQuestDialogueDataStruct*> QuestDialogueMap;
 };

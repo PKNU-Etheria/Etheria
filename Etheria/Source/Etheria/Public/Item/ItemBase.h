@@ -48,7 +48,7 @@ public:
 	/// </summary>
 	UItemBase();
 
-	UItemBase* CreateItemCopy();
+	UItemBase* CreateItemCopy() const;
 
 	UFUNCTION(Category = "Item")
 	FORCEINLINE float GetItemStackWeight() const {

@@ -34,15 +34,22 @@ public:
 	virtual void Interact_With_Implementation(class UQuestComponent* QuestComponent) override;
 
 
+public:
+	void AcceptQuest();
+	void ClearQuest();
+
+
+
 	// CallBack
 public:
 	UFUNCTION()
-	void QuestAvailable_Callback(int QuestID);
+	void QuestAvailable_Callback(int NPCID, int QuestID);
 
 	UFUNCTION()
-	void QuestClearable_Callback(int QuestID);
+	void QuestClearable_Callback(int NPCID, int QuestID);
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int NPCID = -1;
 
 	TMap<int, FQuestStruct*> UnavailableQuests;

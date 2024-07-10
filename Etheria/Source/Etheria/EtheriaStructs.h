@@ -11,52 +11,12 @@ USTRUCT(BlueprintType)
 struct ETHERIA_API FQuestStruct : public FTableRowBase
 {
 	GENERATED_BODY()
-	FQuestStruct() : QuestID(-1) {}
-
-	FQuestStruct(const FQuestStruct& other)
-	{
-		NPCID = other.NPCID;
-		QuestID = other.QuestID;
-		QuestName = other.QuestName;
-		QuestDescription = other.QuestDescription;
-
-		Require_Level = other.Require_Level;
-		Require_Items = other.Require_Items;
-		Require_Quests = other.Require_Quests;
-
-		Progress_Monster = other.Progress_Monster;
-		Progress_Monster_RequireNum = other.Progress_Monster_RequireNum;
-		Progress_Monster_ID = other.Progress_Monster_ID;
-
-		Progress_Item = other.Progress_Item;
-		Progress_Item_RequireNum = other.Progress_Item_RequireNum;
-		Progress_Item_ID = other.Progress_Item_ID;
-	}
-
-	FQuestStruct& operator=(const FQuestStruct& other)
-	{
-		NPCID = other.NPCID;
-		QuestID = other.QuestID;
-		QuestName = other.QuestName;
-		QuestDescription = other.QuestDescription;
-
-		Require_Level = other.Require_Level;
-		Require_Items = other.Require_Items;
-		Require_Quests = other.Require_Quests;
-
-		Progress_Monster = other.Progress_Monster;
-		Progress_Monster_RequireNum = other.Progress_Monster_RequireNum;
-		Progress_Monster_ID = other.Progress_Monster_ID;
-
-		Progress_Item = other.Progress_Item;
-		Progress_Item_RequireNum = other.Progress_Item_RequireNum;
-		Progress_Item_ID = other.Progress_Item_ID;
-		return *this;
-	}
+	FQuestStruct() {}
 
 	// 퀘스트 정보
 
 		// NPC ID
+		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int NPCID;
 
 		// 퀘스트 ID
@@ -76,12 +36,15 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 	// 퀘스트 전제 조건 (Require)
 	
 		// 선행 레벨
+		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int Require_Level = 1;
 
 		// 선행 아이템
+		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<int> Require_Items;
 
 		// 선행 퀘스트
+		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<int> Require_Quests;
 	
 
@@ -112,6 +75,74 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 
 	// 퀘스트 보상
 
+};
+
+USTRUCT(BlueprintType)
+struct ETHERIA_API FBranchStruct : public FTableRowBase
+{
+	GENERATED_BODY()
+	FBranchStruct() {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int NextScriptID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText Branch_Script;
+};
+
+USTRUCT(BlueprintType)
+struct ETHERIA_API FDialogueStruct : public FTableRowBase
+{
+	GENERATED_BODY()
+	FDialogueStruct() {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int SceneID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ScriptID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName NPCName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText Script;
+
+
+	// 다음 스크립트 ID (Branch O)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FBranchStruct> Branchs;
+
+	// 다음 스크립트 ID (Branch X)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int NextScriptID;
+
+
+	// 현재 Scene ID의 ScriptID에서 행동할 NPC ID (Behavior Tree로 제어)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int> ActionNPC_IDs;
+
+
+	// Should Loop
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bLoop = false;
+};
+
+// 퀘스트 대화 정보 저장 
+USTRUCT(BlueprintType)
+struct ETHERIA_API FQuestDialogueDataStruct : public FTableRowBase
+{
+	GENERATED_BODY()
+	FQuestDialogueDataStruct() {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int QuestID = -1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataTable* AcceptDialogueDB;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataTable* ClearDialogueDB;
 };
 
 // 아이템 수치 정보

@@ -49,26 +49,96 @@ void ANPC_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ANPC_Base::Interact_With_Implementation(UQuestComponent* QuestComponent)
 {
 	UE_LOG(LogTemp, Display, TEXT("ANPC_Base : Interact_With_Implementation"));
+
+	if (!QuestSubSystem || !QuestComponent) return;
+
+	// Clear Quest
+	for (const auto& Quest : ClearableQuests)
+	{
+		UE_LOG(LogTemp, Display, TEXT("ANPC_Base : Clear Quest < %s >"), *Quest.Value->QuestName.ToString());
+
+		int QuestID = Quest.Value->QuestID;
+
+		// Clearable -> Cleared
+		ClearedQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest.Value));
+		ClearableQuests.Remove(QuestID);
+
+		// Clearing Quest
+		QuestSubSystem->ClearQuest(QuestID);
+
+		// Show Quest Clear Widget
+
+		return;
+	}
+
+
+	// Accept Quest
+	for (const auto& Quest : AvailableQuests)
+	{
+		UE_LOG(LogTemp, Display, TEXT("ANPC_Base : Accept Quest < %s >"), *Quest.Value->QuestName.ToString());
+
+		int QuestID = Quest.Value->QuestID;
+
+		// Available -> Progressing
+		ProgressingQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest.Value));
+		AvailableQuests.Remove(QuestID);
+
+		// Accepting Quest
+		QuestSubSystem->AcceptQuest(QuestID);
+
+
+		// Show Quest Accept Widget
+
+		return;
+	}
+
+	// Normal Interact
+
+
 }
 
-void ANPC_Base::QuestAvailable_Callback(int QuestID)
+void ANPC_Base::AcceptQuest()
 {
-	FQuestStruct* Quest = *UnavailableQuests.Find(QuestID);
+}
+
+void ANPC_Base::ClearQuest()
+{
+}
+
+void ANPC_Base::QuestAvailable_Callback(int InNPCID, int InQuestID)
+{
+	if (NPCID != InNPCID) 
+		return;
+
+	UE_LOG(LogTemp, Display, TEXT("ANPC_Base : QuestAvailable_Callback"));
+
+	FQuestStruct** QuestRefPtr = UnavailableQuests.Find(InQuestID);
+	if (!QuestRefPtr) return;
+
+	FQuestStruct* Quest = *QuestRefPtr;
 	if (!Quest) return;
 
-	UnavailableQuests.Remove(QuestID);
-	AvailableQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest));
+	UnavailableQuests.Remove(InQuestID);
+	AvailableQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
 
 	// if(AvailableQuests.Num() > 0)
 }
 
-void ANPC_Base::QuestClearable_Callback(int QuestID)
+void ANPC_Base::QuestClearable_Callback(int InNPCID, int InQuestID)
 {
-	FQuestStruct* Quest = *ProgressingQuests.Find(QuestID);
+	if (NPCID != InNPCID)
+		return;
+
+	UE_LOG(LogTemp, Display, TEXT("ANPC_Base : QuestClearable_Callback"));
+
+	FQuestStruct** QuestRefPtr = ProgressingQuests.Find(InQuestID);
+	if (!QuestRefPtr) return;
+
+	FQuestStruct* Quest = *QuestRefPtr;
 	if (!Quest) return;
 
-	ProgressingQuests.Remove(QuestID);
-	ClearableQuests.Add(TTuple<int, FQuestStruct*>(QuestID, Quest));
+	ProgressingQuests.Remove(InQuestID);
+	ClearableQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
 
 	// if(ClearableQuests.Num() > 0)
 }
