@@ -27,10 +27,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void BeginFocus();
-	virtual void EndFocus();
-	virtual void BeginInteract();
-	virtual void EndInteract();
-	virtual void Interact();
+	virtual void BeginFocus() override;
+	virtual void EndFocus() override;
+	virtual void BeginInteract() override;
+	virtual void EndInteract() override;
+	virtual void Interact(AItemTestCharacter* PlayerCharacter) override;
 
 };

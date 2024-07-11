@@ -54,7 +54,7 @@ void AInterfaceTestActor::EndInteract()
 
 }
 
-void AInterfaceTestActor::Interact()
+void AInterfaceTestActor::Interact(AItemTestCharacter* PlayerCharacter)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Calling Interact override on interface test actor."));
 

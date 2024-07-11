@@ -90,9 +90,8 @@ void AItemTestCharacter::PerformInteractionCheck()
 		{	// 충돌하는 액터가 상호작용 인터페이스가 존재할 시에
 			if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
 			{
-				const float Distance = (TraceStart - TraceHit.ImpactPoint).Size();
 				// 현재 상호작용 데이터와 다를 시. 현재 액터로 교체
-				if (TraceHit.GetActor() != InteractionData.CurrentInteractable && Distance <= InteractionCheckDistance)
+				if (TraceHit.GetActor() != InteractionData.CurrentInteractable)
 				{
 					FoundInteractable(TraceHit.GetActor());
 					return;
@@ -185,7 +184,7 @@ void AItemTestCharacter::Interact()
 
 	if (IsValid(TargetInteractable.GetObject()))
 	{
-		TargetInteractable->Interact();
+		TargetInteractable->Interact(this);
 	}
 }
 
