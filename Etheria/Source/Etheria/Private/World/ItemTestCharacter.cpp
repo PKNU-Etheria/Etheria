@@ -149,6 +149,24 @@ void AItemTestCharacter::NoInteractableFound()
 
 void AItemTestCharacter::BeginInteract()
 {
+	PerformInteractionCheck();	// 변한게 있는지 확인하기 위한 호출.
+
+	if (InteractionData.CurrentInteractable)
+	{
+		if (IsValid(TargetInteractable.GetObject()))
+		{
+			TargetInteractable->BeginInteract();
+
+			if (FMath::IsNearlyZero(TargetInteractable->InteractableData.InteractionDuration, 0.1f))
+			{
+				Interact();
+			}
+			else
+			{
+				GetWorldTimerManager().SetTimer(TimerHandle_Interaction, this, &AItemTestCharacter::Interact, TargetInteractable->InteractableData.InteractionDuration, false);
+			}
+		}
+	}
 }
 
 void AItemTestCharacter::EndInteract()
