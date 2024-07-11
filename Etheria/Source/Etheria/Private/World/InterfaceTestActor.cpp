@@ -2,6 +2,7 @@
 
 
 #include "World/InterfaceTestActor.h"
+#include "Public/World/ItemTestCharacter.h"
 
 // Sets default values
 AInterfaceTestActor::AInterfaceTestActor()
