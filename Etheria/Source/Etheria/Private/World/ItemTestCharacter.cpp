@@ -129,7 +129,7 @@ void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
 }
 
 void AItemTestCharacter::NoInteractableFound()
-{
+{	// 상호작용 하고 있는 경우.
 	if (IsInteracting())
 	{
 		GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
@@ -170,7 +170,14 @@ void AItemTestCharacter::BeginInteract()
 }
 
 void AItemTestCharacter::EndInteract()
-{
+{	// 타이머 초기화 -> 상호작용이 잘 마무리 되었다면 굳이 상호작용 중인지 확인할 필요가 없음.
+	GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
+
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		TargetInteractable->EndInteract();
+	}
+
 }
 
 void AItemTestCharacter::Interact()
