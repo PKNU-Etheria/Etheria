@@ -177,11 +177,16 @@ void AItemTestCharacter::EndInteract()
 	{
 		TargetInteractable->EndInteract();
 	}
-
 }
 
 void AItemTestCharacter::Interact()
 {
+	GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
+
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		TargetInteractable->Interact();
+	}
 }
 
 void AItemTestCharacter::Tick(float DeltaSeconds)
