@@ -130,6 +130,21 @@ void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
 
 void AItemTestCharacter::NoInteractableFound()
 {
+	if (IsInteracting())
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
+	}
+
+	if (InteractionData.CurrentInteractable)	// 상호작용 가능한 액터가 존재할 경우
+	{	// 포커스 하이라이트 중지
+		if (IsValid(TargetInteractable.GetObject()))
+		{
+			TargetInteractable->EndFocus();
+		}
+		// 타겟 널 세팅
+		InteractionData.CurrentInteractable = nullptr;
+		TargetInteractable = nullptr;
+	}
 }
 
 void AItemTestCharacter::BeginInteract()
