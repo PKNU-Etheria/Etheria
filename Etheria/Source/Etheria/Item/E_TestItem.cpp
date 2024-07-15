@@ -19,6 +19,11 @@ AE_TestItem::AE_TestItem()
 
     DetectionRadius = 200.0f;
     ItemName = "Test Item";
+
+    CurrentState = EItemState::Idle;
+    MoveSpeed = 200.0f;
+    AccelerationRate = 2.0f;
+    CurrentMoveSpeed = 0.0f;
 }
 
 void AE_TestItem::BeginPlay()
@@ -52,10 +57,19 @@ void AE_TestItem::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    // 도깨비불 처럼 상 하로 움직임 반복.
-    FVector NewLocation = GetActorLocation();
-    NewLocation.Z += FMath::Sin(GetGameTimeSinceCreation() * 2.0f) * 0.5f;
-    SetActorLocation(NewLocation);
+    // 대기 중일 때
+    if (CurrentState == EItemState::Idle)
+    {
+        // 도깨비불 처럼 상 하로 움직임 반복.
+        FVector NewLocation = GetActorLocation();
+        NewLocation.Z += FMath::Sin(GetGameTimeSinceCreation() * 2.0f) * 0.5f;
+        SetActorLocation(NewLocation);
+    }
+    // 아이템이 플레이어에게 이동 중일 때
+    if (CurrentState == EItemState::MovingPlayer)
+    {
+        MoveToPlayer(DeltaTime);
+    }
 
     // 매 프레임마다 디버그 구체 그리기
     if (GetWorld())
@@ -76,9 +90,37 @@ void AE_TestItem::Tick(float DeltaTime)
 
 void AE_TestItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    if (Cast<AItemTestCharacter>(OtherActor))
+    /*if (Cast<AItemTestCharacter>(OtherActor))
     {
         PickupItem(OtherActor);
+    }*/
+
+    if (CurrentState == EItemState::Idle && Cast<AItemTestCharacter>(OtherActor))
+    {
+        CurrentState = EItemState::MovingPlayer;
+        TargetPlayer = OtherActor;
+        CurrentMoveSpeed = MoveSpeed;
+    }
+}
+
+void AE_TestItem::MoveToPlayer(float DeltaTime)
+{
+    if (TargetPlayer)
+    {
+        FVector Direction = (TargetPlayer->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+        FVector NewLocation = GetActorLocation() + Direction * CurrentMoveSpeed * DeltaTime;
+
+        SetActorLocation(NewLocation);
+
+        // 속도 증가
+        CurrentMoveSpeed *= (1.0f + AccelerationRate * DeltaTime);
+
+        // 플레이어와의 거리 체크
+        float DistanceToPlayer = FVector::Distance(GetActorLocation(), TargetPlayer->GetActorLocation());
+        if (DistanceToPlayer < 50.0f) // 적당한 거리에 도달하면 획득
+        {
+            PickupItem(TargetPlayer);
+        }
     }
 }
 
@@ -96,8 +138,7 @@ void AE_TestItem::PickupItem(AActor* OtherActor)
         //    FString Message = FString::Printf(TEXT("%s 획득"), *ItemName);
         //    if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
         //    {
-        //        // 여기서 UI 위젯을 생성하고 메시지를 표시합니다.
-        //        // 예: PC->ShowItemPickupMessage(Message);
+        //        // 여기서 UI 위젯 생성.
         //    }
 
         //    // 액터 제거
