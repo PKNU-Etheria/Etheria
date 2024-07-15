@@ -90,9 +90,8 @@ void AItemTestCharacter::PerformInteractionCheck()
 		{	// 충돌하는 액터가 상호작용 인터페이스가 존재할 시에
 			if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
 			{
-				const float Distance = (TraceStart - TraceHit.ImpactPoint).Size();
 				// 현재 상호작용 데이터와 다를 시. 현재 액터로 교체
-				if (TraceHit.GetActor() != InteractionData.CurrentInteractable && Distance <= InteractionCheckDistance)
+				if (TraceHit.GetActor() != InteractionData.CurrentInteractable)
 				{
 					FoundInteractable(TraceHit.GetActor());
 					return;
@@ -110,23 +109,83 @@ void AItemTestCharacter::PerformInteractionCheck()
 }
 
 void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
-{
+{	// 상호작용하는 경우
+	if (IsInteracting())
+	{
+		EndInteract();
+	}
+
+	if (InteractionData.CurrentInteractable)
+	{
+		TargetInteractable = InteractionData.CurrentInteractable;
+		TargetInteractable->EndFocus();	// 하이라이트 종료
+	}
+
+	InteractionData.CurrentInteractable = NewInteractable;
+	TargetInteractable = NewInteractable;
+
+	TargetInteractable->BeginFocus(); // 하이라이트 시작 (새로운 타겟)
 }
 
 void AItemTestCharacter::NoInteractableFound()
-{
+{	// 상호작용 하고 있는 경우.
+	if (IsInteracting())
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
+	}
+
+	if (InteractionData.CurrentInteractable)	// 상호작용 가능한 액터가 존재할 경우
+	{	// 포커스 하이라이트 중지
+		if (IsValid(TargetInteractable.GetObject()))
+		{
+			TargetInteractable->EndFocus();
+		}
+		// 타겟 널 세팅
+		InteractionData.CurrentInteractable = nullptr;
+		TargetInteractable = nullptr;
+	}
 }
 
 void AItemTestCharacter::BeginInteract()
 {
+	PerformInteractionCheck();	// 변한게 있는지 확인하기 위한 호출.
+
+	if (InteractionData.CurrentInteractable)
+	{
+		if (IsValid(TargetInteractable.GetObject()))
+		{
+			TargetInteractable->BeginInteract();
+
+			if (FMath::IsNearlyZero(TargetInteractable->InteractableData.InteractionDuration, 0.1f))
+			{
+				Interact();
+			}
+			else
+			{
+				GetWorldTimerManager().SetTimer(TimerHandle_Interaction, this, &AItemTestCharacter::Interact, TargetInteractable->InteractableData.InteractionDuration, false);
+			}
+		}
+	}
 }
 
 void AItemTestCharacter::EndInteract()
-{
+{	// 타이머 초기화 -> 상호작용이 잘 마무리 되었다면 굳이 상호작용 중인지 확인할 필요가 없음.
+	GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
+
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		TargetInteractable->EndInteract();
+	}
 }
 
 void AItemTestCharacter::Interact()
 {
+	GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
+
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		TargetInteractable->Interact(this);
+	}
 }
 
 void AItemTestCharacter::Tick(float DeltaSeconds)
@@ -143,6 +202,10 @@ void AItemTestCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
+
+		//Interaction TEST
+		EnhancedInputComponent->BindAction(InterAction, ETriggerEvent::Started, this, &AItemTestCharacter::BeginInteract);
+		EnhancedInputComponent->BindAction(InterAction, ETriggerEvent::Completed, this, &AItemTestCharacter::EndInteract);
 
 		//Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);

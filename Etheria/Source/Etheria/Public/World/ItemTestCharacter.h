@@ -43,6 +43,10 @@ class ETHERIA_API AItemTestCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
+	/** Interaction Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* InterAction;
+
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
@@ -98,7 +102,7 @@ protected:
 
 	float InteractionCheckDistance;	// 상호작용 거리
 
-	FTimerHandle TimerHandle_INteraction;	// 체크 주기
+	FTimerHandle TimerHandle_Interaction;	// 체크 주기
 
 	FInteractionData InteractionData;	// 상호작용 가능한 항목 -> 최근에 접촉
 
@@ -107,4 +111,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	// 상호작용 시간이 0인 경우에는 false 
+	FORCEINLINE bool IsInteracting() const { return GetWorldTimerManager().IsTimerActive(TimerHandle_Interaction); };
 };

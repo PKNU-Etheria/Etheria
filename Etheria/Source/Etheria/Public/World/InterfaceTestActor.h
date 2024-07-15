@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Public/Interfaces/InteractionInterface.h"
 #include "InterfaceTestActor.generated.h"
 
 UCLASS()
-class ETHERIA_API AInterfaceTestActor : public AActor
+class ETHERIA_API AInterfaceTestActor : public AActor, public IInteractionInterface
 {
 	GENERATED_BODY()
 	
@@ -16,11 +17,23 @@ public:
 	AInterfaceTestActor();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Test Actor")
+	UStaticMeshComponent* Mesh;
+
+	UPROPERTY(EditInstanceOnly, Category = "Test Actor")
+	FInteractableData InstanceInteractableData;	// 상호작용 가능한 데이터.
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void BeginFocus() override;
+	virtual void EndFocus() override;
+	virtual void BeginInteract() override;
+	virtual void EndInteract() override;
+	virtual void Interact(AItemTestCharacter* PlayerCharacter) override;
 
 };
