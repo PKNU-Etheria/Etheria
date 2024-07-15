@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 
+// 퀘스트 상호작용 진행상태
 UENUM(BlueprintType)
-enum class ETestEnum : uint8
+enum class EQuestInteractStatus : uint8
 {
-	ETE_Test,
+	EQIS_None,
+	EQIS_Accepting,
+	EQIS_Clearing,
 };
 
 // 아이템 등급
