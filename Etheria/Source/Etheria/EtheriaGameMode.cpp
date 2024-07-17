@@ -4,6 +4,7 @@
 #include "Character/Player/EPlayer.h"
 #include "Character/Player/EPlayerController.h"
 #include "Character/Player/EPlayerState.h"
+#include "GameFramework/HUD.h"
 #include "UObject/ConstructorHelpers.h"
 
 AEtheriaGameMode::AEtheriaGameMode()
@@ -25,6 +26,12 @@ AEtheriaGameMode::AEtheriaGameMode()
 	if (PlayerStateBPClass.Class != NULL)
 	{
 		PlayerStateClass = PlayerStateBPClass.Class;
+	}
+
+	static ConstructorHelpers::FClassFinder<AHUD> HUDBPClass(TEXT("/Game/Item/BP_TutorialHUD.BP_TutorialHUD_C"));
+	if (HUDBPClass.Succeeded())
+	{
+		HUDClass = HUDBPClass.Class;
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Public/Interfaces/InteractionInterface.h"
+#include "Public/UserInterface/TutorialHUD.h"
 #include "ItemTestCharacter.generated.h"
 
 USTRUCT()
@@ -94,6 +95,9 @@ protected:
 	/// <summary>
 	/// variables
 	/// </summary>
+	
+	UPROPERTY()
+	ATutorialHUD* HUD;
 
 	UPROPERTY(VisibleAnywhere, Category = "Character | Interaction")
 	TScriptInterface<IInteractionInterface> TargetInteractable;	// 상호작용 가능한 항목들
