@@ -51,4 +51,14 @@ private:
 
 	UPROPERTY()
 	class UQuestSubSystem* QuestSubSystem;
+
+private:
+	void ShowDialgoue(const FDialogueStruct& DialogueInfo);
+	void CloseDialogue();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UWidget_Dialogue> DialogueWidgetClass;
+
+	UPROPERTY()
+	class UWidget_Dialogue* DialogueWidget;
 };

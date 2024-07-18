@@ -65,7 +65,7 @@ public:
 
 private:
 	UPROPERTY()
-	UDataTable* QuestDB;
+	UDataTable* MainQuestDB;
 
 	TArray<FQuestStruct*> AllQuests;
 
@@ -81,7 +81,7 @@ public:
 
 private:
 	UPROPERTY()
-	UDataTable* QuestDialogueDB;
+	UDataTable* MainQuest_DialogueDB;
 
 	TMap<int, FQuestDialogueDataStruct*> QuestDialogueMap;
 };

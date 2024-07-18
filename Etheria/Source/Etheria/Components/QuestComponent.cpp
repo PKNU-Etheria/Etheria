@@ -3,6 +3,7 @@
 
 #include "Components/QuestComponent.h"
 #include "Quest/QuestSubSystem.h"
+#include "Quest/Widget_Dialogue.h"
 #include "Character/NPC/NeutralNPC/NPCInterface.h"
 #include "Character/NPC/NeutralNPC/NPC_Base.h"
 #include "Kismet/GameplayStatics.h"
@@ -123,6 +124,7 @@ void UQuestComponent::StartDialogue(int QuestID)
 	{
 		UE_LOG(LogTemp, Display, TEXT("%s : %s"), 
 			*CurrentDialgoues[CurrentScriptIdx]->NPCName.ToString(), *CurrentDialgoues[CurrentScriptIdx]->Script.ToString());
+		ShowDialgoue(*CurrentDialgoues[CurrentScriptIdx]);
 		CurrentScriptIdx++;
 	}
 }
@@ -136,6 +138,7 @@ void UQuestComponent::ShowNextDialgoue()
 	{
 		UE_LOG(LogTemp, Display, TEXT("%s : %s"),
 			*CurrentDialgoues[CurrentScriptIdx]->NPCName.ToString(), *CurrentDialgoues[CurrentScriptIdx]->Script.ToString());
+		ShowDialgoue(*CurrentDialgoues[CurrentScriptIdx]);
 		CurrentScriptIdx++;
 	}
 	// Close Dialogue
@@ -144,11 +147,13 @@ void UQuestComponent::ShowNextDialgoue()
 		if (InteractingStatus == EQuestInteractStatus::EQIS_Accepting)
 		{
 			UE_LOG(LogTemp, Display, TEXT("UQuestComponent : Close Dialogue & Accept Quest"));
+			CloseDialogue();
 			QuestSubSystem->AcceptQuest(DialogueQuestID);
 		}
 		else if (InteractingStatus == EQuestInteractStatus::EQIS_Clearing)
 		{
 			UE_LOG(LogTemp, Display, TEXT("UQuestComponent : Close Dialogue & Clear Quest"));
+			CloseDialogue();
 			QuestSubSystem->ClearQuest(DialogueQuestID);
 		}
 
@@ -156,6 +161,32 @@ void UQuestComponent::ShowNextDialgoue()
 		DialogueQuestID = -1;
 		CurrentScriptIdx = 0;
 		InteractingStatus = EQuestInteractStatus::EQIS_None;
+	}
+}
+
+void UQuestComponent::ShowDialgoue(const FDialogueStruct& DialogueInfo)
+{
+	if (!DialogueWidgetClass) return;
+
+	if (!DialogueWidget)
+	{
+		APawn* owningPawn = Cast<APawn>(GetOwner());
+		if (!owningPawn) return;
+		APlayerController* playerController = Cast<APlayerController>(owningPawn->GetController());
+		if (!playerController) return;
+		DialogueWidget = CreateWidget<UWidget_Dialogue>(playerController, DialogueWidgetClass);
+		DialogueWidget->AddToViewport();
+	}
+
+	DialogueWidget->ShowDialogue(DialogueInfo);
+}
+
+void UQuestComponent::CloseDialogue()
+{
+	if (DialogueWidget)
+	{
+		DialogueWidget->RemoveFromParent();
+		DialogueWidget = nullptr;
 	}
 }
 

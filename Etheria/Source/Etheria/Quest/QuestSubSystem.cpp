@@ -7,12 +7,12 @@
 
 UQuestSubSystem::UQuestSubSystem()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> QuestDBRef(TEXT("/Game/Character/NPC/NeutralNPC/Quest/Data/DB_Quest.DB_Quest"));
-	if (QuestDBRef.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UDataTable> MainQuestDBRef(TEXT("/Game/Character/NPC/NeutralNPC/Quest/Data/DB_MainQuests.DB_MainQuests"));
+	if (MainQuestDBRef.Succeeded())
 	{
-		QuestDB = QuestDBRef.Object;
+		MainQuestDB = MainQuestDBRef.Object;
 
-		QuestDB->GetAllRows<FQuestStruct>("UQuestSubSystem : GetAllRows", AllQuests);
+		MainQuestDB->GetAllRows<FQuestStruct>("UQuestSubSystem : GetAllRows", AllQuests);
 
 		for (const auto& Quest : AllQuests)
 		{
@@ -24,13 +24,13 @@ UQuestSubSystem::UQuestSubSystem()
 		}
 	}
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> QuestDialogueDBRef(TEXT("/Game/Character/NPC/NeutralNPC/Quest/Data/DB_QuestDialogues.DB_QuestDialogues"));
-	if (QuestDialogueDBRef.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UDataTable> MainQuestDialogueDBRef(TEXT("/Game/Character/NPC/NeutralNPC/Quest/Data/DB_MainQuests_Dialogue.DB_MainQuests_Dialogue"));
+	if (MainQuestDialogueDBRef.Succeeded())
 	{
-		QuestDialogueDB = QuestDialogueDBRef.Object;
+		MainQuest_DialogueDB = MainQuestDialogueDBRef.Object;
 
 		TArray<FQuestDialogueDataStruct*> AllQuestDialogues;
-		QuestDialogueDB->GetAllRows<FQuestDialogueDataStruct>("UQuestSubSystem : GetAllRows", AllQuestDialogues);
+		MainQuest_DialogueDB->GetAllRows<FQuestDialogueDataStruct>("UQuestSubSystem : GetAllRows", AllQuestDialogues);
 
 		for (const auto& Dialgoue : AllQuestDialogues)
 			QuestDialogueMap.Add(TTuple<int, FQuestDialogueDataStruct*>(Dialgoue->QuestID, Dialgoue));
