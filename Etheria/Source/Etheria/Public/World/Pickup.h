@@ -34,6 +34,10 @@ public:
 	void UpdateInteractableData();
 	void TakePickup(const AItemTestCharacter* Taker);
 
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;	// 편집기에서 수정한 내용을 즉시 적용하는 이벤트.
+#endif
+
 protected:
 	/// <summary>
 	/// Variables
@@ -41,16 +45,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Pickup | Components")
 	UStaticMeshComponent* PickupMesh;
 
-	UPROPERTY(EditInstanceOnly, Category = "Pickup | Item Database")
+	UPROPERTY(EditInstanceOnly, Category = "Pickup | Item Initialization")
 	UDataTable* ItemDataTable;
 
-	UPROPERTY(EditInstanceOnly, Category = "Pickup | Item Database")
+	UPROPERTY(EditInstanceOnly, Category = "Pickup | Item Initialization")
 	FName DesiredItemID;
 
 	UPROPERTY(VisibleAnywhere, Category = "Pickup | Item Reference")
 	UItemBase* ItemReference;
 
-	UPROPERTY(EditInstanceOnly, Category = "Pickup | Item Reference")
+	UPROPERTY(EditInstanceOnly, Category = "Pickup | Item Initialization")
 	int32 ItemQuantity;
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Pickup | Interaction")
