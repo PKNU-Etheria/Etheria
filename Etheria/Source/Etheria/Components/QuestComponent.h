@@ -52,10 +52,17 @@ private:
 	UPROPERTY()
 	class UQuestSubSystem* QuestSubSystem;
 
-private:
+public:
+	UFUNCTION(BlueprintCallable)
 	void ShowDialgoue(const FDialogueStruct& DialogueInfo);
+
+	UFUNCTION(BlueprintCallable)
+	void BranchSelected(const FBranchStruct& BranchInfo);
+
+	UFUNCTION(BlueprintCallable)
 	void CloseDialogue();
 
+private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UWidget_Dialogue> DialogueWidgetClass;
 

@@ -51,6 +51,13 @@ void UQuestComponent::Interact()
 {
 	if (InteractingStatus != EQuestInteractStatus::EQIS_None)
 	{
+		// If Before Dialogue Has Branch -> Return
+		if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx - 1)
+			&& CurrentDialgoues[CurrentScriptIdx - 1]->Branchs.Num() > 0)
+		{
+			return;
+		}
+
 		ShowNextDialgoue();
 		return;
 	}
@@ -134,7 +141,8 @@ void UQuestComponent::ShowNextDialgoue()
 	if (!QuestSubSystem) return;
 
 	// Show Next Dialogue
-	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx))
+	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx)
+		&& CurrentDialgoues[CurrentScriptIdx]->NextScriptID != -1)
 	{
 		UE_LOG(LogTemp, Display, TEXT("%s : %s"),
 			*CurrentDialgoues[CurrentScriptIdx]->NPCName.ToString(), *CurrentDialgoues[CurrentScriptIdx]->Script.ToString());
@@ -179,6 +187,12 @@ void UQuestComponent::ShowDialgoue(const FDialogueStruct& DialogueInfo)
 	}
 
 	DialogueWidget->ShowDialogue(DialogueInfo);
+}
+
+void UQuestComponent::BranchSelected(const FBranchStruct& BranchInfo)
+{
+	CurrentScriptIdx = BranchInfo.NextScriptID;
+	ShowNextDialgoue();
 }
 
 void UQuestComponent::CloseDialogue()

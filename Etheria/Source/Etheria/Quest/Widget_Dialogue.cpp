@@ -3,9 +3,12 @@
 
 #include "Quest/Widget_Dialogue.h"
 #include "Components/TextBlock.h"
+#include "Components/VerticalBox.h"
 
 void UWidget_Dialogue::ShowDialogue(const FDialogueStruct& DialogueInfo)
 {
 	Text_NPCName->SetText(FText::FromName(DialogueInfo.NPCName));
-	SetDialogueText(DialogueInfo.Script);
+	SetDialogueText(DialogueInfo);
+
+
 }

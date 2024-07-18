@@ -20,7 +20,7 @@ public:
 	void ShowDialogue(const FDialogueStruct& DialogueInfo);
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void SetDialogueText(const FText& InText);
+	void SetDialogueText(const FDialogueStruct& DialogueInfo);
 
 public:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
