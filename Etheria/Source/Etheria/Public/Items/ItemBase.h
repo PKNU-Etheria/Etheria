@@ -7,6 +7,8 @@
 #include "EtheriaCharacter.h"
 #include "ItemBase.generated.h"
 
+class UInventoryComponent;
+
 /**
  * 
  */
@@ -20,8 +22,8 @@ public:
 	/// Properties & Variables
 	/// </summary>
 	
-	//UPROPERTY()
-	//UInventoryComponent* OwningInvectory;
+	UPROPERTY()
+	UInventoryComponent* OwningInventory;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	int32 Quantity;

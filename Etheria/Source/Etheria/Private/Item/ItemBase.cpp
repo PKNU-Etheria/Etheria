@@ -2,6 +2,7 @@
 
 
 #include "Items/ItemBase.h"
+#include "Public/Components/InventoryComponent.h"
 
 UItemBase::UItemBase()
 {
@@ -30,13 +31,13 @@ void UItemBase::SetQuantity(const int32 NewQuantity)
 		Quantity = FMath::Clamp(NewQuantity, 0, NumericData.bIsStackable ? NumericData.MaxStackSize : 1);
 
 		//  하나의 스택이 다른 스택에 병합되거나 삭제될 때 - 수량을 변경할 때마다 필터링(setQAuantity 함수를 통해)
-		/*if (OwningInventory)
+		if (OwningInventory)
 		{
 			if(Quantity <= 0)
 			{
-				OwningInventory->RemoveItem(this);
+				OwningInventory->RemoveSingleInstanceOfItem(this);
 			}
-		}*/
+		}
 	}
 
 }
