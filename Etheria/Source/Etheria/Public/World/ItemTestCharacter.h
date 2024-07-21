@@ -9,6 +9,8 @@
 #include "Public/UserInterface/TutorialHUD.h"
 #include "ItemTestCharacter.generated.h"
 
+class UInventoryComponent;
+
 USTRUCT()
 struct FInteractionData	// 상호작용에 대한 데이터
 {
@@ -102,6 +104,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Character | Interaction")
 	TScriptInterface<IInteractionInterface> TargetInteractable;	// 상호작용 가능한 항목들
 
+	UPROPERTY(VisibleAnywhere, Category = "Character | Inventory")
+	UInventoryComponent* PlayerInventory;
+
 	float InteractionCheckFrequency;	// 상호작용 주기
 
 	float InteractionCheckDistance;	// 상호작용 거리
@@ -117,4 +122,8 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	// 상호작용 시간이 0인 경우에는 false 
 	FORCEINLINE bool IsInteracting() const { return GetWorldTimerManager().IsTimerActive(TimerHandle_Interaction); };
+
+	FORCEINLINE UInventoryComponent* GetInventory() const { return PlayerInventory; };
+
+	void UpdateInteractionWidget() const;
 };

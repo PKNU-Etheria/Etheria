@@ -4,6 +4,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Public/Components/InventoryComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -50,6 +51,10 @@ AItemTestCharacter::AItemTestCharacter()
 	InteractionCheckDistance = 225.0f;
 
 	BaseEyeHeight = 74.0f;	 // Pawn 변수. 원래 64의 값으로 폰의 목부분에서 나타남.
+
+	PlayerInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerInventory"));
+	PlayerInventory->SetSlotsCapacity(20);
+	PlayerInventory->SetWeightCapacity(50.0f);
 }
 
 // Called when the game starts or when spawned
@@ -192,6 +197,14 @@ void AItemTestCharacter::Interact()
 	if (IsValid(TargetInteractable.GetObject()))
 	{
 		TargetInteractable->Interact(this);
+	}
+}
+
+void AItemTestCharacter::UpdateInteractionWidget() const
+{
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		HUD->UpdateInteractionWidget(&TargetInteractable->InteractableData);
 	}
 }
 

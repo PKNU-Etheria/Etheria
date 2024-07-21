@@ -2,6 +2,8 @@
 
 
 #include "World/Pickup.h"
+#include "Public/World/ItemTestCharacter.h"
+#include "Public/Components/InventoryComponent.h"
 
 // Sets default values
 APickup::APickup()
@@ -94,14 +96,39 @@ void APickup::TakePickup(const AItemTestCharacter* Taker)
 	{	// 해당 액터가 파괴되기 시작할 때! 즉 플레이어가 아이템을 주웠을 때
 		if (ItemReference)
 		{	// 아이템 정보가 유효하면
-			//if (UInventoryComponent* PlayerInventory = Taker->GetInventory())
-			//{	// 플레이어에 부착되어 있는 플레이어 인벤토리 컴포넌트를 체크.
+			if (UInventoryComponent* PlayerInventory = Taker->GetInventory())
+			{	// 플레이어에 부착되어 있는 플레이어 인벤토리 컴포넌트를 체크.
+				const FItemAddResult AddResult = PlayerInventory->HandleAddItem(ItemReference);
 
-			//}
+				switch (AddResult.OperationResult)
+				{
+				case EItemAddResult::IAR_NoItemAdded:
+					break;
+				case EItemAddResult::IAR_PartialAmountItemAdded:
+					UpdateInteractableData();
+					Taker->UpdateInteractionWidget();
+					break;
+				case EItemAddResult::IAR_AllItemAdded:
+					Destroy();
+					break;
+				default:
+					break;
+				}
+
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *AddResult.ResultMessage.ToString());
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Player inventory component is null!"));
+			}
 
 			// 플레이어 인벤토리에 아이템을 추가
 			// 추가 연산의 결과를 통해.
 			// 아이템을 파괴하거나 조정함.
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Pickup internal item reference was somehow null!"));
 		}
 	}
 }

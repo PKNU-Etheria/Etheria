@@ -103,29 +103,95 @@ int32 UInventoryComponent::RemoveAmountOfItem(UItemBase* ItemIn, int32 DesiredAm
 }
 
 void UInventoryComponent::SplitExistingStack(UItemBase* ItemIn, const int32 AmountToSplit)
-{
+{	// 인벤토리 내용물의 총 개수가 인벤토리 슬롯 용량보다 작거나 같다면.
+	// 인벤토리 안에 있는 내용물. 픽업 X
 	if (!(InventoryContents.Num() + 1 > InventorySlotsCapacity))
-	{
+	{	// 내용물을 쪼개서 넣는다.
 		RemoveAmountOfItem(ItemIn, AmountToSplit);
 		AddNewItem(ItemIn, AmountToSplit);
 	}
 }
 
-FItemAddResult UInventoryComponent::HandleNonStackableItems(UItemBase*, int32 RequestedAddAmount)
+FItemAddResult UInventoryComponent::HandleNonStackableItems(UItemBase* InputItem, int32 RequestedAddAmount)
 {
-	return FItemAddResult();
+	// InputItem의 weight가 유효한지 체크.
+	if (FMath::IsNearlyZero(InputItem->GetItemSingleWeight()) || InputItem->GetItemSingleWeight() < 0)
+	{
+		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. item has invalid weight value."), InputItem->TextData.Name));
+	}
+	// 무게가 초과 될 경우.
+	if (InventoryTotalwieght + InputItem->GetItemSingleWeight() > GetWeightCapacity())
+	{
+		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. item would overflow weight limit."), InputItem->TextData.Name));
+	}
+	// 공간이 초과될 경우.
+	if (InventoryContents.Num() + 1 > InventorySlotsCapacity)
+	{
+		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. All inventory slots are full."), InputItem->TextData.Name));
+	}
+
+	// 아이템 추가
+	AddNewItem(InputItem, RequestedAddAmount);
+	return FItemAddResult::AddedAll(RequestedAddAmount, FText::Format(FText::FromString("Successfully added {0} {1} to the inventory."), RequestedAddAmount, InputItem->TextData.Name));
 }
 
-int32 UInventoryComponent::HandleStackableItems(UItemBase*, int32 RequestedAddAmount)
+int32 UInventoryComponent::HandleStackableItems(UItemBase* InputItem, int32 RequestedAddAmount)
 {
 	return int32();
 }
 
 FItemAddResult UInventoryComponent::HandleAddItem(UItemBase* InputItem)
-{
+{	// 아이템이 인벤토리에 들어올 때마다 확인하는 시작점.
+	if (GetOwner())
+	{
+		const int32 InitialRequestedAddAmount = InputItem->Quantity;
+
+		// 스택이 없는 아이템
+		if (!InputItem->NumericData.bIsStackable)
+		{
+			return HandleNonStackableItems(InputItem, InitialRequestedAddAmount);
+		}
+
+		// 스택인 아이템
+		const int32 StackableAmountAdded = HandleStackableItems(InputItem, InitialRequestedAddAmount);	 // 추가되는 양
+
+		if (StackableAmountAdded == InitialRequestedAddAmount)
+		{
+			// return added all result
+		}
+
+		if (StackableAmountAdded < InitialRequestedAddAmount && StackableAmountAdded > 0)
+		{
+			// return added partial result
+		}
+
+		if (StackableAmountAdded <= 0)
+		{
+			// return added none result
+		}
+	}
+
 	return FItemAddResult();
 }
 
 void UInventoryComponent::AddNewItem(UItemBase* Item, const int32 AmountToAdd)
 {
+	UItemBase* NewItem;
+
+	if (Item->bIsCopy || Item->bIsPickup)
+	{	// 사본이거나 월드에서 픽업일 경우.
+		NewItem = Item;
+		NewItem->ResetItemFlags();
+	}
+	else
+	{	// 기존 아이템을 스택 분할하거나 다른 인벤토리 공간으로 드래깅(이동)할 경우
+		NewItem = Item->CreateItemCopy();
+	}
+
+	NewItem->OwningInventory = this;
+	NewItem->SetQuantity(AmountToAdd);
+
+	InventoryContents.Add(NewItem);
+	InventoryTotalwieght += NewItem->GetItemStackWeight();
+	OnInventoryUpdated.Broadcast();
 }
