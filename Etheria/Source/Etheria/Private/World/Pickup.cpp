@@ -8,7 +8,7 @@
 // Sets default values
 APickup::APickup()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	PickupMesh = CreateDefaultSubobject<UStaticMeshComponent>("PickupMesh");
@@ -87,7 +87,7 @@ void APickup::Interact(AItemTestCharacter* PlayerCharacter)
 	if (PlayerCharacter)
 	{
 		TakePickup(PlayerCharacter);
-//		UE_LOG(LogTemp, Warning, TEXT("Let's Player Pick Up Test"));
+		//		UE_LOG(LogTemp, Warning, TEXT("Let's Player Pick Up Test"));
 	}
 }
 

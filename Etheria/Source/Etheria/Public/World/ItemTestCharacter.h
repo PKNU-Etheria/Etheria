@@ -50,6 +50,10 @@ class ETHERIA_API AItemTestCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InterAction;
 
+	/** Toggle On/Off Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ToggleAction;
+
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
@@ -79,6 +83,8 @@ protected:
 
 	// To add mapping context
 	virtual void BeginPlay();
+
+	void ToggleMenu();	// 토클 온/오프하는 키와 바인딩 시킬 함수.
 
 	void PerformInteractionCheck();
 

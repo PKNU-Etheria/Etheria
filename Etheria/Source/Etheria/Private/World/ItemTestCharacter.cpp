@@ -208,6 +208,11 @@ void AItemTestCharacter::UpdateInteractionWidget() const
 	}
 }
 
+void AItemTestCharacter::ToggleMenu()
+{
+	HUD->ToggleMenu();
+}
+
 void AItemTestCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -220,12 +225,17 @@ void AItemTestCharacter::Tick(float DeltaSeconds)
 
 void AItemTestCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
+	check(PlayerInputComponent);
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-
+		
 		//Interaction TEST
 		EnhancedInputComponent->BindAction(InterAction, ETriggerEvent::Started, this, &AItemTestCharacter::BeginInteract);
 		EnhancedInputComponent->BindAction(InterAction, ETriggerEvent::Completed, this, &AItemTestCharacter::EndInteract);
+
+		// Toggle On/Off
+		EnhancedInputComponent->BindAction(ToggleAction, ETriggerEvent::Started, this, &AItemTestCharacter::ToggleMenu);
 
 		//Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
