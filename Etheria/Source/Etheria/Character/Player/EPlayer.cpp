@@ -14,6 +14,7 @@
 #include "AbilitySystemComponent.h"
 #include "EPlayerController.h"
 #include "EPlayerState.h"
+#include "Components/InteractComponent.h"
 
 AEPlayer::AEPlayer()
 {
@@ -61,6 +62,9 @@ AEPlayer::AEPlayer()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	CameraComp->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	// Create Interact Component
+	InteractComp = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
 
 	// Input
 	InitializeInputKey();
@@ -173,7 +177,7 @@ void AEPlayer::SetupGASInputComponent()
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AEPlayer::GASInputPressed, 0);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AEPlayer::GASInputReleased, 0);
 
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AEPlayer::Interact, 1);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AEPlayer::Interact, 1);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AEPlayer::Attack, 2);
 		EnhancedInputComponent->BindAction(SkillAction, ETriggerEvent::Triggered, this, &AEPlayer::Skill, 3);
 		EnhancedInputComponent->BindAction(SpecialSkillAction, ETriggerEvent::Triggered, this, &AEPlayer::SpecialSkill, 4);
@@ -287,6 +291,7 @@ void AEPlayer::Look(const FInputActionInstance& Instance)
 void AEPlayer::Interact(int32 InputID)
 {
 	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : Interact"));
+	InteractComp->Interact();
 }
 
 void AEPlayer::Attack(int32 InputID)
