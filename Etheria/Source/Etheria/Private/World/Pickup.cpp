@@ -78,7 +78,7 @@ void APickup::EndFocus()
 {
 	if (PickupMesh)
 	{
-		PickupMesh->SetRenderCustomDepth(true);	// 메쉬의 경계에 접근 허용
+		PickupMesh->SetRenderCustomDepth(false);	// 메쉬의 경계에 접근 허용
 	}
 }
 
@@ -87,12 +87,13 @@ void APickup::Interact(AItemTestCharacter* PlayerCharacter)
 	if (PlayerCharacter)
 	{
 		TakePickup(PlayerCharacter);
+//		UE_LOG(LogTemp, Warning, TEXT("Let's Player Pick Up Test"));
 	}
 }
 
 void APickup::TakePickup(const AItemTestCharacter* Taker)
 {
-	if (IsPendingKillPending())
+	if (!IsPendingKillPending())
 	{	// 해당 액터가 파괴되기 시작할 때! 즉 플레이어가 아이템을 주웠을 때
 		if (ItemReference)
 		{	// 아이템 정보가 유효하면
