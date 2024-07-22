@@ -18,7 +18,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Interaction Widget | Player Reference")
 	AItemTestCharacter* PlayerReference;
 
-	void UpdateWidget(const FInteractableData* InteractableData);
+	void UpdateWidget(const FInteractableData* InteractableData) const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Interaction Widget | interactable Data")

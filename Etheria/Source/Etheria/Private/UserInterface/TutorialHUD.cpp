@@ -27,7 +27,27 @@ void ATutorialHUD::HideMenu()
 	}
 }
 
-void ATutorialHUD::ShowInteractionWidget()
+void ATutorialHUD::ToggleMenu()
+{	// 메뉴창이 떠있으면
+	if (bIsMenuVisble)
+	{	// 메뉴창을 먼저 숨김
+		HideMenu();
+
+		const FInputModeGameOnly InputMode;
+		GetOwningPlayerController()->SetInputMode(InputMode);
+		GetOwningPlayerController()->SetShowMouseCursor(false);
+	}
+	else
+	{	// 메뉴가 열려있을 때 UI요소들을 클릭할 수 있음. 캐릭터 제어 , 카메라 무빙 등도 포함.
+		DisplayMenu();
+
+		const FInputModeGameAndUI InputMode;
+		GetOwningPlayerController()->SetInputMode(InputMode);
+		GetOwningPlayerController()->SetShowMouseCursor(true);
+	}
+}
+
+void ATutorialHUD::ShowInteractionWidget() const
 {
 	if (InteractionWidget)
 	{
@@ -35,7 +55,7 @@ void ATutorialHUD::ShowInteractionWidget()
 	}
 }
 
-void ATutorialHUD::HideInteractionWidget()
+void ATutorialHUD::HideInteractionWidget() const
 {
 	if (InteractionWidget)
 	{
@@ -43,7 +63,7 @@ void ATutorialHUD::HideInteractionWidget()
 	}
 }
 
-void ATutorialHUD::UpdateInteractionWidget(const FInteractableData* InteractableData)
+void ATutorialHUD::UpdateInteractionWidget(const FInteractableData* InteractableData) const
 {
 	if (InteractionWidget)
 	{
@@ -52,7 +72,7 @@ void ATutorialHUD::UpdateInteractionWidget(const FInteractableData* Interactable
 			InteractionWidget->SetVisibility(ESlateVisibility::Visible);
 		}
 
-		//InteractionWidget->UpdateWidget(InteractableData);
+		InteractionWidget->UpdateWidget(InteractableData);
 	}
 }
 

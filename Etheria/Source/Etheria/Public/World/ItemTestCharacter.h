@@ -6,7 +6,10 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Public/Interfaces/InteractionInterface.h"
+#include "Public/UserInterface/TutorialHUD.h"
 #include "ItemTestCharacter.generated.h"
+
+class UInventoryComponent;
 
 USTRUCT()
 struct FInteractionData	// 상호작용에 대한 데이터
@@ -47,6 +50,10 @@ class ETHERIA_API AItemTestCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InterAction;
 
+	/** Toggle On/Off Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ToggleAction;
+
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
@@ -77,6 +84,8 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	void ToggleMenu();	// 토클 온/오프하는 키와 바인딩 시킬 함수.
+
 	void PerformInteractionCheck();
 
 	void FoundInteractable(AActor* NewInteractable);
@@ -94,9 +103,15 @@ protected:
 	/// <summary>
 	/// variables
 	/// </summary>
+	
+	UPROPERTY()
+	ATutorialHUD* HUD;
 
 	UPROPERTY(VisibleAnywhere, Category = "Character | Interaction")
 	TScriptInterface<IInteractionInterface> TargetInteractable;	// 상호작용 가능한 항목들
+
+	UPROPERTY(VisibleAnywhere, Category = "Character | Inventory")
+	UInventoryComponent* PlayerInventory;
 
 	float InteractionCheckFrequency;	// 상호작용 주기
 
@@ -113,4 +128,8 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	// 상호작용 시간이 0인 경우에는 false 
 	FORCEINLINE bool IsInteracting() const { return GetWorldTimerManager().IsTimerActive(TimerHandle_Interaction); };
+
+	FORCEINLINE UInventoryComponent* GetInventory() const { return PlayerInventory; };
+
+	void UpdateInteractionWidget() const;
 };

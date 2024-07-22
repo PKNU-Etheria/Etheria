@@ -2,6 +2,8 @@
 
 
 #include "World/ItemTestGameMode.h"
+#include "UObject/ConstructorHelpers.h"
+#include "GameFramework/HUD.h"
 
 AItemTestGameMode::AItemTestGameMode()
 {
@@ -9,5 +11,11 @@ AItemTestGameMode::AItemTestGameMode()
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
+	}
+
+	static ConstructorHelpers::FClassFinder<AHUD> HUDBPClass(TEXT("/Game/Item/BP_TutorialHUD.BP_TutorialHUD_C"));
+	if (HUDBPClass.Succeeded())
+	{
+		HUDClass = HUDBPClass.Class;
 	}
 }

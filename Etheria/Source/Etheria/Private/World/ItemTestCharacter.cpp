@@ -4,6 +4,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Public/Components/InventoryComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -50,6 +51,10 @@ AItemTestCharacter::AItemTestCharacter()
 	InteractionCheckDistance = 225.0f;
 
 	BaseEyeHeight = 74.0f;	 // Pawn 변수. 원래 64의 값으로 폰의 목부분에서 나타남.
+
+	PlayerInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerInventory"));
+	PlayerInventory->SetSlotsCapacity(20);
+	PlayerInventory->SetWeightCapacity(50.0f);
 }
 
 // Called when the game starts or when spawned
@@ -66,6 +71,8 @@ void AItemTestCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	HUD = Cast<ATutorialHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 }
 
 void AItemTestCharacter::PerformInteractionCheck()
@@ -124,6 +131,8 @@ void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
 	InteractionData.CurrentInteractable = NewInteractable;
 	TargetInteractable = NewInteractable;
 
+	HUD->UpdateInteractionWidget(&TargetInteractable->InteractableData);
+
 	TargetInteractable->BeginFocus(); // 하이라이트 시작 (새로운 타겟)
 }
 
@@ -140,6 +149,9 @@ void AItemTestCharacter::NoInteractableFound()
 		{
 			TargetInteractable->EndFocus();
 		}
+
+		HUD->HideInteractionWidget();
+
 		// 타겟 널 세팅
 		InteractionData.CurrentInteractable = nullptr;
 		TargetInteractable = nullptr;
@@ -188,6 +200,19 @@ void AItemTestCharacter::Interact()
 	}
 }
 
+void AItemTestCharacter::UpdateInteractionWidget() const
+{
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		HUD->UpdateInteractionWidget(&TargetInteractable->InteractableData);
+	}
+}
+
+void AItemTestCharacter::ToggleMenu()
+{
+	HUD->ToggleMenu();
+}
+
 void AItemTestCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -200,12 +225,17 @@ void AItemTestCharacter::Tick(float DeltaSeconds)
 
 void AItemTestCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
+	check(PlayerInputComponent);
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-
+		
 		//Interaction TEST
 		EnhancedInputComponent->BindAction(InterAction, ETriggerEvent::Started, this, &AItemTestCharacter::BeginInteract);
 		EnhancedInputComponent->BindAction(InterAction, ETriggerEvent::Completed, this, &AItemTestCharacter::EndInteract);
+
+		// Toggle On/Off
+		EnhancedInputComponent->BindAction(ToggleAction, ETriggerEvent::Started, this, &AItemTestCharacter::ToggleMenu);
 
 		//Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);

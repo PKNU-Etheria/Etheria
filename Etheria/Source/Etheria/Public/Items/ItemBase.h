@@ -7,6 +7,8 @@
 #include "EtheriaCharacter.h"
 #include "ItemBase.generated.h"
 
+class UInventoryComponent;
+
 /**
  * 
  */
@@ -20,8 +22,8 @@ public:
 	/// Properties & Variables
 	/// </summary>
 	
-	//UPROPERTY()
-	//UInventoryComponent* OwningInvectory;
+	UPROPERTY()
+	UInventoryComponent* OwningInventory;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	int32 Quantity;
@@ -47,10 +49,15 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FItemAssetData AssetData;
 
+	bool bIsCopy;	// 사본인가? 이미 인벤토리안에 해당 아이템이 있다면
+	bool bIsPickup;	// 월드에서 주울수있다면.
+
 	/// <summary>
 	/// Functions
 	/// </summary>
 	UItemBase();
+
+	void ResetItemFlags();
 
 	UItemBase* CreateItemCopy() const;
 

@@ -8,6 +8,14 @@
 #include "Components/StaticMeshComponent.h"
 #include "E_TestItem.generated.h"
 
+UENUM(BlueprintType)
+enum class EItemState : uint8
+{
+    Idle,
+    MovingPlayer,
+    Collected
+};
+
 UCLASS()
 class ETHERIA_API AE_TestItem : public AActor
 {
@@ -37,8 +45,22 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties")
     FString ItemName;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties")
+    EItemState CurrentState;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties")
+    float MoveSpeed;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties")
+    float AccelerationRate;
+
+private:
     UFUNCTION()
     void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+    void MoveToPlayer(float DeltaTime);
     void PickupItem(AActor* OtherActor);
+
+    AActor* TargetPlayer;
+    float CurrentMoveSpeed;
 };
