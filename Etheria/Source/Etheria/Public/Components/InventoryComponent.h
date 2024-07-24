@@ -105,7 +105,7 @@ public:
 
 	// Getters
 	UFUNCTION(Category = "Inventory")
-	FORCEINLINE float GetInventoryTotalWeight() const { return InventoryTotalwieght; };	// 인벤토리 무게 반환
+	FORCEINLINE float GetInventoryTotalWeight() const { return InventoryTotalWeight; };	// 인벤토리 무게 반환
 	UFUNCTION(Category = "Inventory")
 	FORCEINLINE float GetWeightCapacity() const { return InventoryWeightCapacity; };	// 인벤토리 용량 반환
 	UFUNCTION(Category = "Inventory")
@@ -142,7 +142,7 @@ protected:
 	/// Variables
 	/// </summary>
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
-	float InventoryTotalwieght;
+	float InventoryTotalWeight;
 	UPROPERTY(EditInstanceOnly, Category = "Inventory")
 	int32 InventorySlotsCapacity;
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
