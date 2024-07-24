@@ -4,7 +4,9 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/TimelineComponent.h"
 #include "Public/Components/InventoryComponent.h"
+#include "Public/World/Pickup.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -45,12 +47,18 @@ AItemTestCharacter::AItemTestCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
+	
+	// 줌으로 쓸 카메라 위치들 세팅
+	AimingCameraTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("AimingCameraTimeline"));
+	DefaultCameraLocation = FVector{ 0.0f, 0.0f, 65.0f };
+	AimingCameraLocation = FVector{ 175.0f, 50.0f, 55.0f };
+	CameraBoom->SocketOffset = DefaultCameraLocation;
+	
 	// 상호작용 변수들 초기화
 	InteractionCheckFrequency = 0.1f;
 	InteractionCheckDistance = 225.0f;
 
-	BaseEyeHeight = 74.0f;	 // Pawn 변수. 원래 64의 값으로 폰의 목부분에서 나타남.
+	BaseEyeHeight = 76.0f;	 // Pawn 변수. 원래 64의 값으로 폰의 목부분에서 나타남.
 
 	PlayerInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerInventory"));
 	PlayerInventory->SetSlotsCapacity(20);
@@ -73,13 +81,37 @@ void AItemTestCharacter::BeginPlay()
 	}
 
 	HUD = Cast<ATutorialHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+	FOnTimelineFloat AimLerpAlphaValue;
+	FOnTimelineEvent TimelineFinishedEvent;
+	AimLerpAlphaValue.BindUFunction(this, FName("UpdateCameraTimeline"));
+	TimelineFinishedEvent.BindUFunction(this, FName("CameraTimelineEnd"));
+
+	if (AimingCameraTimeline && AimingCameraCurve)
+	{
+		AimingCameraTimeline->AddInterpFloat(AimingCameraCurve, AimLerpAlphaValue);
+		AimingCameraTimeline->SetTimelineFinishedFunc(TimelineFinishedEvent);
+	}
 }
 
 void AItemTestCharacter::PerformInteractionCheck()
 {	// line trace
 	InteractionData.LastInteractionCheckTime = GetWorld()->GetTimeSeconds();
 
-	FVector TraceStart{ GetPawnViewLocation()};
+	FVector TraceStart{ FVector::ZeroVector };
+
+	if (!bAiming)
+	{
+		InteractionCheckDistance = 225.0f;
+		TraceStart = GetPawnViewLocation();
+	}
+	else
+	{
+		InteractionCheckDistance = 325.0f;
+		TraceStart = FollowCamera->GetComponentLocation();
+	}
+
+	//FVector TraceStart{ GetPawnViewLocation()};
 	FVector TraceEnd{ TraceStart + (GetViewRotation().Vector() * InteractionCheckDistance) };	// 회전은 폰 메시가 아닌 캐릭터 컨트롤러에서 이루어짐. -> 마우스로 카메라 위치를 변경.
 
 	// 벡터 내적. 정면 벡터와 회전 벡터.
@@ -211,6 +243,84 @@ void AItemTestCharacter::UpdateInteractionWidget() const
 void AItemTestCharacter::ToggleMenu()
 {
 	HUD->ToggleMenu();
+	// 메뉴가 켜지면
+	if (HUD->bIsMenuVisble)
+	{	// 줌 취소
+		StopAiming();
+	}
+}
+
+void AItemTestCharacter::Aim()
+{	// 줌
+	if (!HUD->bIsMenuVisble)
+	{	// 메뉴가 아닌 상태라면 줌 시전.
+		bAiming = true;
+		bUseControllerRotationYaw = true;	// 플레이어와 카메라는 같이 움직인다.
+		GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+
+		if (AimingCameraTimeline)	// 타임라인이 존재할 경우
+		{	// 해당 타임라인에 따른 플레이어 줌이 선형시간에 따라 움직임.
+			AimingCameraTimeline->PlayFromStart();
+		}
+	}
+}
+
+void AItemTestCharacter::StopAiming()
+{
+	if (bAiming)
+	{
+		bAiming = false;
+		bUseControllerRotationYaw = false;	// 플레이어와 카메라 독립
+		HUD->HideCrosshair();
+		GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+
+		if (AimingCameraTimeline)
+		{	// 역으로 되돌림.
+			AimingCameraTimeline->Reverse();
+		}
+	}
+}
+
+void AItemTestCharacter::UpdateCameraTimeline(const float TimelineValue) const
+{	// 기존 카메라 위치와 줌 카메라 위치를 타임라인에 따른 확대 줌 기능.
+	const FVector CameraLocation = FMath::Lerp(DefaultCameraLocation, AimingCameraLocation, TimelineValue);
+	CameraBoom->SocketOffset = CameraLocation;
+}
+
+void AItemTestCharacter::CameraTimelineEnd()
+{
+	if (AimingCameraTimeline)
+	{
+		if (AimingCameraTimeline->GetPlaybackPosition() != 0.0f)
+		{
+			HUD->ShowCrosshair();
+		}
+	}
+}
+
+void AItemTestCharacter::DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop)
+{	// 인벤토리 내에 드랍하고 싶은 아이템이 존재할 경우
+	if (PlayerInventory->FindMatchingItem(ItemToDrop))
+	{	// 새로운 액터를 월드에 생성하기 위한 클래스 변수(다양한 구조체 함수 함축)
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.bNoFail = true;
+		// 생성된 아이템이 벽 내부와 같은 곳에 스폰되지 않도록 즉. 어떤 오브젝트와 오버라이드 하는지 체크
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		// 캐릭터 앞에 던진다는 느낌 -> 캐릭터 내부에서 드랍되는 것보다 나음.
+		const FVector SpawnLocation{ GetActorLocation() + (GetActorForwardVector() * 50.0f) };
+		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
+
+		const int32 RemovedQuantity = PlayerInventory->RemoveAmountOfItem(ItemToDrop, QuantityToDrop);
+
+		APickup* Pickup = GetWorld()->SpawnActor<APickup>(APickup::StaticClass(), SpawnTransform, SpawnParams);
+
+		Pickup->InitializeDrop(ItemToDrop, RemovedQuantity);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item to drop was somehow null!"));
+	}
 }
 
 void AItemTestCharacter::Tick(float DeltaSeconds)
@@ -233,6 +343,9 @@ void AItemTestCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 		//Interaction TEST
 		EnhancedInputComponent->BindAction(InterAction, ETriggerEvent::Started, this, &AItemTestCharacter::BeginInteract);
 		EnhancedInputComponent->BindAction(InterAction, ETriggerEvent::Completed, this, &AItemTestCharacter::EndInteract);
+
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &AItemTestCharacter::Aim);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &AItemTestCharacter::StopAiming);
 
 		// Toggle On/Off
 		EnhancedInputComponent->BindAction(ToggleAction, ETriggerEvent::Started, this, &AItemTestCharacter::ToggleMenu);
