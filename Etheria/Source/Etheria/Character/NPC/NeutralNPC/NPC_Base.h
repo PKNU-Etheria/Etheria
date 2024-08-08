@@ -6,10 +6,11 @@
 #include "GameFramework/Character.h"
 #include "NPCInterface.h"
 #include "EtheriaStructs.h"
+#include "Etheria/Character/ECharacter.h"
 #include "NPC_Base.generated.h"
 
 UCLASS()
-class ETHERIA_API ANPC_Base : public ACharacter, public INPCInterface
+class ETHERIA_API ANPC_Base : public AECharacter, public INPCInterface
 {
 	GENERATED_BODY()
 
