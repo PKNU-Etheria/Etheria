@@ -26,6 +26,7 @@ UItemBase* UItemBase::CreateItemCopy() const
 	ItemCopy->NumericData = this->NumericData;
 	ItemCopy->ItemStatistics = this->ItemStatistics;
 	ItemCopy->AssetData = this->AssetData;
+
 	ItemCopy->bIsCopy = true;
 
 	return ItemCopy;
@@ -38,12 +39,16 @@ void UItemBase::SetQuantity(const int32 NewQuantity)
 		Quantity = FMath::Clamp(NewQuantity, 0, NumericData.bIsStackable ? NumericData.MaxStackSize : 1);
 
 		//  하나의 스택이 다른 스택에 병합되거나 삭제될 때 - 수량을 변경할 때마다 필터링(setQAuantity 함수를 통해)
-		if (OwningInventory)
+		if (this->OwningInventory)
 		{
-			if(Quantity <= 0)
+			if(this->Quantity <= 0)
 			{
-				OwningInventory->RemoveSingleInstanceOfItem(this);
+				this->OwningInventory->RemoveSingleInstanceOfItem(this);
 			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ItemBase OwningInventory was null (item May be a pickup)."));
 		}
 	}
 

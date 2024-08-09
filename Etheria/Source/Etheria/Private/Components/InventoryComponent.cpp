@@ -67,7 +67,7 @@ UItemBase* UInventoryComponent::FindNextPartialStack(UItemBase* ItemIn) const
 
 int32 UInventoryComponent::CalculateWeightAddAmount(UItemBase* ItemIn, int32 RequestedAddAmount)
 {
-	const int32 WeightMaxAddAmount = FMath::FloorToInt((GetWeightCapacity() - InventoryTotalwieght) / ItemIn->GetItemSingleWeight());
+	const int32 WeightMaxAddAmount = FMath::FloorToInt((GetWeightCapacity() - InventoryTotalWeight) / ItemIn->GetItemSingleWeight());
 	if (WeightMaxAddAmount >= RequestedAddAmount)
 	{
 		return RequestedAddAmount;
@@ -95,7 +95,7 @@ int32 UInventoryComponent::RemoveAmountOfItem(UItemBase* ItemIn, int32 DesiredAm
 
 	ItemIn->SetQuantity(ItemIn->Quantity - ActualAmountToRemove);
 
-	InventoryTotalwieght -= ActualAmountToRemove * ItemIn->GetItemSingleWeight();
+	InventoryTotalWeight -= ActualAmountToRemove * ItemIn->GetItemSingleWeight();
 
 	OnInventoryUpdated.Broadcast();
 	
@@ -120,7 +120,7 @@ FItemAddResult UInventoryComponent::HandleNonStackableItems(UItemBase* InputItem
 		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. item has invalid weight value."), InputItem->TextData.Name));
 	}
 	// 무게가 초과 될 경우.
-	if (InventoryTotalwieght + InputItem->GetItemSingleWeight() > GetWeightCapacity())
+	if (InventoryTotalWeight + InputItem->GetItemSingleWeight() > GetWeightCapacity())
 	{
 		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. item would overflow weight limit."), InputItem->TextData.Name));
 	}
@@ -137,6 +137,88 @@ FItemAddResult UInventoryComponent::HandleNonStackableItems(UItemBase* InputItem
 
 int32 UInventoryComponent::HandleStackableItems(UItemBase* InputItem, int32 RequestedAddAmount)
 {
+	if (RequestedAddAmount <= 0 || FMath::IsNearlyZero(InputItem->GetItemStackWeight()))
+	{
+		// invalid item data
+		return 0;
+	}
+
+	int32 AmountToDistribute = RequestedAddAmount;	// 인벤토리에 넣기 위한 남은 개수
+
+	// 넣을 아이템이 인벤토리에 이미 존재할 경우와 개수가 최대 개수가 아닐경우.
+	UItemBase* ExistingItemStack = FindNextPartialStack(InputItem);
+
+	// distribute item stack over existing stacks
+	while (ExistingItemStack)
+	{	// 풀 스택까지 남은 개수 가져오기. (들어갈 수 있는 허용 값)
+		const int32 AmountToMakeFullStack = CalculateNumberForFullStack(ExistingItemStack, AmountToDistribute);
+		//  무게 용량 고려하기. 풀 스택까지 남은 양 중에서 실제로 넣을 수 있는 양.
+		const int32 WeightLimitAddAmount = CalculateWeightAddAmount(ExistingItemStack, AmountToMakeFullStack);
+
+		// 추가할 수 있는 양이 허용하는 용량을 넘지 않는 경우. 추가 가능한 무게가 있을 경우
+		if (WeightLimitAddAmount > 0)
+		{	// 인벤토리에 있던 기존 아이템 수량 변경 및 인벤토리 무게 변경.
+			ExistingItemStack->SetQuantity(ExistingItemStack->Quantity + WeightLimitAddAmount);
+			InventoryTotalWeight += (ExistingItemStack->GetItemSingleWeight() * WeightLimitAddAmount);
+			// 인벤에 추가한 스택 값만큼 주운 아이템 수량을 다시 조정해주기 위해 연산
+			AmountToDistribute -= WeightLimitAddAmount;
+			// 주운 아이템 수량 다시 조절.
+			InputItem->SetQuantity(AmountToDistribute);
+
+			// 아이템을 추가했을 때 최대 용량이 초과할 경우
+			if (InventoryTotalWeight + ExistingItemStack->GetItemSingleWeight() > InventoryWeightCapacity)
+			{	// 총 용량이 인벤토리 현재 용량과 같다면. 즉, 최대 용량에 도달했다면 루프 탈출.
+				OnInventoryUpdated.Broadcast();	// 인벤 업데이트
+				return RequestedAddAmount - AmountToDistribute;	// 들어간 개수
+			}
+		}
+		else if(WeightLimitAddAmount <= 0)	// 만약 허용되는 개수가 0이라면
+		{	// 남은 스택은 있지만 인벤토리가 허용할 수 있는 무게 용량이 찼을 경우.
+			// 아이템을 추가할 수 있는 용량은 허용되지 않음. 추가되는 것을 막기.
+			if (AmountToDistribute != RequestedAddAmount)
+			{	
+				OnInventoryUpdated.Broadcast();
+				return RequestedAddAmount - AmountToDistribute;
+			}
+
+			return 0;
+		}
+
+		if (AmountToDistribute <= 0)	// 용량도 개수도 모두 다 스택 가능
+		{	// 모든 아이템은 기존 스택 아이템에 추가됨.
+			OnInventoryUpdated.Broadcast();
+			return RequestedAddAmount;
+		}
+		// 여전히 쌓을 수 있는 공간이 있을 수도 있기 때문에 한번더 체크.
+		ExistingItemStack = FindNextPartialStack(InputItem);
+	}
+
+	// 쌓을 수 없다면 새로운 인벤토리 슬롯을 만들어야함. 공간이 있는지 체크.
+	if (InventoryContents.Num() + 1 <= InventorySlotsCapacity)
+	{	// 스택에 여유가 없어서 새로운 공간에 해당 아이템을 새롭게 만들 수 있느냐?
+		// 공간이 있을 경우. 남은 아이템 수량을 추가할 공간이 있는지 확인.
+		const int32 WeightLimitAddAmount = CalculateWeightAddAmount(InputItem, AmountToDistribute);
+
+		if (WeightLimitAddAmount > 0)
+		{	// 추가할 수 있는 양이 전체 양보다 작을 경우.
+			if (WeightLimitAddAmount < AmountToDistribute)
+			{	// 일부만 추가할 수 있도록 한다.
+				AmountToDistribute -= WeightLimitAddAmount;
+				InputItem->SetQuantity(AmountToDistribute);
+
+				// 추가할 수 있는 수량만큼 아이템을 새롭게 만들어서 복제한다.
+				AddNewItem(InputItem->CreateItemCopy(), WeightLimitAddAmount);
+				return RequestedAddAmount - AmountToDistribute;
+			}
+			// 아이템의 모든 수량을 추가할 수 있을 경우. 다 추가한다.
+			AddNewItem(InputItem, AmountToDistribute);
+			return RequestedAddAmount;
+		}
+		// 아이템 슬롯은 여유가 있지만 용량이 부족할 경우.
+		return RequestedAddAmount - AmountToDistribute;
+	}
+
+	// 쌓을 수 없고 추가 용량 슬롯이 존재하지 않을 경우.
 	return 0;
 }
 
@@ -194,6 +276,6 @@ void UInventoryComponent::AddNewItem(UItemBase* Item, const int32 AmountToAdd)
 	NewItem->SetQuantity(AmountToAdd);
 
 	InventoryContents.Add(NewItem);
-	InventoryTotalwieght += NewItem->GetItemStackWeight();
+	InventoryTotalWeight += NewItem->GetItemStackWeight();
 	OnInventoryUpdated.Broadcast();
 }

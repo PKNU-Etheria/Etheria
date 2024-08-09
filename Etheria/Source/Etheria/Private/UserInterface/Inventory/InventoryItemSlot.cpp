@@ -3,10 +3,15 @@
 
 #include "UserInterface/Inventory/InventoryItemSlot.h"
 #include "Public/UserInterface/Inventory/InventoryTooltip.h"
+#include "Public/UserInterface/Inventory/DragItemVisual.h"
+#include "Public/UserInterface/Inventory/ItemDragDropOperation.h"
 #include "Components/Border.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Public/Items/ItemBase.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Input/Reply.h"
+#include "Input/Events.h"
 
 void UInventoryItemSlot::NativeOnInitialized()
 {
@@ -40,7 +45,7 @@ void UInventoryItemSlot::NativeConstruct()
 			ItemBorder->SetBrushColor(FLinearColor::Yellow);
 			break;
 		case EItemQuality::Special:
-			ItemBorder->SetBrushColor(FLinearColor(100.0f, 65.0f, 0.0f, 1.0f));
+			ItemBorder->SetBrushColor(FLinearColor(1.0f, 0.45f, 0.0f, 1.0f));
 			break;
 		default:
 			break;
@@ -59,10 +64,19 @@ void UInventoryItemSlot::NativeConstruct()
 	}
 }
 
-//FReply UInventoryItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-//{
-//	return nullptr;
-//}
+FReply UInventoryItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	FReply Reply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
+	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	{
+		return Reply.Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
+	}
+
+	// submenu on right click will happen here
+
+	return Reply.Unhandled();
+}
 
 void UInventoryItemSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
@@ -70,6 +84,26 @@ void UInventoryItemSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 
 void UInventoryItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
+	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
+
+	if (DragItemVisualClass)
+	{
+		const TObjectPtr<UDragItemVisual> DragVisual = CreateWidget<UDragItemVisual>(this, DragItemVisualClass);
+		DragVisual->ItemIcon->SetBrushFromTexture(ItemReference->AssetData.Icon);
+		DragVisual->ItemBorder->SetBrushColor(ItemBorder->GetBrushColor());
+		
+		ItemReference->NumericData.bIsStackable ? DragVisual->ItemQuantity->SetText(FText::AsNumber(ItemReference->Quantity)) : DragVisual->ItemQuantity->SetVisibility(ESlateVisibility::Collapsed);
+
+		UItemDragDropOperation* DragItemOperation = NewObject<UItemDragDropOperation>();
+		DragItemOperation->SourceItem = ItemReference;
+		DragItemOperation->SourceInventory = ItemReference->OwningInventory;
+
+		DragItemOperation->DefaultDragVisual = DragVisual;
+		DragItemOperation->Pivot = EDragPivot::TopLeft; // 마우스에 부착되는 위치
+
+		OutOperation = DragItemOperation;
+
+	}
 }
 
 bool UInventoryItemSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
