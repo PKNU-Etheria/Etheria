@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "EtheriaStructs.h"
 #include "EtheriaEnums.h"
+#include "Character/NPC/NeutralNPC/NPCInterface.h"
 #include "QuestComponent.generated.h"
 
 
@@ -27,7 +28,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	void Interact();
+	void Interact(INPCInterface* InNPC);
 
 	void TryAcceptQuest(int QuestID);
 	void TryClearQuest(int QuestID);

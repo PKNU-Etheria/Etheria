@@ -48,17 +48,17 @@ AItemTestCharacter::AItemTestCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	
-	// ÁÜÀ¸·Î ¾µ Ä«¸Þ¶ó À§Ä¡µé ¼¼ÆÃ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	AimingCameraTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("AimingCameraTimeline"));
 	DefaultCameraLocation = FVector{ 0.0f, 0.0f, 65.0f };
 	AimingCameraLocation = FVector{ 175.0f, 50.0f, 55.0f };
 	CameraBoom->SocketOffset = DefaultCameraLocation;
 	
-	// »óÈ£ÀÛ¿ë º¯¼öµé ÃÊ±âÈ­
+	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 	InteractionCheckFrequency = 0.1f;
 	InteractionCheckDistance = 225.0f;
 
-	BaseEyeHeight = 76.0f;	 // Pawn º¯¼ö. ¿ø·¡ 64ÀÇ °ªÀ¸·Î ÆùÀÇ ¸ñºÎºÐ¿¡¼­ ³ªÅ¸³².
+	BaseEyeHeight = 76.0f;	 // Pawn ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ 64ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ÎºÐ¿ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½.
 
 	PlayerInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerInventory"));
 	PlayerInventory->SetSlotsCapacity(20);
@@ -112,30 +112,30 @@ void AItemTestCharacter::PerformInteractionCheck()
 	}
 
 	//FVector TraceStart{ GetPawnViewLocation()};
-	FVector TraceEnd{ TraceStart + (GetViewRotation().Vector() * InteractionCheckDistance) };	// È¸ÀüÀº Æù ¸Þ½Ã°¡ ¾Æ´Ñ Ä³¸¯ÅÍ ÄÁÆ®·Ñ·¯¿¡¼­ ÀÌ·ç¾îÁü. -> ¸¶¿ì½º·Î Ä«¸Þ¶ó À§Ä¡¸¦ º¯°æ.
+	FVector TraceEnd{ TraceStart + (GetViewRotation().Vector() * InteractionCheckDistance) };	// È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Þ½Ã°ï¿½ ï¿½Æ´ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½. -> ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
-	// º¤ÅÍ ³»Àû. Á¤¸é º¤ÅÍ¿Í È¸Àü º¤ÅÍ.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¿ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	float LookDirection = FVector::DotProduct(GetActorForwardVector(), GetViewRotation().Vector());
-	// ÆùÀÌ ¹Ù¶óº¸°í ÀÖ´Â ¹æÇâ°ú °°Àº ¹æÇâÀ» ¹Ù¶óº¸°í ÀÖÁö ¾Ê´Â ÇÑ ¶óÀÎ Æ®·¹ÀÌ½º¸¦ ÀüÇô ÁøÇàÇÏÁö ¾ÊÀ½.
-	if (LookDirection > 0) // ¾ç¼ö´Â °°Àº ¹æÇâ, À½¼ö´Â ´Ù¸¥ ¹æÇâ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸°ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+	if (LookDirection > 0) // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 	{
 		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 1.0f, 0, 2.0f);
 
-		FCollisionQueryParams QueryParams;	// tracingÇÏ´Â ±¸Á¶Ã¼.
-		QueryParams.AddIgnoredActor(this);	// ³ª ÀÚ½ÅÀº °¨ÁöµÇ¾î¼± ¾È‰Î
-		FHitResult TraceHit;	// trace °á°ú ÀúÀå
-		// Á÷¼±À» ÀÌ¿ëÇÑ Ãæµ¹ ÆÇÁ¤
+		FCollisionQueryParams QueryParams;	// tracingï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼.
+		QueryParams.AddIgnoredActor(this);	// ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾î¼± ï¿½È‰ï¿½
+		FHitResult TraceHit;	// trace ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½
 		if (GetWorld()->LineTraceSingleByChannel(TraceHit, TraceStart, TraceEnd, ECC_Visibility, QueryParams))
-		{	// Ãæµ¹ÇÏ´Â ¾×ÅÍ°¡ »óÈ£ÀÛ¿ë ÀÎÅÍÆäÀÌ½º°¡ Á¸ÀçÇÒ ½Ã¿¡
+		{	// ï¿½æµ¹ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¿ï¿½
 			if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
 			{
-				// ÇöÀç »óÈ£ÀÛ¿ë µ¥ÀÌÅÍ¿Í ´Ù¸¦ ½Ã. ÇöÀç ¾×ÅÍ·Î ±³Ã¼
+				// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½Ã¼
 				if (TraceHit.GetActor() != InteractionData.CurrentInteractable)
 				{
 					FoundInteractable(TraceHit.GetActor());
 					return;
 				}
-				// µ¿ÀÏ ½Ã ½ºÅµ.
+				// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Åµ.
 				if (TraceHit.GetActor() == InteractionData.CurrentInteractable)
 				{
 					return;
@@ -143,12 +143,12 @@ void AItemTestCharacter::PerformInteractionCheck()
 			}
 		}
 	}
-	// »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¾×ÅÍ°¡ ¾øÀ½.
+	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	NoInteractableFound();
 }
 
 void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
-{	// »óÈ£ÀÛ¿ëÇÏ´Â °æ¿ì
+{	// ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
 	if (IsInteracting())
 	{
 		EndInteract();
@@ -157,7 +157,7 @@ void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
 	if (InteractionData.CurrentInteractable)
 	{
 		TargetInteractable = InteractionData.CurrentInteractable;
-		TargetInteractable->EndFocus();	// ÇÏÀÌ¶óÀÌÆ® Á¾·á
+		TargetInteractable->EndFocus();	// ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 	}
 
 	InteractionData.CurrentInteractable = NewInteractable;
@@ -165,18 +165,18 @@ void AItemTestCharacter::FoundInteractable(AActor* NewInteractable)
 
 	HUD->UpdateInteractionWidget(&TargetInteractable->InteractableData);
 
-	TargetInteractable->BeginFocus(); // ÇÏÀÌ¶óÀÌÆ® ½ÃÀÛ (»õ·Î¿î Å¸°Ù)
+	TargetInteractable->BeginFocus(); // ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½Î¿ï¿½ Å¸ï¿½ï¿½)
 }
 
 void AItemTestCharacter::NoInteractableFound()
-{	// »óÈ£ÀÛ¿ë ÇÏ°í ÀÖ´Â °æ¿ì.
+{	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ï°ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½.
 	if (IsInteracting())
 	{
 		GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
 	}
 
-	if (InteractionData.CurrentInteractable)	// »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¾×ÅÍ°¡ Á¸ÀçÇÒ °æ¿ì
-	{	// Æ÷Ä¿½º ÇÏÀÌ¶óÀÌÆ® ÁßÁö
+	if (InteractionData.CurrentInteractable)	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+	{	// ï¿½ï¿½Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 		if (IsValid(TargetInteractable.GetObject()))
 		{
 			TargetInteractable->EndFocus();
@@ -184,7 +184,7 @@ void AItemTestCharacter::NoInteractableFound()
 
 		HUD->HideInteractionWidget();
 
-		// Å¸°Ù ³Î ¼¼ÆÃ
+		// Å¸ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		InteractionData.CurrentInteractable = nullptr;
 		TargetInteractable = nullptr;
 	}
@@ -192,7 +192,7 @@ void AItemTestCharacter::NoInteractableFound()
 
 void AItemTestCharacter::BeginInteract()
 {
-	PerformInteractionCheck();	// º¯ÇÑ°Ô ÀÖ´ÂÁö È®ÀÎÇÏ±â À§ÇÑ È£Ãâ.
+	PerformInteractionCheck();	// ï¿½ï¿½ï¿½Ñ°ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½.
 
 	if (InteractionData.CurrentInteractable)
 	{
@@ -213,7 +213,7 @@ void AItemTestCharacter::BeginInteract()
 }
 
 void AItemTestCharacter::EndInteract()
-{	// Å¸ÀÌ¸Ó ÃÊ±âÈ­ -> »óÈ£ÀÛ¿ëÀÌ Àß ¸¶¹«¸® µÇ¾ú´Ù¸é ±»ÀÌ »óÈ£ÀÛ¿ë ÁßÀÎÁö È®ÀÎÇÒ ÇÊ¿ä°¡ ¾øÀ½.
+{	// Å¸ï¿½Ì¸ï¿½ ï¿½Ê±ï¿½È­ -> ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ä°¡ ï¿½ï¿½ï¿½ï¿½.
 	GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
 
 	if (IsValid(TargetInteractable.GetObject()))
@@ -243,23 +243,23 @@ void AItemTestCharacter::UpdateInteractionWidget() const
 void AItemTestCharacter::ToggleMenu()
 {
 	HUD->ToggleMenu();
-	// ¸Þ´º°¡ ÄÑÁö¸é
+	// ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (HUD->bIsMenuVisble)
-	{	// ÁÜ Ãë¼Ò
+	{	// ï¿½ï¿½ ï¿½ï¿½ï¿½
 		StopAiming();
 	}
 }
 
 void AItemTestCharacter::Aim()
-{	// ÁÜ
+{	// ï¿½ï¿½
 	if (!HUD->bIsMenuVisble)
-	{	// ¸Þ´º°¡ ¾Æ´Ñ »óÅÂ¶ó¸é ÁÜ ½ÃÀü.
+	{	// ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 		bAiming = true;
-		bUseControllerRotationYaw = true;	// ÇÃ·¹ÀÌ¾î¿Í Ä«¸Þ¶ó´Â °°ÀÌ ¿òÁ÷ÀÎ´Ù.
+		bUseControllerRotationYaw = true;	// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½.
 		GetCharacterMovement()->MaxWalkSpeed = 200.0f;
 
-		if (AimingCameraTimeline)	// Å¸ÀÓ¶óÀÎÀÌ Á¸ÀçÇÒ °æ¿ì
-		{	// ÇØ´ç Å¸ÀÓ¶óÀÎ¿¡ µû¸¥ ÇÃ·¹ÀÌ¾î ÁÜÀÌ ¼±Çü½Ã°£¿¡ µû¶ó ¿òÁ÷ÀÓ.
+		if (AimingCameraTimeline)	// Å¸ï¿½Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+		{	// ï¿½Ø´ï¿½ Å¸ï¿½Ó¶ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 			AimingCameraTimeline->PlayFromStart();
 		}
 	}
@@ -270,19 +270,19 @@ void AItemTestCharacter::StopAiming()
 	if (bAiming)
 	{
 		bAiming = false;
-		bUseControllerRotationYaw = false;	// ÇÃ·¹ÀÌ¾î¿Í Ä«¸Þ¶ó µ¶¸³
+		bUseControllerRotationYaw = false;	// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½
 		HUD->HideCrosshair();
 		GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 
 		if (AimingCameraTimeline)
-		{	// ¿ªÀ¸·Î µÇµ¹¸².
+		{	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Çµï¿½ï¿½ï¿½.
 			AimingCameraTimeline->Reverse();
 		}
 	}
 }
 
 void AItemTestCharacter::UpdateCameraTimeline(const float TimelineValue) const
-{	// ±âÁ¸ Ä«¸Þ¶ó À§Ä¡¿Í ÁÜ Ä«¸Þ¶ó À§Ä¡¸¦ Å¸ÀÓ¶óÀÎ¿¡ µû¸¥ È®´ë ÁÜ ±â´É.
+{	// ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Å¸ï¿½Ó¶ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½.
 	const FVector CameraLocation = FMath::Lerp(DefaultCameraLocation, AimingCameraLocation, TimelineValue);
 	CameraBoom->SocketOffset = CameraLocation;
 }
@@ -299,15 +299,15 @@ void AItemTestCharacter::CameraTimelineEnd()
 }
 
 void AItemTestCharacter::DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop)
-{	// ÀÎº¥Åä¸® ³»¿¡ µå¶øÇÏ°í ½ÍÀº ¾ÆÀÌÅÛÀÌ Á¸ÀçÇÒ °æ¿ì
+{	// ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	if (PlayerInventory->FindMatchingItem(ItemToDrop))
-	{	// »õ·Î¿î ¾×ÅÍ¸¦ ¿ùµå¿¡ »ý¼ºÇÏ±â À§ÇÑ Å¬·¡½º º¯¼ö(´Ù¾çÇÑ ±¸Á¶Ã¼ ÇÔ¼ö ÇÔÃà)
+	{	// ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½å¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ù¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½)
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		SpawnParams.bNoFail = true;
-		// »ý¼ºµÈ ¾ÆÀÌÅÛÀÌ º® ³»ºÎ¿Í °°Àº °÷¿¡ ½ºÆùµÇÁö ¾Êµµ·Ï Áï. ¾î¶² ¿ÀºêÁ§Æ®¿Í ¿À¹ö¶óÀÌµå ÇÏ´ÂÁö Ã¼Å©
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½ ï¿½ï¿½. ï¿½î¶² ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ ï¿½Ï´ï¿½ï¿½ï¿½ Ã¼Å©
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		// Ä³¸¯ÅÍ ¾Õ¿¡ ´øÁø´Ù´Â ´À³¦ -> Ä³¸¯ÅÍ ³»ºÎ¿¡¼­ µå¶øµÇ´Â °Íº¸´Ù ³ªÀ½.
+		// Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ù´ï¿½ ï¿½ï¿½ï¿½ï¿½ -> Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½Íºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 		const FVector SpawnLocation{ GetActorLocation() + (GetActorForwardVector() * 50.0f) };
 		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
 

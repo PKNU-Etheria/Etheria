@@ -47,43 +47,44 @@ void UQuestComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
-void UQuestComponent::Interact()
+void UQuestComponent::Interact(INPCInterface* InNPC)
 {
-	if (InteractingStatus != EQuestInteractStatus::EQIS_None)
-	{
-		// If Before Dialogue Has Branch -> Return
-		if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx - 1)
-			&& CurrentDialgoues[CurrentScriptIdx - 1]->Branchs.Num() > 0)
-		{
-			return;
-		}
+	//if (InteractingStatus != EQuestInteractStatus::EQIS_None)
+	//{
+	//	// If Before Dialogue Has Branch -> Return
+	//	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx - 1)
+	//		&& CurrentDialgoues[CurrentScriptIdx - 1]->Branchs.Num() > 0)
+	//	{
+	//		return;
+	//	}
 
-		ShowNextDialgoue();
-		return;
-	}
+	//	ShowNextDialgoue();
+	//	return;
+	//}
 
-	ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
-	if (!player) return;
+	//ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
+	//if (!player) return;
 
-	AController* controller = player->GetController();
-	if (!controller) return;
+	//AController* controller = player->GetController();
+	//if (!controller) return;
 
-	TArray<AActor*> IgnoreActors;	FHitResult hitResult;
-	IgnoreActors.Add(player);
+	//TArray<AActor*> IgnoreActors;	FHitResult hitResult;
+	//IgnoreActors.Add(player);
 
-	FVector start = player->GetActorLocation();
-	FRotator ControllerRot = controller->GetControlRotation();
-	FVector ControllerForwardVec = UKismetMathLibrary::GetForwardVector(ControllerRot);
-	FVector end = start + Interact_Range * ControllerForwardVec;
+	//FVector start = player->GetActorLocation();
+	//FRotator ControllerRot = controller->GetControlRotation();
+	//FVector ControllerForwardVec = UKismetMathLibrary::GetForwardVector(ControllerRot);
+	//FVector end = start + Interact_Range * ControllerForwardVec;
 
-	ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
+	//ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
 
-	UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
-		TraceType, false, IgnoreActors,
-		EDrawDebugTrace::ForDuration, hitResult, true);
+	//UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
+	//	TraceType, false, IgnoreActors,
+	//	EDrawDebugTrace::ForDuration, hitResult, true);
 
-	INPCInterface* hitActor = Cast<INPCInterface>(hitResult.GetActor());
-	ANPC_Base* NPC = Cast<ANPC_Base>(hitActor);
+	//INPCInterface* hitActor = Cast<INPCInterface>(hitResult.GetActor());
+
+	ANPC_Base* NPC = Cast<ANPC_Base>(InNPC);
 	if (IsValid(NPC))
 	{
 		NPC->Execute_Interact_With(NPC, this);
