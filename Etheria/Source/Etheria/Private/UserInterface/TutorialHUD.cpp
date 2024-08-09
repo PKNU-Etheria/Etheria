@@ -47,6 +47,22 @@ void ATutorialHUD::ToggleMenu()
 	}
 }
 
+void ATutorialHUD::ShowCrosshair()
+{
+	if (CrosshairWidget)
+	{
+		CrosshairWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void ATutorialHUD::HideCrosshair()
+{
+	if (CrosshairWidget)
+	{
+		CrosshairWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
 void ATutorialHUD::ShowInteractionWidget() const
 {
 	if (InteractionWidget)
@@ -94,5 +110,10 @@ void ATutorialHUD::BeginPlay()
 		InteractionWidget->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
-
+	if (CrosshairWidgetClass)
+	{	
+		CrosshairWidget = CreateWidget<UUserWidget>(GetWorld(), CrosshairWidgetClass);
+		CrosshairWidget->AddToViewport();
+		CrosshairWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
