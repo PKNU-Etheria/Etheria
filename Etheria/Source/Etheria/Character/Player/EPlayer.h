@@ -98,7 +98,7 @@ protected:
 	class UInteractComponent* InteractComp;
 
 	// Input
-	// ³ªÁß¿¡ ¹è¿­·Î °ü¸®
+	// ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(VisibleAnywhere, Category = Input)
 	class UInputMappingContext* DefaultMappingContext;
 

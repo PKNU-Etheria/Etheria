@@ -30,5 +30,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UQuestComponent* QuestComponent;
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Interact_Range = 500;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Interact_Radius = 50;
+
+private:
+	class INPCInterface* InteractingNPC;
+	class IInteractionInterface* InteractingItem;
 };

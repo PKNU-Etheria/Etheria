@@ -33,7 +33,7 @@ void AInterfaceTestActor::BeginFocus()
 {
 	if (Mesh)
 	{
-		Mesh->SetRenderCustomDepth(true);	// ¸Þ½¬ÀÇ °æ°è¿¡ Á¢±Ù Çã¿ë
+		Mesh->SetRenderCustomDepth(true);	// ï¿½Þ½ï¿½ï¿½ï¿½ ï¿½ï¿½è¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	}
 }
 
