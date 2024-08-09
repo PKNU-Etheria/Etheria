@@ -3,6 +3,7 @@
 
 #include "Components/QuestComponent.h"
 #include "Quest/QuestSubSystem.h"
+#include "Quest/Widget_Dialogue.h"
 #include "Character/NPC/NeutralNPC/NPCInterface.h"
 #include "Character/NPC/NeutralNPC/NPC_Base.h"
 #include "Kismet/GameplayStatics.h"
@@ -46,36 +47,44 @@ void UQuestComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
-void UQuestComponent::Interact()
+void UQuestComponent::Interact(INPCInterface* InNPC)
 {
-	if (InteractingStatus != EQuestInteractStatus::EQIS_None)
-	{
-		ShowNextDialgoue();
-		return;
-	}
+	//if (InteractingStatus != EQuestInteractStatus::EQIS_None)
+	//{
+	//	// If Before Dialogue Has Branch -> Return
+	//	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx - 1)
+	//		&& CurrentDialgoues[CurrentScriptIdx - 1]->Branchs.Num() > 0)
+	//	{
+	//		return;
+	//	}
 
-	ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
-	if (!player) return;
+	//	ShowNextDialgoue();
+	//	return;
+	//}
 
-	AController* controller = player->GetController();
-	if (!controller) return;
+	//ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
+	//if (!player) return;
 
-	TArray<AActor*> IgnoreActors;	FHitResult hitResult;
-	IgnoreActors.Add(player);
+	//AController* controller = player->GetController();
+	//if (!controller) return;
 
-	FVector start = player->GetActorLocation();
-	FRotator ControllerRot = controller->GetControlRotation();
-	FVector ControllerForwardVec = UKismetMathLibrary::GetForwardVector(ControllerRot);
-	FVector end = start + Interact_Range * ControllerForwardVec;
+	//TArray<AActor*> IgnoreActors;	FHitResult hitResult;
+	//IgnoreActors.Add(player);
 
-	ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
+	//FVector start = player->GetActorLocation();
+	//FRotator ControllerRot = controller->GetControlRotation();
+	//FVector ControllerForwardVec = UKismetMathLibrary::GetForwardVector(ControllerRot);
+	//FVector end = start + Interact_Range * ControllerForwardVec;
 
-	UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
-		TraceType, false, IgnoreActors,
-		EDrawDebugTrace::ForDuration, hitResult, true);
+	//ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
 
-	INPCInterface* hitActor = Cast<INPCInterface>(hitResult.GetActor());
-	ANPC_Base* NPC = Cast<ANPC_Base>(hitActor);
+	//UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
+	//	TraceType, false, IgnoreActors,
+	//	EDrawDebugTrace::ForDuration, hitResult, true);
+
+	//INPCInterface* hitActor = Cast<INPCInterface>(hitResult.GetActor());
+
+	ANPC_Base* NPC = Cast<ANPC_Base>(InNPC);
 	if (IsValid(NPC))
 	{
 		NPC->Execute_Interact_With(NPC, this);
@@ -123,6 +132,7 @@ void UQuestComponent::StartDialogue(int QuestID)
 	{
 		UE_LOG(LogTemp, Display, TEXT("%s : %s"), 
 			*CurrentDialgoues[CurrentScriptIdx]->NPCName.ToString(), *CurrentDialgoues[CurrentScriptIdx]->Script.ToString());
+		ShowDialgoue(*CurrentDialgoues[CurrentScriptIdx]);
 		CurrentScriptIdx++;
 	}
 }
@@ -132,10 +142,12 @@ void UQuestComponent::ShowNextDialgoue()
 	if (!QuestSubSystem) return;
 
 	// Show Next Dialogue
-	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx))
+	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx)
+		&& CurrentDialgoues[CurrentScriptIdx]->NextScriptID != -1)
 	{
 		UE_LOG(LogTemp, Display, TEXT("%s : %s"),
 			*CurrentDialgoues[CurrentScriptIdx]->NPCName.ToString(), *CurrentDialgoues[CurrentScriptIdx]->Script.ToString());
+		ShowDialgoue(*CurrentDialgoues[CurrentScriptIdx]);
 		CurrentScriptIdx++;
 	}
 	// Close Dialogue
@@ -144,11 +156,13 @@ void UQuestComponent::ShowNextDialgoue()
 		if (InteractingStatus == EQuestInteractStatus::EQIS_Accepting)
 		{
 			UE_LOG(LogTemp, Display, TEXT("UQuestComponent : Close Dialogue & Accept Quest"));
+			CloseDialogue();
 			QuestSubSystem->AcceptQuest(DialogueQuestID);
 		}
 		else if (InteractingStatus == EQuestInteractStatus::EQIS_Clearing)
 		{
 			UE_LOG(LogTemp, Display, TEXT("UQuestComponent : Close Dialogue & Clear Quest"));
+			CloseDialogue();
 			QuestSubSystem->ClearQuest(DialogueQuestID);
 		}
 
@@ -156,6 +170,38 @@ void UQuestComponent::ShowNextDialgoue()
 		DialogueQuestID = -1;
 		CurrentScriptIdx = 0;
 		InteractingStatus = EQuestInteractStatus::EQIS_None;
+	}
+}
+
+void UQuestComponent::ShowDialgoue(const FDialogueStruct& DialogueInfo)
+{
+	if (!DialogueWidgetClass) return;
+
+	if (!DialogueWidget)
+	{
+		APawn* owningPawn = Cast<APawn>(GetOwner());
+		if (!owningPawn) return;
+		APlayerController* playerController = Cast<APlayerController>(owningPawn->GetController());
+		if (!playerController) return;
+		DialogueWidget = CreateWidget<UWidget_Dialogue>(playerController, DialogueWidgetClass);
+		DialogueWidget->AddToViewport();
+	}
+
+	DialogueWidget->ShowDialogue(DialogueInfo);
+}
+
+void UQuestComponent::BranchSelected(const FBranchStruct& BranchInfo)
+{
+	CurrentScriptIdx = BranchInfo.NextScriptID;
+	ShowNextDialgoue();
+}
+
+void UQuestComponent::CloseDialogue()
+{
+	if (DialogueWidget)
+	{
+		DialogueWidget->RemoveFromParent();
+		DialogueWidget = nullptr;
 	}
 }
 
