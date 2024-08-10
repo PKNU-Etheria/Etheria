@@ -5,6 +5,9 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/TimelineComponent.h"
+#include "Components/InventoryComponent.h"
+#include "Public/World/Pickup.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -15,6 +18,7 @@
 #include "EPlayerController.h"
 #include "EPlayerState.h"
 #include "Components/InteractComponent.h"
+#include "DrawDebugHelpers.h"
 
 AEPlayer::AEPlayer()
 {
@@ -168,6 +172,14 @@ void AEPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	SetupGASInputComponent();
 }
 
+void AEPlayer::UpdateInteractionWidget() const
+{
+}
+
+void AEPlayer::DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop)
+{
+}
+
 void AEPlayer::SetupGASInputComponent()
 {
 	if (IsValid(ASC) && IsValid(InputComponent))
@@ -307,4 +319,44 @@ void AEPlayer::Skill(int32 InputID)
 void AEPlayer::SpecialSkill(int32 InputID)
 {
 	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : SpecialSkill"));
+}
+
+void AEPlayer::Aim()
+{
+}
+
+void AEPlayer::StopAiming()
+{
+}
+
+void AEPlayer::ToggleMenu()
+{
+}
+
+void AEPlayer::UpdateCameraTimeline(const float TimelineValue) const
+{
+}
+
+void AEPlayer::CameraTimelineEnd()
+{
+}
+
+void AEPlayer::PerformInteractionCheck()
+{
+}
+
+void AEPlayer::FoundInteractable(AActor* NewInteractable)
+{
+}
+
+void AEPlayer::NoInteractableFound()
+{
+}
+
+void AEPlayer::BeginInteract()
+{
+}
+
+void AEPlayer::EndInteract()
+{
 }

@@ -2,7 +2,7 @@
 
 
 #include "Components/InventoryComponent.h"
-#include "Public/Components/InventoryComponent.h"
+#include "Components/InventoryComponent.h"
 #include "Public/Items/ItemBase.h"
 
 // Sets default values for this component's properties
