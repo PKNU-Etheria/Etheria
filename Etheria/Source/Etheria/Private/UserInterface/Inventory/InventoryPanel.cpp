@@ -3,7 +3,7 @@
 
 #include "UserInterface/Inventory/InventoryPanel.h"
 #include "World/ItemTestCharacter.h"
-#include "Public/Components/InventoryComponent.h"
+#include "Components/InventoryComponent.h"
 #include "Public/UserInterface/Inventory/InventoryPanel.h"
 #include "Public/UserInterface/Inventory/InventoryItemSlot.h"
 #include "Public/UserInterface/Inventory/ItemDragDropOperation.h"

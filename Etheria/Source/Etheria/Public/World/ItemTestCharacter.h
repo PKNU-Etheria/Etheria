@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Character/Player/EPlayer.h"
 #include "Public/Interfaces/InteractionInterface.h"
 #include "Public/UserInterface/TutorialHUD.h"
 #include "ItemTestCharacter.generated.h"
@@ -13,23 +14,22 @@ class UInventoryComponent;
 class UItemBase;
 class UTimelineComponent;
 
-USTRUCT()
-struct FInteractionData	// 상호작용에 대한 데이터
-{
-	GENERATED_USTRUCT_BODY()
-
-	FInteractionData() : CurrentInteractable(nullptr), LastInteractionCheckTime(0.0f)
-	{
-
-	};
-
-	UPROPERTY()
-	AActor* CurrentInteractable;	// 상호작용 액터
-
-	UPROPERTY()
-	float LastInteractionCheckTime;
-};
-
+//USTRUCT()
+//struct FInteractionData	// 상호작용에 대한 데이터
+//{
+//	GENERATED_USTRUCT_BODY()
+//
+//	FInteractionData() : CurrentInteractable(nullptr), LastInteractionCheckTime(0.0f)
+//	{
+//
+//	};
+//
+//	UPROPERTY()
+//	AActor* CurrentInteractable;	// 상호작용 액터
+//
+//	UPROPERTY()
+//	float LastInteractionCheckTime;
+//};
 
 UCLASS(config = Game)
 class ETHERIA_API AItemTestCharacter : public ACharacter
@@ -46,31 +46,31 @@ class ETHERIA_API AItemTestCharacter : public ACharacter
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* DefaultMappingContext;
+	class UInputMappingContext* DefaultMappingContext;//
 
 	/** Interaction Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InterAction;
+	class UInputAction* InterAction;//
 
 	/** Aim Zoom Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* AimAction;
+	class UInputAction* AimAction;	//
 
 	/** Toggle On/Off Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* ToggleAction;
+	class UInputAction* ToggleAction;//
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* JumpAction;
+	class UInputAction* JumpAction;//
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* MoveAction;
+	class UInputAction* MoveAction;//
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+	class UInputAction* LookAction;//
 
 public:
 	AItemTestCharacter();
@@ -79,16 +79,16 @@ public:
 protected:
 
 	/** Called for movement input */
-	void Move(const FInputActionValue& Value);
+	void Move(const FInputActionValue& Value);//
 
 	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);//
 
 	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;//
 
 	// To add mapping context
-	virtual void BeginPlay();
+	virtual void BeginPlay();//
 
 	void ToggleMenu();	// 토클 온/오프하는 키와 바인딩 시킬 함수.
 

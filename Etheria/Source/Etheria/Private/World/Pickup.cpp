@@ -3,7 +3,7 @@
 
 #include "World/Pickup.h"
 #include "Public/World/ItemTestCharacter.h"
-#include "Public/Components/InventoryComponent.h"
+#include "Components/InventoryComponent.h"
 
 // Sets default values
 APickup::APickup()
