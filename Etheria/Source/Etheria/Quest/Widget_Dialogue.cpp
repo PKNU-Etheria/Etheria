@@ -9,6 +9,4 @@ void UWidget_Dialogue::ShowDialogue(const FDialogueStruct& DialogueInfo)
 {
 	Text_NPCName->SetText(FText::FromName(DialogueInfo.NPCName));
 	SetDialogueText(DialogueInfo);
-
-
 }

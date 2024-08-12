@@ -63,10 +63,25 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CloseDialogue();
 
+	// Dialogue
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UWidget_Dialogue> DialogueWidgetClass;
 
 	UPROPERTY()
 	class UWidget_Dialogue* DialogueWidget;
+
+	int BranchNum = 0;
+
+	// Quest
+public:
+	UFUNCTION()
+	void ShowQuest();
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UWidget_Quest> QuestWidgetClass;
+
+	UPROPERTY()
+	class UWidget_Quest* QuestWidget;
 };

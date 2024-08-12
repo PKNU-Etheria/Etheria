@@ -26,8 +26,8 @@ public:
 
 	void Interact();
 	
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UQuestComponent* QuestComponent;
 
 public:

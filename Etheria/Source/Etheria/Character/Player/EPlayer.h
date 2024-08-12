@@ -8,9 +8,9 @@
 #include "AbilitySystemInterface.h"
 #include "EPlayer.generated.h"
 
-/**
- * 
- */
+
+DECLARE_MULTICAST_DELEGATE(FShowQuest);
+
 UCLASS()
 class ETHERIA_API AEPlayer : public AECharacter, public IAbilitySystemInterface
 {
@@ -61,7 +61,7 @@ protected:
 	void Skill(int32 InputID);
 	void SpecialSkill(int32 InputID);
 	// If you want to add input, add to here
-
+	void ShowQuest(int32 InputID);
 
 	// State
 
@@ -122,5 +122,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* SpecialSkillAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* QuestAction;
+
+	// Delegates
+public:
+	FShowQuest Delegate_ShowQuest;
 	
 };

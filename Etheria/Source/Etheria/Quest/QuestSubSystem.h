@@ -29,8 +29,14 @@ public:
 
 public:
 	void InitializeNPC(class ANPC_Base* NPC);
-	const TArray<FQuestStruct*>& GetAllQuests() { return AllQuests; }
-	
+
+	const TArray<FQuestStruct*>& GetAllQuests() const { return AllQuests; }
+	const TMap<int, FQuestStruct*>& GetUnavailableQuests() const { return UnavailableQuests; }
+	const TMap<int, FQuestStruct*>& GetAvailableQuests() const { return AvailableQuests; }
+	const TMap<int, FQuestStruct*>& GetProgressingQuests() const { return ProgressingQuests; }
+	const TMap<int, FQuestStruct*>& GetClearableQuests() const { return ClearableQuests; }
+	const TMap<int, FQuestStruct*>& GetClearedQuests() const { return ClearedQuests; }
+
 public:
 	// Related to Inventory (Quantity = Player Owning Item Qunatity)
 	// Unavailable && Progressing Check
