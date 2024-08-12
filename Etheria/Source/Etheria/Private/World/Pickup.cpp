@@ -2,8 +2,9 @@
 
 
 #include "World/Pickup.h"
-#include "Public/World/ItemTestCharacter.h"
+#include "Character/Player/EPlayer.h"
 #include "Components/InventoryComponent.h"
+#include "Components/InteractComponent.h"
 
 // Sets default values
 APickup::APickup()
@@ -85,7 +86,7 @@ void APickup::EndFocus()
 	}
 }
 
-void APickup::Interact(AItemTestCharacter* PlayerCharacter)
+void APickup::Interact(ACharacter* PlayerCharacter)
 {
 	if (PlayerCharacter)
 	{
@@ -94,13 +95,14 @@ void APickup::Interact(AItemTestCharacter* PlayerCharacter)
 	}
 }
 
-void APickup::TakePickup(const AItemTestCharacter* Taker)
+void APickup::TakePickup(const ACharacter* Taker)
 {
 	if (!IsPendingKillPending())
 	{	// 해당 액터가 파괴되기 시작할 때! 즉 플레이어가 아이템을 주웠을 때
 		if (ItemReference)
 		{	// 아이템 정보가 유효하면
-			if (UInventoryComponent* PlayerInventory = Taker->GetInventory())
+			const AEPlayer* TPlayer = Cast<AEPlayer>(Taker);
+			if (UInventoryComponent* PlayerInventory = TPlayer->GetInventory())
 			{	// 플레이어에 부착되어 있는 플레이어 인벤토리 컴포넌트를 체크.
 				const FItemAddResult AddResult = PlayerInventory->HandleAddItem(ItemReference);
 
@@ -110,7 +112,7 @@ void APickup::TakePickup(const AItemTestCharacter* Taker)
 					break;
 				case EItemAddResult::IAR_PartialAmountItemAdded:
 					UpdateInteractableData();
-					Taker->UpdateInteractionWidget();
+					TPlayer->GetInteractComponent()->UpdateInteractionWidget();
 					break;
 				case EItemAddResult::IAR_AllItemAdded:
 					Destroy();

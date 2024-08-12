@@ -30,9 +30,9 @@ public:
 
 	virtual void BeginFocus() override;
 	virtual void EndFocus() override;
-	virtual void Interact(AItemTestCharacter* PlayerCharacter) override;
+	virtual void Interact(ACharacter* PlayerCharacter) override;
 	void UpdateInteractableData();
-	void TakePickup(const AItemTestCharacter* Taker);
+	void TakePickup(const ACharacter* Taker);
 
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;	// 편집기에서 수정한 내용을 즉시 적용하는 이벤트.

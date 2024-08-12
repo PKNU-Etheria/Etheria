@@ -7,29 +7,12 @@
 #include "InputActionValue.h"
 #include "AbilitySystemInterface.h"
 #include "Public/Interfaces/InteractionInterface.h"
+#include "Public/UserInterface/TutorialHUD.h"
 #include "EPlayer.generated.h"
 
-class ATutorialHUD;
 class UInventoryComponent;
 class UItemBase;
 class UTimelineComponent;
-
-USTRUCT()
-struct FInteractionData	// 상호작용에 대한 데이터
-{
-	GENERATED_USTRUCT_BODY()
-
-	FInteractionData() : CurrentInteractable(nullptr), LastInteractionCheckTime(0.0f)
-	{
-
-	};
-
-	UPROPERTY()
-	AActor* CurrentInteractable;	// 상호작용 액터
-
-	UPROPERTY()
-	float LastInteractionCheckTime;
-};
 
 UCLASS()
 class ETHERIA_API AEPlayer : public AECharacter, public IAbilitySystemInterface
@@ -61,12 +44,12 @@ public:
 	FORCEINLINE class USpringArmComponent* GetSpringArmComponent() const { return SpringArmComp; }
 	/** Returns CameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComp; }
-	// if interaction time is zero = false 
-	FORCEINLINE bool IsInteracting() const { return GetWorldTimerManager().IsTimerActive(TimerHandle_Interaction); };
+
+	FORCEINLINE class UInteractComponent* GetInteractComponent() const { return InteractComp; }
+
+	FORCEINLINE class ATutorialHUD* GetHUD() const { return HUD; };
 
 	FORCEINLINE UInventoryComponent* GetInventory() const { return PlayerInventory; };
-
-	void UpdateInteractionWidget() const;
 
 	void DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop);
 
@@ -93,7 +76,8 @@ protected:
 	void Aim();	// Zoom In
 	void StopAiming();	// Zoom Out
 
-	// Invecntory
+	// Inventory
+	void InitializeInventorySet();
 	void ToggleMenu();	 // Inventory ToggleOn/Off
 
 	// Interaction 
@@ -101,11 +85,7 @@ protected:
 	void UpdateCameraTimeline(const float TimelineValue) const;		// linear timeline Zoom In
 	UFUNCTION()
 	void CameraTimelineEnd();	// Event after timeline finish
-	void PerformInteractionCheck();
-	void FoundInteractable(AActor* NewInteractable);
-	void NoInteractableFound();
-	void BeginInteract();
-	void EndInteract();
+	
 
 	// State
 
@@ -179,18 +159,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Character | Inventory")
 	UInventoryComponent* PlayerInventory;
-
-	// Interaction
-	UPROPERTY(VisibleAnywhere, Category = "Character | Interaction")
-	TScriptInterface<IInteractionInterface> TargetInteractable;	// Interaction Actor Data
-
-	float InteractionCheckFrequency;	// Interaction Frequency
-
-	float InteractionCheckDistance;	// Interaction Distance
-
-	FTimerHandle TimerHandle_Interaction;	// Check Frequency
-
-	FInteractionData InteractionData;	// Can interact Actor Info
 
 	// Zoom
 	UPROPERTY(VisibleAnywhere, Category = "Character | Camera")
