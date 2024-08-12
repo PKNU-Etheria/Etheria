@@ -19,6 +19,7 @@
 #include "EPlayerState.h"
 #include "Components/InteractComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Public/UserInterface/TutorialHUD.h"
 
 AEPlayer::AEPlayer()
 {
@@ -69,6 +70,7 @@ AEPlayer::AEPlayer()
 
 	// Create Interact Component
 	InteractComp = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
+	InteractComp->SetPlayer(this);
 
 	// Input
 	InitializeInputKey();
@@ -172,12 +174,29 @@ void AEPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	SetupGASInputComponent();
 }
 
-void AEPlayer::UpdateInteractionWidget() const
-{
-}
-
 void AEPlayer::DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop)
 {
+	if (PlayerInventory->FindMatchingItem(ItemToDrop))
+	{	// ���ο� ���͸� ���忡 �����ϱ� ���� Ŭ���� ����(�پ��� ����ü �Լ� ����)
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.bNoFail = true;
+		// ������ �������� �� ���ο� ���� ���� �������� �ʵ��� ��. � ������Ʈ�� �������̵� �ϴ��� üũ
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		// ĳ���� �տ� �����ٴ� ���� -> ĳ���� ���ο��� ����Ǵ� �ͺ��� ����.
+		const FVector SpawnLocation{ GetActorLocation() + (GetActorForwardVector() * 50.0f) };
+		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
+
+		const int32 RemovedQuantity = PlayerInventory->RemoveAmountOfItem(ItemToDrop, QuantityToDrop);
+
+		APickup* Pickup = GetWorld()->SpawnActor<APickup>(APickup::StaticClass(), SpawnTransform, SpawnParams);
+
+		Pickup->InitializeDrop(ItemToDrop, RemovedQuantity);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item to drop was somehow null!"));
+	}
 }
 
 void AEPlayer::SetupGASInputComponent()
@@ -323,40 +342,58 @@ void AEPlayer::SpecialSkill(int32 InputID)
 
 void AEPlayer::Aim()
 {
+	if (!HUD->bIsMenuVisble)
+	{	
+		bAiming = true;
+		bUseControllerRotationYaw = true;	
+		GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+
+		if (AimingCameraTimeline)	
+		{	
+			AimingCameraTimeline->PlayFromStart();
+		}
+	}
 }
 
 void AEPlayer::StopAiming()
 {
+	if (bAiming)
+	{
+		bAiming = false;
+		bUseControllerRotationYaw = false;	
+		HUD->HideCrosshair();
+		GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+
+		if (AimingCameraTimeline)
+		{	
+			AimingCameraTimeline->Reverse();
+		}
+	}
 }
 
 void AEPlayer::ToggleMenu()
 {
+	HUD->ToggleMenu();
+
+	if (HUD->bIsMenuVisble)
+	{
+		StopAiming();
+	}
 }
 
 void AEPlayer::UpdateCameraTimeline(const float TimelineValue) const
 {
+	const FVector CameraLocation = FMath::Lerp(DefaultCameraLocation, AimingCameraLocation, TimelineValue);
+	SpringArmComp->SocketOffset = CameraLocation;
 }
 
 void AEPlayer::CameraTimelineEnd()
 {
-}
-
-void AEPlayer::PerformInteractionCheck()
-{
-}
-
-void AEPlayer::FoundInteractable(AActor* NewInteractable)
-{
-}
-
-void AEPlayer::NoInteractableFound()
-{
-}
-
-void AEPlayer::BeginInteract()
-{
-}
-
-void AEPlayer::EndInteract()
-{
+	if (AimingCameraTimeline)
+	{
+		if (AimingCameraTimeline->GetPlaybackPosition() != 0.0f)
+		{
+			HUD->ShowCrosshair();
+		}
+	}
 }

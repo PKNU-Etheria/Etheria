@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "Character/Player/EPlayer.h"
+#include "Components/InteractComponent.h"
 #include "Public/Interfaces/InteractionInterface.h"
 #include "Public/UserInterface/TutorialHUD.h"
 #include "ItemTestCharacter.generated.h"
