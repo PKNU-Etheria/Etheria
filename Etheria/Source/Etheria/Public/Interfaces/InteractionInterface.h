@@ -71,7 +71,7 @@ public:
 	virtual void EndFocus();
 	virtual void BeginInteract();
 	virtual void EndInteract();
-	virtual void Interact(AItemTestCharacter* PlayerCharacter);
+	virtual void Interact(ACharacter* PlayerCharacter);
 	
 	FInteractableData InteractableData;
 };

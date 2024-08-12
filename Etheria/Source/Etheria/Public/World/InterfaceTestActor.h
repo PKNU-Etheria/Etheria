@@ -34,6 +34,6 @@ public:
 	virtual void EndFocus() override;
 	virtual void BeginInteract() override;
 	virtual void EndInteract() override;
-	virtual void Interact(AItemTestCharacter* PlayerCharacter) override;
+	virtual void Interact(ACharacter* PlayerCharacter) override;
 
 };

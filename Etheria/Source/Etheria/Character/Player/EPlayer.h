@@ -7,9 +7,9 @@
 #include "InputActionValue.h"
 #include "AbilitySystemInterface.h"
 #include "Public/Interfaces/InteractionInterface.h"
+#include "Public/UserInterface/TutorialHUD.h"
 #include "EPlayer.generated.h"
 
-class ATutorialHUD;
 class UInventoryComponent;
 class UItemBase;
 class UTimelineComponent;
@@ -45,6 +45,10 @@ public:
 	/** Returns CameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComp; }
 
+	FORCEINLINE class UInteractComponent* GetInteractComponent() const { return InteractComp; }
+
+	FORCEINLINE class ATutorialHUD* GetHUD() const { return HUD; };
+
 	FORCEINLINE UInventoryComponent* GetInventory() const { return PlayerInventory; };
 
 	void DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop);
@@ -72,7 +76,8 @@ protected:
 	void Aim();	// Zoom In
 	void StopAiming();	// Zoom Out
 
-	// Invecntory
+	// Inventory
+	void InitializeInventorySet();
 	void ToggleMenu();	 // Inventory ToggleOn/Off
 
 	// Interaction 

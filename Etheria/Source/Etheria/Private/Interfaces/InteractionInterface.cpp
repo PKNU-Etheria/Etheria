@@ -22,6 +22,6 @@ void IInteractionInterface::EndInteract()
 {
 }
 
-void IInteractionInterface::Interact(AItemTestCharacter* PlayerCharacter)
+void IInteractionInterface::Interact(ACharacter* PlayerCharacter)
 {
 }

@@ -75,6 +75,8 @@ AEPlayer::AEPlayer()
 	// Input
 	InitializeInputKey();
 
+	// Inventory Setting
+	InitializeInventorySet();
 }
 
 UAbilitySystemComponent* AEPlayer::GetAbilitySystemComponent() const
@@ -96,6 +98,18 @@ void AEPlayer::BeginPlay()
 		}
 	}
 
+	HUD = Cast<ATutorialHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+	FOnTimelineFloat AimLerpAlphaValue;
+	FOnTimelineEvent TimelineFinishedEvent;
+	AimLerpAlphaValue.BindUFunction(this, FName("UpdateCameraTimeline"));
+	TimelineFinishedEvent.BindUFunction(this, FName("CameraTimelineEnd"));
+
+	if (AimingCameraTimeline && AimingCameraCurve)
+	{
+		AimingCameraTimeline->AddInterpFloat(AimingCameraCurve, AimLerpAlphaValue);
+		AimingCameraTimeline->SetTimelineFinishedFunc(TimelineFinishedEvent);
+	}
 }
 
 void AEPlayer::Tick(float DeltaTime)
@@ -369,6 +383,13 @@ void AEPlayer::StopAiming()
 			AimingCameraTimeline->Reverse();
 		}
 	}
+}
+
+void AEPlayer::InitializeInventorySet()
+{
+	PlayerInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerInventory"));
+	PlayerInventory->SetSlotsCapacity(20);
+	PlayerInventory->SetWeightCapacity(50.0f);
 }
 
 void AEPlayer::ToggleMenu()
