@@ -10,7 +10,8 @@ AItemTestGameMode::AItemTestGameMode()
 	/// Script / Engine.Blueprint'/Game/Character/Player/BP_EPlayer.BP_EPlayer'
 		/// Script / Engine.Blueprint'/Game/ThirdPerson/Blueprints/ItemTest_ThirdPersonCharacter.ItemTest_ThirdPersonCharacter'
 		//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPerson/Blueprints/ItemTest_ThirdPersonCharacter"));
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Character/Player/BP_EPlayer"));
+
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Character/Player/BP_EPlayer.BP_EPlayer_C"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;

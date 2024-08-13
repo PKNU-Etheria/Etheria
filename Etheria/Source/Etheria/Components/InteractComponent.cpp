@@ -32,6 +32,10 @@ void UInteractComponent::BeginPlay()
 	// ...
 	InteractionCheckFrequency = 0.1f;
 	InteractionCheckDistance = 225.0f;
+
+	Interact_Range = 250;
+
+	Interact_Radius = 12;
 }
 
 
