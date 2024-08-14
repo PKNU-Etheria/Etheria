@@ -2,6 +2,8 @@
 
 
 #include "Character/Player/EPlayer.h"
+#include "Character/Player/EPlayerController.h"
+#include "Character/Player/EPlayerState.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -15,8 +17,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 #include "AbilitySystemComponent.h"
-#include "EPlayerController.h"
-#include "EPlayerState.h"
 #include "Components/InteractComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Public/UserInterface/TutorialHUD.h"

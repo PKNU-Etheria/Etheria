@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Item/E_TestItem.h"
-#include "World/ItemTestCharacter.h"
+#include "Character/Player/EPlayer.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 
@@ -95,7 +95,7 @@ void AE_TestItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
         PickupItem(OtherActor);
     }*/
 
-    if (CurrentState == EItemState::Idle && Cast<AItemTestCharacter>(OtherActor))
+    if (CurrentState == EItemState::Idle && Cast<AEPlayer>(OtherActor))
     {
         CurrentState = EItemState::MovingPlayer;
         TargetPlayer = OtherActor;
@@ -126,7 +126,7 @@ void AE_TestItem::MoveToPlayer(float DeltaTime)
 
 void AE_TestItem::PickupItem(AActor* OtherActor)
 {
-    AItemTestCharacter* PlayerCharacter = Cast<AItemTestCharacter>(OtherActor);
+    AEPlayer* PlayerCharacter = Cast<AEPlayer>(OtherActor);
     if (PlayerCharacter)
     {
         //UInventoryComponent* InventoryComponent = PlayerCharacter->FindComponentByClass<UInventoryComponent>();
