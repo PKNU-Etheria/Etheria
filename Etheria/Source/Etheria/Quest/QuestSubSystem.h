@@ -37,6 +37,9 @@ public:
 	const TMap<int, FQuestStruct*>& GetClearableQuests() const { return ClearableQuests; }
 	const TMap<int, FQuestStruct*>& GetClearedQuests() const { return ClearedQuests; }
 
+	UFUNCTION(BlueprintCallable)
+	const FQuestStruct GetQuest(int QuestID);
+
 public:
 	// Related to Inventory (Quantity = Player Owning Item Qunatity)
 	// Unavailable && Progressing Check

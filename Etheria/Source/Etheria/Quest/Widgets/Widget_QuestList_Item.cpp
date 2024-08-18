@@ -20,16 +20,18 @@ void UWidget_QuestList_Item::NativeOnListItemObjectSet(UObject* ListItemObject)
 		// QuestSystem->Available_Delegate.AddUObject(this, )
 	}
 
-	UQuestData* QuestData = Cast<UQuestData>(ListItemObject);
-	if (QuestData)
-	{
-		QuestID = QuestData->QuestID;
+	UQuestData* questData = Cast<UQuestData>(ListItemObject);
 
-		// Set Quest Info (Quest Name . . . )
-		if (QuestData->QuestInfo)
-		{
-			Text_QuestID->SetText(UKismetTextLibrary::Conv_IntToText(QuestID));
-			Text_QuestName->SetText(FText::FromName(QuestData->QuestInfo->QuestName));
-		}
+	// Set Quest Info (Quest Name . . . )
+	if (questData && questData->QuestInfo)
+	{
+		Text_QuestID->SetText(UKismetTextLibrary::Conv_IntToText(QuestID));
+		Text_QuestName->SetText(FText::FromName(questData->QuestInfo->QuestName));
+
+		this->QuestData = questData->QuestInfo;
+		QuestType = questData->QuestType;
+		QuestName = questData->QuestInfo->QuestName;
+		QuestDescription = questData->QuestInfo->QuestDescription;
+		QuestID = questData->QuestID;
 	}
 }

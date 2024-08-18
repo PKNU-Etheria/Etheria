@@ -15,6 +15,7 @@ class ETHERIA_API UQuestData : public UObject
 public:
 	UQuestData() {}
 
+	EQuestDetailType QuestType;
 	const FQuestStruct* QuestInfo;
 	int QuestID = 0;
 };

@@ -27,4 +27,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UWidget_QuestList* QuestList_Cleared;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UWidget_Quest_Detail* QuestDetail;
 };

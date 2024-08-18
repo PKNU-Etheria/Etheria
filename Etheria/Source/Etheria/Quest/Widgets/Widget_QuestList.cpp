@@ -32,6 +32,7 @@ void UWidget_QuestList::SetQuestWidget(UWidget_Quest* parent)
 void UWidget_QuestList::AddUnAvailableQuest(const FQuestStruct* InQuestInfo)
 {
 	UQuestData* data = NewObject<UQuestData>(UQuestData::StaticClass());
+	data->QuestType = EQuestDetailType::EQDT_Startable;
 	data->QuestID = InQuestInfo->QuestID;
 	data->QuestInfo = InQuestInfo;
 	QuestList->AddItem(data);
@@ -40,6 +41,7 @@ void UWidget_QuestList::AddUnAvailableQuest(const FQuestStruct* InQuestInfo)
 void UWidget_QuestList::AddAvailableQuest(const FQuestStruct* InQuestInfo)
 {
 	UQuestData* data = NewObject<UQuestData>(UQuestData::StaticClass());
+	data->QuestType = EQuestDetailType::EQDT_Startable;
 	data->QuestID = InQuestInfo->QuestID;
 	data->QuestInfo = InQuestInfo;
 	QuestList->AddItem(data);
@@ -48,6 +50,7 @@ void UWidget_QuestList::AddAvailableQuest(const FQuestStruct* InQuestInfo)
 void UWidget_QuestList::AddProgressingQuest(const FQuestStruct* InQuestInfo)
 {
 	UQuestData* data = NewObject<UQuestData>(UQuestData::StaticClass());
+	data->QuestType = EQuestDetailType::EQDT_Progressing;
 	data->QuestID = InQuestInfo->QuestID;
 	data->QuestInfo = InQuestInfo;
 	QuestList->AddItem(data);
@@ -56,6 +59,7 @@ void UWidget_QuestList::AddProgressingQuest(const FQuestStruct* InQuestInfo)
 void UWidget_QuestList::AddClearableQuest(const FQuestStruct* InQuestInfo)
 {
 	UQuestData* data = NewObject<UQuestData>(UQuestData::StaticClass());
+	data->QuestType = EQuestDetailType::EQDT_Progressing;
 	data->QuestID = InQuestInfo->QuestID;
 	data->QuestInfo = InQuestInfo;
 	QuestList->AddItem(data);
@@ -64,6 +68,7 @@ void UWidget_QuestList::AddClearableQuest(const FQuestStruct* InQuestInfo)
 void UWidget_QuestList::AddClearedQuest(const FQuestStruct* InQuestInfo)
 {
 	UQuestData* data = NewObject<UQuestData>(UQuestData::StaticClass());
+	data->QuestType = EQuestDetailType::EQDT_Cleared;
 	data->QuestID = InQuestInfo->QuestID;
 	data->QuestInfo = InQuestInfo;
 	QuestList->AddItem(data);
