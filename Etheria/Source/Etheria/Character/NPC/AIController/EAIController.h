@@ -56,8 +56,6 @@ public:
 	float DistanceToPlayer = 0.f;
 
 protected:
-
-	
 	class UAISenseConfig_Sight* SightConfig;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = true))

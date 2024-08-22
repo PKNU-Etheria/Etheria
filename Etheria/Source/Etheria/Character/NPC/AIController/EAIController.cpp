@@ -18,11 +18,12 @@ AEAIController::AEAIController(FObjectInitializer const& ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree> obj(TEXT("/Script/AIModule.BehaviorTree'/Game/Character/NPC/AIContorller/BP_EAIBehaviorTree.BP_EAIBehaviorTree'"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviourTreeObject(TEXT("/Script/AIModule.BehaviorTree'/Game/Character/NPC/AIContorller/BP_EAIBehaviorTree.BP_EAIBehaviorTree'"));
 
-	if (obj.Succeeded())
+	if (BehaviourTreeObject.Succeeded())
 	{
-		BehaviorTree = obj.Object;
+		UE_LOG(LogTemp, Log, TEXT("EAIController : Behaviour Tree Load Success!"));
+		BehaviorTree = BehaviourTreeObject.Object;
 	}
 
 	BehaviorTreeComponent = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComponent"));
@@ -55,6 +56,7 @@ void AEAIController::OnPossess(APawn* InPawn)
 
 	if (Blackboard)
 	{
+		UE_LOG(LogTemp, Log, TEXT("EAIController : Blackboard Initialize Success!"));
 		Blackboard->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	}
 }
@@ -95,7 +97,7 @@ void AEAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
 	{
 		DistanceToPlayer = GetPawn()->GetDistanceTo(DetectedPawns[i]);
 
-		UE_LOG(LogTemp, Log, TEXT("EAIController : Distance %f"), DistanceToPlayer);
+		//UE_LOG(LogTemp, Log, TEXT("EAIController : Distance %f"), DistanceToPlayer);
 	}
 
 	bIsPlayerDetected = true;

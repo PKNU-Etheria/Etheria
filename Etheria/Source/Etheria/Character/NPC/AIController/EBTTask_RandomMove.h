@@ -19,7 +19,7 @@ class ETHERIA_API UEBTTask_RandomMove : public UBTTask_BlackboardBase
 	GENERATED_BODY()
 	
 public:
-	UEBTTask_RandomMove();
+	UEBTTask_RandomMove(FObjectInitializer const& ObjectInitializer);
 
 	EBTNodeResult::Type ExcuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
 

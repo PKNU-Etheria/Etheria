@@ -12,26 +12,28 @@
 #include "Engine/World.h"
 #include "Etheria/Character/NPC/AIController/BlackboardKeys.h"
 
-UEBTTask_RandomMove::UEBTTask_RandomMove()
+UEBTTask_RandomMove::UEBTTask_RandomMove(FObjectInitializer const& ObjectInitializer)
 {
 	NodeName = TEXT("Find Random Location");
 }
 
 EBTNodeResult::Type UEBTTask_RandomMove::ExcuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	auto const cont = Cast<AEAIController>(OwnerComp.GetAIOwner());
-	auto const npc = cont->GetPawn();
+	auto const Controller = Cast<AEAIController>(OwnerComp.GetAIOwner());
+	auto const NPC = Controller->GetPawn();
 
-	FVector const origin = npc->GetActorLocation();
-	FNavLocation loc;
+	FVector const NPCLocation = NPC->GetActorLocation();
+	FNavLocation TargetLocation;
 
-	UNavigationSystemV1* const navSystem = UNavigationSystemV1::GetCurrent(GetWorld());
+	UNavigationSystemV1* const NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
 	
-	if (navSystem->GetRandomPointInNavigableRadius(origin, SearchRadius, loc, nullptr))
+	if (NavSystem->GetRandomPointInNavigableRadius(NPCLocation, SearchRadius, TargetLocation, nullptr))
 	{
-		cont->GetBlackboardComponent()->SetValueAsVector(BlackboardKeys::TargetLocation, loc.Location);
+		Controller->GetBlackboardComponent()->SetValueAsVector(BlackboardKeys::TargetLocation, TargetLocation.Location);
+		//FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+
+		//return EBTNodeResult::Succeeded;
 	}
 
-	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::Failed;
 }
