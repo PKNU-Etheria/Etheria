@@ -226,6 +226,7 @@ void AEPlayer::SetupGASInputComponent()
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AEPlayer::Attack, 2);
 		EnhancedInputComponent->BindAction(SkillAction, ETriggerEvent::Triggered, this, &AEPlayer::Skill, 3);
 		EnhancedInputComponent->BindAction(SpecialSkillAction, ETriggerEvent::Triggered, this, &AEPlayer::SpecialSkill, 4);
+		EnhancedInputComponent->BindAction(ToggleAction, ETriggerEvent::Started, this, &AEPlayer::ToggleMenu, 5);
 	}
 }
 
@@ -304,6 +305,16 @@ void AEPlayer::InitializeInputKey()
 	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_SpeicalSkill.IA_SpeicalSkill'"));
 	if (IA_SPECIALSKILL.Succeeded())
 		SpecialSkillAction = IA_SPECIALSKILL.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_TOGGLE
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_ToggleMenu.IA_ToggleMenu'"));
+	if (IA_TOGGLE.Succeeded())
+		ToggleAction = IA_TOGGLE.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_AIM
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_Aim.IA_Aim'"));
+	if (IA_AIM.Succeeded())
+		AimAction = IA_AIM.Object;
 }
 
 void AEPlayer::Move(const FInputActionInstance& Instance)
@@ -392,8 +403,10 @@ void AEPlayer::InitializeInventorySet()
 	PlayerInventory->SetWeightCapacity(50.0f);
 }
 
-void AEPlayer::ToggleMenu()
+void AEPlayer::ToggleMenu(int32 InputID)
 {
+	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : SpecialSkill"));
+
 	HUD->ToggleMenu();
 
 	if (HUD->bIsMenuVisble)

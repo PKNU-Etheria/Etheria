@@ -78,7 +78,7 @@ protected:
 
 	// Inventory
 	void InitializeInventorySet();
-	void ToggleMenu();	 // Inventory ToggleOn/Off
+	void ToggleMenu(int32 InputID);	 // Inventory ToggleOn/Off
 
 	// Interaction 
 	UFUNCTION()
