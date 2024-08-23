@@ -2,7 +2,7 @@
 
 
 #include "UserInterface/Inventory/InventoryPanel.h"
-#include "World/ItemTestCharacter.h"
+#include "Character/Player/EPlayer.h"
 #include "Components/InventoryComponent.h"
 #include "Public/UserInterface/Inventory/InventoryPanel.h"
 #include "Public/UserInterface/Inventory/InventoryItemSlot.h"
@@ -14,7 +14,7 @@ void UInventoryPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	PlayerCharacter = Cast<AItemTestCharacter>(GetOwningPlayerPawn());
+	PlayerCharacter = Cast<AEPlayer>(GetOwningPlayerPawn());
 	if (PlayerCharacter)
 	{
 		InventoryReference = PlayerCharacter->GetInventory();
@@ -42,8 +42,10 @@ void UInventoryPanel::SetInfoText() const
 
 void UInventoryPanel::RefreshInventory()
 {
+	UE_LOG(LogTemp, Warning, TEXT("In Function RefreshInventory"));
 	if (InventoryReference && InventorySlotClass)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("RefreshInventory Start"));
 		InventoryWrapBox->ClearChildren();
 
 		for (UItemBase* const& InventoryItem : InventoryReference->GetInventoryContents())

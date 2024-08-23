@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "InventoryPanel.generated.h"
 
-class AItemTestCharacter;
+class AEPlayer;
 class UInventoryComponent;
 class UInventoryItemSlot;
 class UWrapBox;
@@ -33,7 +33,7 @@ public:
 	UTextBlock* CapacityInfo;
 
 	UPROPERTY()
-	AItemTestCharacter* PlayerCharacter;
+	AEPlayer* PlayerCharacter;
 	UPROPERTY()
 	UInventoryComponent* InventoryReference;
 	UPROPERTY(EditDefaultsOnly)
