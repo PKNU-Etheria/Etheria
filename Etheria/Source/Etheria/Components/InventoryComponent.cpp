@@ -226,11 +226,13 @@ FItemAddResult UInventoryComponent::HandleAddItem(UItemBase* InputItem)
 {	// 아이템이 인벤토리에 들어올 때마다 확인하는 시작점.
 	if (GetOwner())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Handle AddItem Start"));
 		const int32 InitialRequestedAddAmount = InputItem->Quantity;
 
 		// 스택이 없는 아이템
 		if (!InputItem->NumericData.bIsStackable)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Check NonStackable Start"));
 			return HandleNonStackableItems(InputItem, InitialRequestedAddAmount);
 		}
 
@@ -239,16 +241,19 @@ FItemAddResult UInventoryComponent::HandleAddItem(UItemBase* InputItem)
 
 		if (StackableAmountAdded == InitialRequestedAddAmount)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Check Stackable 1 Start"));
 			return FItemAddResult::AddedAll(InitialRequestedAddAmount, FText::Format(FText::FromString("Successfully add {0} {1} to the inventory."), InitialRequestedAddAmount, InputItem->TextData.Name));
 		}
 
 		if (StackableAmountAdded < InitialRequestedAddAmount && StackableAmountAdded > 0)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Check Stackable 2 Start"));
 			return FItemAddResult::AddedPartial(StackableAmountAdded, FText::Format(FText::FromString("Partial amount of {0} added to the inventory. Number add = {1}"), InputItem->TextData.Name, StackableAmountAdded));
 		}
 
 		if (StackableAmountAdded <= 0)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Check Stackable 3 Start"));
 			return FItemAddResult::AddedNone(FText::Format(FText::FromString("Couldn't add {0} to the inventory. No remaining inventory slots, or invalid item."), InputItem->TextData.Name));
 		}
 	}
@@ -278,4 +283,5 @@ void UInventoryComponent::AddNewItem(UItemBase* Item, const int32 AmountToAdd)
 	InventoryContents.Add(NewItem);
 	InventoryTotalWeight += NewItem->GetItemStackWeight();
 	OnInventoryUpdated.Broadcast();
+	UE_LOG(LogTemp, Warning, TEXT("AddNewItem Clear"));
 }

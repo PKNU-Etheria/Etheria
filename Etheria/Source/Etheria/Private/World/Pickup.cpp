@@ -91,7 +91,6 @@ void APickup::Interact(ACharacter* PlayerCharacter)
 	if (PlayerCharacter)
 	{
 		TakePickup(PlayerCharacter);
-		//		UE_LOG(LogTemp, Warning, TEXT("Let's Player Pick Up Test"));
 	}
 }
 
@@ -99,22 +98,27 @@ void APickup::TakePickup(const ACharacter* Taker)
 {
 	if (!IsPendingKillPending())
 	{	// 해당 액터가 파괴되기 시작할 때! 즉 플레이어가 아이템을 주웠을 때
+		UE_LOG(LogTemp, Warning, TEXT("Let's TakePickUp Test"));
 		if (ItemReference)
 		{	// 아이템 정보가 유효하면
 			const AEPlayer* TPlayer = Cast<AEPlayer>(Taker);
+			UE_LOG(LogTemp, Warning, TEXT("Player Clear"));
 			if (UInventoryComponent* PlayerInventory = TPlayer->GetInventory())
 			{	// 플레이어에 부착되어 있는 플레이어 인벤토리 컴포넌트를 체크.
 				const FItemAddResult AddResult = PlayerInventory->HandleAddItem(ItemReference);
-
+				UE_LOG(LogTemp, Warning, TEXT("Get Inventory"));
 				switch (AddResult.OperationResult)
 				{
 				case EItemAddResult::IAR_NoItemAdded:
+					UE_LOG(LogTemp, Warning, TEXT("NoItemAdded Test"));
 					break;
 				case EItemAddResult::IAR_PartialAmountItemAdded:
 					UpdateInteractableData();
+					UE_LOG(LogTemp, Warning, TEXT("AmountItemAdded Test"));
 					TPlayer->GetInteractComponent()->UpdateInteractionWidget();
 					break;
 				case EItemAddResult::IAR_AllItemAdded:
+					UE_LOG(LogTemp, Warning, TEXT("AllItemAdded Test"));
 					Destroy();
 					break;
 				default:
