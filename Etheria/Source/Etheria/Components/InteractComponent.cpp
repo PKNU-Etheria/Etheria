@@ -43,37 +43,10 @@ void UInteractComponent::BeginPlay()
 void UInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
-	if (!player) return;
-
-	AController* controller = player->GetController();
-	if (!controller) return;
-
-	TArray<AActor*> IgnoreActors;	FHitResult hitResult;
-	IgnoreActors.Add(player);
-
-	FVector start = player->GetActorLocation();
-	FRotator ControllerRot = controller->GetControlRotation();
-	FVector ControllerForwardVec = UKismetMathLibrary::GetForwardVector(ControllerRot);
-	FVector end = start + Interact_Range * ControllerForwardVec;
-
-	ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
-
-	UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
-		TraceType, false, IgnoreActors,
-		EDrawDebugTrace::ForDuration, hitResult, true);
-
-	INPCInterface* NPC_If = Cast<INPCInterface>(hitResult.GetActor());
-	if (NPC_If)
+	
+	if (GetWorld()->TimeSince(InteractionData.LastInteractionCheckTime) > InteractionCheckFrequency)
 	{
-		InteractingNPC = NPC_If;
-	}
-
-	IInteractionInterface* Item_If = Cast<IInteractionInterface>(hitResult.GetActor());
-	if (Item_If)
-	{
-		InteractingItem = Item_If;
+		PerformInteractionCheck();
 	}
 }
 
@@ -84,19 +57,19 @@ void UInteractComponent::SetPlayer(AEPlayer* InPlayer)
 
 void UInteractComponent::Interact()
 {
+	Player->GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
+
 	if (InteractingNPC)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("AEPlayer : NPC Interact"));
 		QuestComponent->Interact(InteractingNPC);
 	}
 
-	if (InteractingItem)
+	//if (InteractingItem)
+	if(IsValid(TargetInteractable.GetObject()))
 	{
-		Player->GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
-
-		if (IsValid(TargetInteractable.GetObject()))
-		{
-			TargetInteractable->Interact(Player);
-		}
+		UE_LOG(LogTemp, Warning, TEXT("AEPlayer : Item ValidInteract"));
+		TargetInteractable->Interact(Player);
 	}
 }
 
@@ -110,6 +83,8 @@ void UInteractComponent::UpdateInteractionWidget() const
 
 void UInteractComponent::PerformInteractionCheck()
 {
+	// 이전 코드 수정 대기
+	/*
 	// line trace
 	InteractionData.LastInteractionCheckTime = GetWorld()->GetTimeSeconds();
 
@@ -127,21 +102,21 @@ void UInteractComponent::PerformInteractionCheck()
 	}
 
 	//FVector TraceStart{ GetPawnViewLocation()};
-	FVector TraceEnd{ TraceStart + (Player->GetViewRotation().Vector() * InteractionCheckDistance) };	
+	FVector TraceEnd{ TraceStart + (Player->GetViewRotation().Vector() * InteractionCheckDistance) };
 
 
 	float LookDirection = FVector::DotProduct(Player->GetActorForwardVector(), Player->GetViewRotation().Vector());
 
-	if (LookDirection > 0) 
+	if (LookDirection > 0)
 	{
 		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 1.0f, 0, 2.0f);
 
-		FCollisionQueryParams QueryParams;	
-		QueryParams.AddIgnoredActor(Player);	
-		FHitResult TraceHit;	
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(Player);
+		FHitResult TraceHit;
 
 		if (GetWorld()->LineTraceSingleByChannel(TraceHit, TraceStart, TraceEnd, ECC_Visibility, QueryParams))
-		{	
+		{
 			if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
 			{
 				if (TraceHit.GetActor() != InteractionData.CurrentInteractable)
@@ -154,6 +129,54 @@ void UInteractComponent::PerformInteractionCheck()
 				{
 					return;
 				}
+			}
+		}
+	}
+
+	NoInteractableFound();
+	*/
+
+	InteractionData.LastInteractionCheckTime = GetWorld()->GetTimeSeconds();
+
+	ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
+	if (!player) return;
+
+	AController* controller = player->GetController();
+	if (!controller) return;
+
+	TArray<AActor*> IgnoreActors;
+	FHitResult hitResult;
+	IgnoreActors.Add(player);
+
+	FVector start = player->GetActorLocation();
+	FRotator ControllerRot = controller->GetControlRotation();
+	FVector ControllerForwardVec = UKismetMathLibrary::GetForwardVector(ControllerRot);
+	FVector end = start + Interact_Range * ControllerForwardVec;
+
+	ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
+
+	if (UKismetSystemLibrary::SphereTraceSingle(GetWorld(), start, end, Interact_Radius,
+		TraceType, false, IgnoreActors,
+		EDrawDebugTrace::ForDuration, hitResult, true))
+	{
+		INPCInterface* NPC_If = Cast<INPCInterface>(hitResult.GetActor());
+		if (NPC_If)
+		{
+			InteractingNPC = NPC_If;
+			return;
+		}
+
+		//		IInteractionInterface* Item_If = Cast<IInteractionInterface>(hitResult.GetActor());
+		if (hitResult.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
+		{
+			if (hitResult.GetActor() != InteractionData.CurrentInteractable)
+			{
+				FoundInteractable(hitResult.GetActor());
+				return;
+			}
+			if (hitResult.GetActor() == InteractionData.CurrentInteractable)
+			{
+				return;
 			}
 		}
 	}
@@ -189,8 +212,8 @@ void UInteractComponent::NoInteractableFound()
 		Player->GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
 	}
 
-	if (InteractionData.CurrentInteractable)	
-	{	
+	if (InteractionData.CurrentInteractable)
+	{
 		if (IsValid(TargetInteractable.GetObject()))
 		{
 			TargetInteractable->EndFocus();
