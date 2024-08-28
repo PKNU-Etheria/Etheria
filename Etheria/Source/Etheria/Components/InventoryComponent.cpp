@@ -12,6 +12,7 @@ UInventoryComponent::UInventoryComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	CurrentInventoryType = EItemType::Weapon;
 	// ...
 }
 
@@ -29,6 +30,24 @@ UItemBase* UInventoryComponent::FindMatchingItem(UItemBase* ItemIn) const
 {
 	if (ItemIn)
 	{	// 인벤토리에 해당 아이템이 있으면 반환.
+		TArray<TObjectPtr<UItemBase>> InventoryContents;
+
+		switch (ItemIn->ItemType)
+		{
+		case EItemType::Quest:
+			InventoryContents = QuestInventoryContents;
+			break;
+		case EItemType::Consumable:
+			InventoryContents = ConsumeInventoryContents;
+			break;
+		case EItemType::Ingredient:
+			InventoryContents = IngredientInventoryContents;
+			break;
+		case EItemType::Weapon:
+			InventoryContents = WeaponInventoryContents;
+			break;
+		}
+
 		if (InventoryContents.Contains(ItemIn))
 		{
 			return ItemIn;
@@ -42,6 +61,24 @@ UItemBase* UInventoryComponent::FindNextItemByID(UItemBase* ItemIn) const
 {
 	if (ItemIn)
 	{	// 인벤토리에 해당 아이디를 가진 아이템이 있으면 반환. 이중 포인터 사용. 포인터를 포인터로 가리킴.
+		TArray<TObjectPtr<UItemBase>> InventoryContents;
+
+		switch (ItemIn->ItemType)
+		{
+		case EItemType::Quest:
+			InventoryContents = QuestInventoryContents;
+			break;
+		case EItemType::Consumable:
+			InventoryContents = ConsumeInventoryContents;
+			break;
+		case EItemType::Ingredient:
+			InventoryContents = IngredientInventoryContents;
+			break;
+		case EItemType::Weapon:
+			InventoryContents = WeaponInventoryContents;
+			break;
+		}
+
 		if (const TArray<TObjectPtr<UItemBase>>::ElementType* Result = InventoryContents.FindByKey(ItemIn))
 		{
 			return *Result;
@@ -53,6 +90,24 @@ UItemBase* UInventoryComponent::FindNextItemByID(UItemBase* ItemIn) const
 
 UItemBase* UInventoryComponent::FindNextPartialStack(UItemBase* ItemIn) const
 {	// 이미 인벤토리에 존재하는 아이템으로 체크할 필요 없음.
+	TArray<TObjectPtr<UItemBase>> InventoryContents;
+
+	switch (ItemIn->ItemType)
+	{
+	case EItemType::Quest:
+		InventoryContents = QuestInventoryContents;
+		break;
+	case EItemType::Consumable:
+		InventoryContents = ConsumeInventoryContents;
+		break;
+	case EItemType::Ingredient:
+		InventoryContents = IngredientInventoryContents;
+		break;
+	case EItemType::Weapon:
+		InventoryContents = WeaponInventoryContents;
+		break;
+	}
+
 	if (const TArray<TObjectPtr<UItemBase>>::ElementType* Result = InventoryContents.FindByPredicate([&ItemIn](const UItemBase* InventoryItem)
 		{	// ItemIn에 대한 정보를 인벤토리 아이템들과 비교 for루프문 대신 람다형식이용
 			return InventoryItem->ID == ItemIn->ID && !InventoryItem->IsFullItemStack();
@@ -84,7 +139,21 @@ int32 UInventoryComponent::CalculateNumberForFullStack(UItemBase* StackableItem,
 
 void UInventoryComponent::RemoveSingleInstanceOfItem(UItemBase* ItemToRemove)
 {
-	InventoryContents.RemoveSingle(ItemToRemove);
+	switch (ItemToRemove->ItemType)
+	{
+	case EItemType::Quest:
+		QuestInventoryContents.RemoveSingle(ItemToRemove);
+		break;
+	case EItemType::Consumable:
+		ConsumeInventoryContents.RemoveSingle(ItemToRemove);
+		break;
+	case EItemType::Ingredient:
+		IngredientInventoryContents.RemoveSingle(ItemToRemove);
+		break;
+	case EItemType::Weapon:
+		WeaponInventoryContents.RemoveSingle(ItemToRemove);
+		break;
+	}
 
 	OnInventoryUpdated.Broadcast();
 }
@@ -105,7 +174,9 @@ int32 UInventoryComponent::RemoveAmountOfItem(UItemBase* ItemIn, int32 DesiredAm
 void UInventoryComponent::SplitExistingStack(UItemBase* ItemIn, const int32 AmountToSplit)
 {	// 인벤토리 내용물의 총 개수가 인벤토리 슬롯 용량보다 작거나 같다면.
 	// 인벤토리 안에 있는 내용물. 픽업 X
-	if (!(InventoryContents.Num() + 1 > InventorySlotsCapacity))
+	// 추후에 인벤토리 용량개수 제한을 없애든가 고민해봐야 할 듯
+	int32 ContentsNum = QuestInventoryContents.Num() + ConsumeInventoryContents.Num() + IngredientInventoryContents.Num() + WeaponInventoryContents.Num();
+	if (!(ContentsNum + 1 > InventorySlotsCapacity))
 	{	// 내용물을 쪼개서 넣는다.
 		RemoveAmountOfItem(ItemIn, AmountToSplit);
 		AddNewItem(ItemIn, AmountToSplit);
@@ -125,7 +196,9 @@ FItemAddResult UInventoryComponent::HandleNonStackableItems(UItemBase* InputItem
 		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. item would overflow weight limit."), InputItem->TextData.Name));
 	}
 	// 공간이 초과될 경우.
-	if (InventoryContents.Num() + 1 > InventorySlotsCapacity)
+	// 추후에 인벤토리 용량개수 제한을 없애든가 고민해봐야 할 듯
+	int32 ContentsNum = QuestInventoryContents.Num() + ConsumeInventoryContents.Num() + IngredientInventoryContents.Num() + WeaponInventoryContents.Num();
+	if (ContentsNum + 1 > InventorySlotsCapacity)
 	{
 		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. All inventory slots are full."), InputItem->TextData.Name));
 	}
@@ -194,7 +267,9 @@ int32 UInventoryComponent::HandleStackableItems(UItemBase* InputItem, int32 Requ
 	}
 
 	// 쌓을 수 없다면 새로운 인벤토리 슬롯을 만들어야함. 공간이 있는지 체크.
-	if (InventoryContents.Num() + 1 <= InventorySlotsCapacity)
+	// 추후에 인벤토리 용량개수 제한을 없애든가 고민해봐야 할 듯
+	int32 ContentsNum = QuestInventoryContents.Num() + ConsumeInventoryContents.Num() + IngredientInventoryContents.Num() + WeaponInventoryContents.Num();
+	if (ContentsNum + 1 <= InventorySlotsCapacity)
 	{	// 스택에 여유가 없어서 새로운 공간에 해당 아이템을 새롭게 만들 수 있느냐?
 		// 공간이 있을 경우. 남은 아이템 수량을 추가할 공간이 있는지 확인.
 		const int32 WeightLimitAddAmount = CalculateWeightAddAmount(InputItem, AmountToDistribute);
@@ -277,10 +352,26 @@ void UInventoryComponent::AddNewItem(UItemBase* Item, const int32 AmountToAdd)
 		NewItem = Item->CreateItemCopy();
 	}
 
+
 	NewItem->OwningInventory = this;
 	NewItem->SetQuantity(AmountToAdd);
 
-	InventoryContents.Add(NewItem);
+	switch (NewItem->ItemType)
+	{
+		case EItemType::Quest:
+			QuestInventoryContents.Add(NewItem);
+			break;
+		case EItemType::Consumable:
+			ConsumeInventoryContents.Add(NewItem);
+			break;
+		case EItemType::Ingredient:
+			IngredientInventoryContents.Add(NewItem);
+			break;
+		case EItemType::Weapon:
+			WeaponInventoryContents.Add(NewItem);
+			break;
+	}
+
 	InventoryTotalWeight += NewItem->GetItemStackWeight();
 	OnInventoryUpdated.Broadcast();
 	UE_LOG(LogTemp, Warning, TEXT("AddNewItem Clear"));

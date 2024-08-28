@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EtheriaEnums.h"
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
@@ -111,7 +112,26 @@ public:
 	UFUNCTION(Category = "Inventory")
 	FORCEINLINE int32 GetSlotsCapacity() const { return InventorySlotsCapacity; };	// 인벤토리 개수
 	UFUNCTION(Category = "Inventory")
-	FORCEINLINE TArray<UItemBase*> GetInventoryContents() const { return InventoryContents; };	// 인벤토리 정보 배열 (아이템 모음)
+	FORCEINLINE TArray<UItemBase*> GetInventoryContents(EItemType type) const {
+		switch (type)
+		{
+		case EItemType::Quest:
+			return QuestInventoryContents;
+		case EItemType::Consumable:
+			return ConsumeInventoryContents;
+		case EItemType::Ingredient:
+			return IngredientInventoryContents;
+		case EItemType::Weapon:
+			return WeaponInventoryContents;
+		default:
+			// 기본값으로 빈 배열을 반환하거나, 로그를 남길 수 있습니다.
+			UE_LOG(LogTemp, Warning, TEXT("Unknown item type requested: %d"), static_cast<int32>(type));
+			return TArray<UItemBase*>();
+		}
+	};	// 인벤토리 정보 배열 (아이템 모음)
+	FORCEINLINE int32 GetInventoryContentsNum() const {
+		return QuestInventoryContents.Num() + ConsumeInventoryContents.Num() + IngredientInventoryContents.Num() + WeaponInventoryContents.Num();
+	}
 
 	// Setters
 	UFUNCTION(Category = "Inventory")
@@ -123,6 +143,9 @@ public:
 	/// Variables
 	/// </summary>
 	FOnInventoryUpdated OnInventoryUpdated; // 델리게이트 추가. 우리는 HandleAddItem을 호출해서 AddNewItem함수로 아이템을 추가할 것이다. 그럼 인벤토리 UI도 업데이트가 되어야 하기 위해서 추가함.
+
+	UPROPERTY(VisibleAnyWhere, Category = "Inventory")
+	EItemType CurrentInventoryType;
 
 protected:
 	/// <summary>
@@ -149,5 +172,14 @@ protected:
 	float InventoryWeightCapacity;
 
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
-	TArray<TObjectPtr<UItemBase>> InventoryContents;
+	TArray<TObjectPtr<UItemBase>> QuestInventoryContents;
+
+	UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	TArray<TObjectPtr<UItemBase>> ConsumeInventoryContents;
+
+	UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	TArray<TObjectPtr<UItemBase>> IngredientInventoryContents;
+
+	UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	TArray<TObjectPtr<UItemBase>> WeaponInventoryContents;
 };
