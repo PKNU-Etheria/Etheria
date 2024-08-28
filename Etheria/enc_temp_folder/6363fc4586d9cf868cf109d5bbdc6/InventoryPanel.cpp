@@ -70,6 +70,6 @@ bool UInventoryPanel::NativeOnDrop(const FGeometry& InGeometry, const FDragDropE
 
 		return true;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Detected and item drop on InventoryPanel Fail!!!!!"));
+
 	return false;
 }

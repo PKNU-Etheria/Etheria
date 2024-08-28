@@ -22,7 +22,7 @@ public:
 	/// Properties & Variables
 	/// </summary>
 	
-	UPROPERTY(VisibleAnywhere, Category = "Item")
+	UPROPERTY()
 	UInventoryComponent* OwningInventory;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")

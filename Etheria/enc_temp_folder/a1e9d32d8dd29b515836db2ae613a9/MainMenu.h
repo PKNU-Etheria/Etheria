@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenu.generated.h"
 
-class AEPlayer;
+class AItemTestCharacter;
 
 /**
  * 
@@ -23,5 +23,5 @@ protected:
 
 public:
 	UPROPERTY()
-	AEPlayer* PlayerCharacter;
+	AItemTestCharacter* PlayerCharacter;
 };

@@ -2,7 +2,7 @@
 
 
 #include "UserInterface/MainMenu.h"
-#include "Character/Player/EPlayer.h"
+#include "World/ItemTestCharacter.h"
 #include "Public/Items/ItemBase.h"
 #include "Public/UserInterface/Inventory/ItemDragDropOperation.h"
 
@@ -15,7 +15,7 @@ void UMainMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	PlayerCharacter = Cast<AEPlayer>(GetOwningPlayerPawn());
+	PlayerCharacter = Cast<AItemTestCharacter>(GetOwningPlayerPawn());
 }
 
 bool UMainMenu::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -27,7 +27,5 @@ bool UMainMenu::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& 
 		PlayerCharacter->DropItem(ItemDragDrop->SourceItem, ItemDragDrop->SourceItem->Quantity);
 		return true;
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Detected and item drop on InventoryPanel Fail"));
 	return false;
 }
