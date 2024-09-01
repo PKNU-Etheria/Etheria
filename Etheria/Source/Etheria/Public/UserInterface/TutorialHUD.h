@@ -9,6 +9,7 @@
 
 class UMainMenu;
 class UInteractionWidget;
+class UWeaponWheel;
 
 UCLASS()
 class ETHERIA_API ATutorialHUD : public AHUD
@@ -58,6 +59,9 @@ protected:
 
 	UPROPERTY()
 	UUserWidget* CrosshairWidget;
+
+	UPROPERTY()
+	UWeaponWheel* WeaponWheelWidget;
 
 	/// <summary>
 	/// Functions
