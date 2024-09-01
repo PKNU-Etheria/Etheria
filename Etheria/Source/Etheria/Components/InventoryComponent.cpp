@@ -16,6 +16,12 @@ UInventoryComponent::UInventoryComponent()
 	// ...
 }
 
+void UInventoryComponent::ChangeInventoryType(EItemType type)
+{
+	CurrentInventoryType = type;
+	OnInventoryUpdated.Broadcast();
+}
+
 // Called when the game starts
 void UInventoryComponent::BeginPlay()
 {

@@ -80,6 +80,10 @@ public:
 	/// </summary>
 	UInventoryComponent();
 
+	// Change Inventory Type
+	UFUNCTION(Category = "Inventory")
+	void ChangeInventoryType(EItemType type);
+
 	// 아이템 추가를 위한 함수.
 	UFUNCTION(Category = "Inventory")
 	FItemAddResult HandleAddItem(UItemBase* InputItem);
