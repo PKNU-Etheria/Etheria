@@ -28,7 +28,7 @@ public:
 	UFUNCTION()
 	void OnPawnDetected(const TArray<AActor*>& DetectedPawns);
 	UFUNCTION()
-	void OnTargetDected(AActor* Actor, const FAIStimulus Stimulus);
+	void OnTargetDetected(AActor* Actor, const FAIStimulus Stimulus);
 
 	class UBlackboardComponent* GetBlackboard() const;
 

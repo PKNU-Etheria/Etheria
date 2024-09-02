@@ -21,7 +21,7 @@ class ETHERIA_API UEBTTask_RandomMove : public UBTTask_BlackboardBase
 public:
 	UEBTTask_RandomMove(FObjectInitializer const& ObjectInitializer);
 
-	EBTNodeResult::Type ExcuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Search, meta = (AllowPrivateAccess = true))

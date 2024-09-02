@@ -103,7 +103,7 @@ void AEAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
 	bIsPlayerDetected = true;
 }
 
-void AEAIController::OnTargetDected(AActor* Actor, const FAIStimulus Stimulus)
+void AEAIController::OnTargetDetected(AActor* Actor, const FAIStimulus Stimulus)
 {
 	if (auto const character = Cast<AECharacter>(Actor))
 	{

@@ -18,7 +18,7 @@ UEBTTask_FindPlayerLocation::UEBTTask_FindPlayerLocation(FObjectInitializer cons
 	NodeName = TEXT("Find Player Location");
 }
 
-EBTNodeResult::Type UEBTTask_FindPlayerLocation::ExcuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UEBTTask_FindPlayerLocation::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	const ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	auto const Controller = Cast<AEAIController>(OwnerComp.GetAIOwner());

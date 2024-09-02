@@ -17,7 +17,7 @@ UEBTTask_RandomMove::UEBTTask_RandomMove(FObjectInitializer const& ObjectInitial
 	NodeName = TEXT("Find Random Location");
 }
 
-EBTNodeResult::Type UEBTTask_RandomMove::ExcuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UEBTTask_RandomMove::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	auto const Controller = Cast<AEAIController>(OwnerComp.GetAIOwner());
 	auto const NPC = Controller->GetPawn();
@@ -30,9 +30,9 @@ EBTNodeResult::Type UEBTTask_RandomMove::ExcuteTask(UBehaviorTreeComponent& Owne
 	if (NavSystem->GetRandomPointInNavigableRadius(NPCLocation, SearchRadius, TargetLocation, nullptr))
 	{
 		Controller->GetBlackboardComponent()->SetValueAsVector(BlackboardKeys::TargetLocation, TargetLocation.Location);
-		//FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 
-		//return EBTNodeResult::Succeeded;
+		return EBTNodeResult::Succeeded;
 	}
 
 	return EBTNodeResult::Failed;
