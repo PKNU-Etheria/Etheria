@@ -13,6 +13,7 @@ void UWeaponWheel::NativeOnInitialized()
 	if (PlayerCharacter)
 	{
 		WeaponWheelReference = PlayerCharacter->GetWeaponWheel();
+		WeaponWheelReference->OnWeaponWheelWidgetUpdated.AddUObject(this, &UWeaponWheel::UpdateActiveSection);
 	}
 }
 
@@ -123,6 +124,23 @@ void UWeaponWheel::CalculateSection()
 	}
 }
 
-void UWeaponWheel::UpdateSection()
+void UWeaponWheel::CheckSection()
 {
+	if (WeaponWheelReference->CurSectionAngle == SelectedAngle) return;
+
+	WeaponWheelReference->ChangeCurSectionValue(SelectedAngle);
+}
+
+void UWeaponWheel::UpdateActiveSection()
+{
+	float RotationValue = (WeaponWheelReference->CurSectionAngle + (SectionCount * 0.5f)) * SectionSize; // Change Value
+
+	if (RadialMenuMat)
+	{
+		// 머티리얼의 스칼라 파라미터를 업데이트
+		RadialMenuMat->SetScalarParameterValue(FName("ActiveRotation"), RotationValue);
+
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("RotationValue : %f"), RotationValue));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("Updated SelectedRotation: %d, %d"), MinBounds[SelectedAngle], MaxBounds[SelectedAngle]));
+	}
 }

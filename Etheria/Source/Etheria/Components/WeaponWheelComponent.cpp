@@ -12,6 +12,7 @@ UWeaponWheelComponent::UWeaponWheelComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	CurSectionAngle = 0;
 	// ...
 }
 
@@ -58,5 +59,11 @@ FRotator UWeaponWheelComponent::GetMouseRotation()
 	LookAtRotation.Yaw = 180.0f - LookAtRotation.Yaw;
 
 	return LookAtRotation;
+}
+
+void UWeaponWheelComponent::ChangeCurSectionValue(int newVal)
+{
+	CurSectionAngle = newVal;
+	OnWeaponWheelWidgetUpdated.Broadcast();
 }
 

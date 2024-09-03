@@ -449,7 +449,6 @@ void AEPlayer::ReleasedWeaponWheelPressed(int32 InputID)
 	if (HUD->bIsWeaponWheelVisible)
 	{
 		HUD->ToggleWeaponWheel();
-
 	}
 }
 

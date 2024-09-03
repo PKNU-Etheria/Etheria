@@ -23,7 +23,9 @@ public:
 
 	void CalculateSection();
 
-	void UpdateSection();
+	void CheckSection();
+
+	void UpdateActiveSection();	// Update MI_WeaponWheel Globar Scalar Parameter Value - ActiveRotation Update
 	
 	/// <summary>
 	/// Variables

@@ -81,6 +81,7 @@ void ATutorialHUD::HideWeaponWheel()
 	{
 		bIsWeaponWheelVisible = false;
 		WeaponWheelWidget->SetVisibility(ESlateVisibility::Collapsed);
+		WeaponWheelWidget->CheckSection();
 	}
 }
 
