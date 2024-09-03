@@ -9,6 +9,7 @@
 #include "Components/InputComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Components/InventoryComponent.h"
+#include "Components/WeaponWheelComponent.h"
 #include "Public/World/Pickup.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
@@ -77,6 +78,9 @@ AEPlayer::AEPlayer()
 
 	// Inventory Setting
 	InitializeInventorySet();
+
+	// WeaponWheel Setting
+	InitializeWeaponWheelSet();
 }
 
 UAbilitySystemComponent* AEPlayer::GetAbilitySystemComponent() const
@@ -116,6 +120,10 @@ void AEPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (HUD->bIsWeaponWheelVisible)
+	{
+		HUD->InteractWeaponWheel();
+	}
 }
 
 void AEPlayer::PostInitializeComponents()
@@ -227,6 +235,8 @@ void AEPlayer::SetupGASInputComponent()
 		EnhancedInputComponent->BindAction(SkillAction, ETriggerEvent::Triggered, this, &AEPlayer::Skill, 3);
 		EnhancedInputComponent->BindAction(SpecialSkillAction, ETriggerEvent::Triggered, this, &AEPlayer::SpecialSkill, 4);
 		EnhancedInputComponent->BindAction(ToggleAction, ETriggerEvent::Started, this, &AEPlayer::ToggleMenu, 5);
+		EnhancedInputComponent->BindAction(WeaponWheelAction, ETriggerEvent::Ongoing, this, &AEPlayer::InputWeaponWheelPressed, 6);
+		EnhancedInputComponent->BindAction(WeaponWheelAction, ETriggerEvent::Completed, this, &AEPlayer::ReleasedWeaponWheelPressed, 6);
 	}
 }
 
@@ -315,6 +325,11 @@ void AEPlayer::InitializeInputKey()
 	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_Aim.IA_Aim'"));
 	if (IA_AIM.Succeeded())
 		AimAction = IA_AIM.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_WeaponWheel
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_WeaponWheel.IA_WeaponWheel'"));
+	if (IA_AIM.Succeeded())
+		WeaponWheelAction = IA_WeaponWheel.Object;
 }
 
 void AEPlayer::Move(const FInputActionInstance& Instance)
@@ -405,13 +420,36 @@ void AEPlayer::InitializeInventorySet()
 
 void AEPlayer::ToggleMenu(int32 InputID)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : SpecialSkill"));
+	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : ToggleMenu"));
 
 	HUD->ToggleMenu();
 
 	if (HUD->bIsMenuVisble)
 	{
 		StopAiming();
+	}
+}
+
+void AEPlayer::InitializeWeaponWheelSet()
+{
+	PlayerWeaponWheel = CreateDefaultSubobject<UWeaponWheelComponent>(TEXT("WeaponWheel"));
+}
+
+void AEPlayer::InputWeaponWheelPressed(int32 InputID)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : ToggleWeaponWheel for key down"));
+
+	if(!HUD->bIsWeaponWheelVisible) HUD->ToggleWeaponWheel();
+}
+
+void AEPlayer::ReleasedWeaponWheelPressed(int32 InputID)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : ToggleWeaponWheel key release"));
+
+	if (HUD->bIsWeaponWheelVisible)
+	{
+		HUD->ToggleWeaponWheel();
+
 	}
 }
 

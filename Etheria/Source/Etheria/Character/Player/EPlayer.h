@@ -10,9 +10,10 @@
 #include "Public/UserInterface/TutorialHUD.h"
 #include "EPlayer.generated.h"
 
-class UInventoryComponent;
-class UItemBase;
-class UTimelineComponent;
+class UInventoryComponent;	// Inventory
+class UItemBase;	// ItemData
+class UWeaponWheelComponent;	// WeaponWheel
+class UTimelineComponent;	// AimTimeLine
 
 UCLASS()
 class ETHERIA_API AEPlayer : public AECharacter, public IAbilitySystemInterface
@@ -51,6 +52,8 @@ public:
 
 	FORCEINLINE UInventoryComponent* GetInventory() const { return PlayerInventory; };
 
+	FORCEINLINE UWeaponWheelComponent* GetWeaponWheel() const { return PlayerWeaponWheel; }
+
 	void DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop);
 
 protected:
@@ -79,6 +82,11 @@ protected:
 	// Inventory
 	void InitializeInventorySet();
 	void ToggleMenu(int32 InputID);	 // Inventory ToggleOn/Off
+
+	// WeaponWheel
+	void InitializeWeaponWheelSet();
+	void InputWeaponWheelPressed(int32 InputID);
+	void ReleasedWeaponWheelPressed(int32 InputID);
 
 	// Interaction 
 	UFUNCTION()
@@ -153,12 +161,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* AimAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* WeaponWheelAction;
+
 	// Inventory 
 	UPROPERTY()
 	ATutorialHUD* HUD;
 
 	UPROPERTY(VisibleAnywhere, Category = "Character | Inventory")
 	UInventoryComponent* PlayerInventory;
+
+	// WeaponWheel
+	UPROPERTY(VisibleAnyWhere, Category = "Character | WeaponWheel")
+	UWeaponWheelComponent* PlayerWeaponWheel;
 
 	// Zoom
 	UPROPERTY(VisibleAnywhere, Category = "Character | Camera")
