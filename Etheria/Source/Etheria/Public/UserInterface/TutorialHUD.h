@@ -29,20 +29,31 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget> CrosshairWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	TSubclassOf<UWeaponWheel> WeaponWheelClass;
+	// Inventroy
 	bool bIsMenuVisble;
+	// WeaponWheel
+	bool bIsWeaponWheelVisible;
 
 	/// <summary>
 	/// Functions
 	/// </summary>
 	ATutorialHUD();
-
+	// Inventory
 	void DisplayMenu();
 	void HideMenu();
 	void ToggleMenu();
-
+	// Aim
 	void ShowCrosshair();
 	void HideCrosshair();
+	// WeaponWheel
+	void ShowWeaponWheel();
+	void HideWeaponWheel();
+	void ToggleWeaponWheel();
+	void InteractWeaponWheel();
 
+	// Interaction
 	void ShowInteractionWidget() const;
 	void HideInteractionWidget() const;
 	void UpdateInteractionWidget(const FInteractableData* InteractableData) const;
@@ -67,4 +78,7 @@ protected:
 	/// Functions
 	/// </summary>
 	virtual void BeginPlay() override;
+
+	// UI mouse Position Setting
+	void CenterMouseCursor();
 };

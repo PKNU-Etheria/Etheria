@@ -4,6 +4,7 @@
 #include "UserInterface/TutorialHUD.h"
 #include "UserInterface/MainMenu.h"
 #include "UserInterface/Interaction/InteractionWidget.h"
+#include "UserInterface/Inventory/WeaponWheel.h"
 
 ATutorialHUD::ATutorialHUD()
 {
@@ -13,6 +14,7 @@ void ATutorialHUD::DisplayMenu()
 {
 	if (MainMenuWidget)
 	{
+		CenterMouseCursor();
 		bIsMenuVisble = true;
 		MainMenuWidget->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -60,6 +62,54 @@ void ATutorialHUD::HideCrosshair()
 	if (CrosshairWidget)
 	{
 		CrosshairWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void ATutorialHUD::ShowWeaponWheel()
+{
+	if (WeaponWheelWidget)
+	{
+		CenterMouseCursor();
+		bIsWeaponWheelVisible = true;
+		WeaponWheelWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void ATutorialHUD::HideWeaponWheel()
+{
+	if (WeaponWheelWidget)
+	{
+		bIsWeaponWheelVisible = false;
+		WeaponWheelWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void ATutorialHUD::ToggleWeaponWheel()
+{
+	// if WeaponWheel VIsible
+	if (bIsWeaponWheelVisible)
+	{	// 메뉴창을 먼저 숨김
+		HideWeaponWheel();
+
+		const FInputModeGameOnly InputMode;
+		GetOwningPlayerController()->SetInputMode(InputMode);
+		GetOwningPlayerController()->SetShowMouseCursor(false);
+	}
+	else
+	{	// 메뉴가 열려있을 때 UI요소들을 클릭할 수 있음. 캐릭터 제어 , 카메라 무빙 등도 포함.
+		ShowWeaponWheel();
+
+		const FInputModeGameAndUI InputMode;
+		GetOwningPlayerController()->SetInputMode(InputMode);
+		GetOwningPlayerController()->SetShowMouseCursor(true);
+	}
+}
+
+void ATutorialHUD::InteractWeaponWheel()
+{
+	if (WeaponWheelWidget)
+	{
+		WeaponWheelWidget->CalculateSection();
 	}
 }
 
@@ -111,9 +161,34 @@ void ATutorialHUD::BeginPlay()
 	}
 
 	if (CrosshairWidgetClass)
-	{	
+	{
 		CrosshairWidget = CreateWidget<UUserWidget>(GetWorld(), CrosshairWidgetClass);
 		CrosshairWidget->AddToViewport();
 		CrosshairWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if (WeaponWheelClass)
+	{
+		WeaponWheelWidget = CreateWidget<UWeaponWheel>(GetWorld(), WeaponWheelClass);
+		WeaponWheelWidget->AddToViewport();
+		WeaponWheelWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void ATutorialHUD::CenterMouseCursor()
+{
+	if (APlayerController * PC = GetOwningPlayerController())
+	{
+		FViewport* Viewport = PC->GetLocalPlayer()->ViewportClient->Viewport;
+		if (Viewport)
+		{
+			int32 ViewportSizeX, ViewportSizeY;
+			PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+
+			int32 X = ViewportSizeX / 2;
+			int32 Y = ViewportSizeY / 2;
+
+			Viewport->SetMouse(X, Y);
+		}
 	}
 }
