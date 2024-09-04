@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "WeaponWheel")
 	void ChangeCurSectionValue(int newVal);
 
+	FORCEINLINE int32 GetSectionCount() const { return SectionCount; };
+	FORCEINLINE float GetSectionSize() const { return SectionSize; };
+
 	/// <summary>
 	/// Variables
 	/// </summary>
@@ -37,7 +40,20 @@ public:
 	int32 CurSectionAngle;	// Player Setting WeaponWheel Section index(Weapon)
 
 protected:
+	/// <summary>
+	/// Functions
+	/// </summary>
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	/// <summary>
+	/// Variables
+	/// </summary>
+	// 섹션 개수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponWheel")
+	int32 SectionCount;
+
+	// 섹션 크기
+	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
+	float SectionSize;
 };

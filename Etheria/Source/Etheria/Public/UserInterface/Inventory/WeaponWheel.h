@@ -58,14 +58,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* WeaponWheel;
 
-	// 섹션 개수
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponWheel")
-	int32 SectionCount;
-
-	// 섹션 크기
-	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
-	float SectionSize;
-
 	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
 	TArray<int32> MaxBounds;
 

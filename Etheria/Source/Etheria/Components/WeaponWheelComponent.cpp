@@ -13,6 +13,8 @@ UWeaponWheelComponent::UWeaponWheelComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	CurSectionAngle = 0;
+	SectionCount = 4;
+	SectionSize = 360.0f / SectionCount;
 	// ...
 }
 
