@@ -152,30 +152,6 @@ void AEPlayer::PossessedBy(AController* NewController)
 
 			SetupGASInputComponent();
 		}
-
-		//for (const auto& StartInputAbility : StartInputAbilities)
-		//{
-		//	// ����Ƽ �ο�
-		//	FGameplayAbilitySpec StartSpec(StartInputAbility.Value);
-		//	StartSpec.InputID = StartInputAbility.Key;
-		//	ASC->GiveAbility(StartSpec);
-		//}
-
-		//// ���� �Լ��� ���������� ȣ��Ǳ� ������ Ŭ���̾�Ʈ������ �� �Լ��� ȣ����� �ʴ´�.
-		//// �� �� ���൵ �������.
-		//SetupGASInputComponent();
-
-		//// Ŭ���� ��ü�� �÷��̾ ���� Ŭ�����̱� ������ CastChecked �ص� ��
-		//APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
-
-		//// PgDn, PgUp�� ������ GAS Component�� ����ϴ� Actor�� ������ �� �ִ�. (Player->NPC �����ư��鼭 Ȯ�� ����)
-		//// ������ NPC�� ���� �ƹ��͵� ���� �ʾƵ� �÷��̾��� �±׷� ��Ÿ���� ���� �� �� �ִ�. 
-		//// �̴� ���״� �ƴ�, ������ ������ ����� �Ѵ�.
-		//// Config -> DefaultGame.ini����
-		//// [/Script/GameplayAbilities.AbilitySystemGlobals]
-		//// bUseDebugTargetFromHud = True
-		//// �� �� ���� �߰������ �Ѵ�.
-		//PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
 	}
 }
 
