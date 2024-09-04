@@ -8,6 +8,8 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnWeaponWheelWidgetUpdated);	// Update WeaponWheel Widget
 
+class UItemBase;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ETHERIA_API UWeaponWheelComponent : public UActorComponent
 {
@@ -28,6 +30,9 @@ public:
 	FORCEINLINE int32 GetSectionCount() const { return SectionCount; };
 	FORCEINLINE float GetSectionSize() const { return SectionSize; };
 
+	UFUNCTION(Category = "WeaponWheel")
+	FORCEINLINE TArray<UItemBase*> GetInventoryContents() const { return WeaponWheelContents; };
+
 	/// <summary>
 	/// Variables
 	/// </summary>
@@ -35,6 +40,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "WeaponWheel", meta = (AllowPrivateAccess = "true"))
 	int32 CurSectionAngle;	// Player Setting WeaponWheel Section index(Weapon)
+
+	TArray<UTexture2D*> WeaponSectionDefaultImages;	// 0: Bow, 1: Gauntlet, 2: Spear, 3: Sword
 
 protected:
 	/// <summary>
@@ -53,4 +60,7 @@ protected:
 	// 섹션 크기
 	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
 	float SectionSize;
+
+	UPROPERTY(VisibleAnywhere, Category = "WeaponWheel")
+	TArray<TObjectPtr<UItemBase>> WeaponWheelContents;
 };

@@ -4,6 +4,7 @@
 #include "UserInterface/Inventory/WeaponWheel.h"
 #include "Character/Player/EPlayer.h"
 #include "Components/WeaponWheelComponent.h"
+#include "Public/UserInterface/Inventory/WeaponWheelSectionImage.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -16,6 +17,11 @@ void UWeaponWheel::NativeOnInitialized()
 	{
 		WeaponWheelReference = PlayerCharacter->GetWeaponWheel();
 		WeaponWheelReference->OnWeaponWheelWidgetUpdated.AddUObject(this, &UWeaponWheel::UpdateActiveSection);
+	}
+
+	if (WeaponSectionPanel)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("WeaponSectionPanel Connect!")));
 	}
 
 	// MI_WeaponWheel이라는 머티리얼을 기반으로 동적 인스턴스 생성
@@ -32,13 +38,18 @@ void UWeaponWheel::NativeOnInitialized()
 	// SectionCount와 SectionSize 설정
 	if (RadialMenuMat)
 	{
+		float RotationValue = (WeaponWheelReference->CurSectionAngle + (WeaponWheelReference->GetSectionCount() * 0.5f)) * WeaponWheelReference->GetSectionSize(); // Change Value
+
 		RadialMenuMat->SetScalarParameterValue(FName("SectionCount"), WeaponWheelReference->GetSectionCount());
+		RadialMenuMat->SetScalarParameterValue(FName("ActiveRotation"), RotationValue);
 	}
 
 	MaxBounds.Empty();
 	MinBounds.Empty();
 
 	CalculateSectionBounds();
+
+	SettingSectionImage();
 }
 
 void UWeaponWheel::NativeConstruct()
@@ -46,12 +57,6 @@ void UWeaponWheel::NativeConstruct()
 	Super::NativeConstruct();
 
 	PlayerCharacter = Cast<AEPlayer>(GetOwningPlayerPawn());
-}
-
-void UWeaponWheel::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-
 }
 
 void UWeaponWheel::CalculateSectionBounds()
@@ -76,6 +81,56 @@ void UWeaponWheel::CalculateSectionBounds()
 	{
 		RadialMenuMat->SetScalarParameterValue(FName("SectionCount"), SectionCount);
 		//RadialMenuMat->SetScalarParameterValue(FName("SectionSize"), SectionSize);
+	}
+}
+
+void UWeaponWheel::SettingSectionImage()
+{
+	if (!WeaponWheelSectionImageClass || !WeaponSectionPanel) return; // 클래스 또는 패널이 없으면 리턴
+
+	if (!WeaponSectionPanel || !WeaponSectionPanel->IsA<UCanvasPanel>())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("WeaponSectionPanel is not a Canvas Panel!"));
+		return;
+	}
+
+	FVector InitialRotationAxis = FVector(0.0f, -1.0f, 0.0f);
+
+	// 4개의 섹션을 패널에 추가
+	for (int32 i = 0; i < WeaponWheelReference->GetSectionCount(); ++i)
+	{
+		// UWeaponWheelSectionImage 위젯을 생성
+		UWeaponWheelSectionImage* NewSectionImage = CreateWidget<UWeaponWheelSectionImage>(this, WeaponWheelSectionImageClass);
+		NewSectionImage->GetWeaponIcon()->SetBrushFromTexture(WeaponWheelReference->WeaponSectionDefaultImages[i]);
+
+		if (NewSectionImage)
+		{
+			// 패널에 새 위젯 추가
+			WeaponSectionPanel->AddChild(NewSectionImage);
+			WeaponImageWidget.Add(NewSectionImage);
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Check Section Children: %d"), WeaponSectionPanel->GetAllChildren().Num()));
+		}
+
+		UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(NewSectionImage->Slot);
+		if (!CanvasSlot) continue;
+
+		CanvasSlot->SetAnchors(FAnchors(0.5f, 0.5f, 0.5f, 0.5f));
+		CanvasSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+
+		float AngleDegrees = i * WeaponWheelReference->GetSectionSize();
+
+		FVector RotatedVector = InitialRotationAxis.RotateAngleAxis(AngleDegrees, FVector(0.0f, 0.0f, 1.0f));
+		FVector2D Position2D(RotatedVector.X * 250.0f, RotatedVector.Y * 250.0f); // 250.0f is the radius from the center.
+
+		// Set the position for the widget.
+		CanvasSlot->SetPosition(Position2D);
+
+		// Set the size of each widget (can be adjusted to fit icon dimensions).
+		CanvasSlot->SetSize(FVector2D(200.0f, 200.0f));
+
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Add Weapon Section Image : %d"), i));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Widget Position: %f, %f"), Position2D.X, Position2D.Y));
+
 	}
 }
 
@@ -120,7 +175,7 @@ void UWeaponWheel::CalculateSection()
 		// 머티리얼의 스칼라 파라미터를 업데이트
 		RadialMenuMat->SetScalarParameterValue(FName("SelectedRotation"), RotationValue);
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("RotationValue : %f"), RotationValue));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("RotationValue : %d, %d"), SelectedAngle, WeaponWheelReference->CurSectionAngle));
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("Updated SelectedRotation: %d, %d"), MinBounds[SelectedAngle], MaxBounds[SelectedAngle]));
 	}
 }
@@ -169,5 +224,4 @@ FRotator UWeaponWheel::GetMouseRotation()
 	LookAtRotation.Yaw = 180.0f - LookAtRotation.Yaw;
 
 	return LookAtRotation;
-	return FRotator();
 }

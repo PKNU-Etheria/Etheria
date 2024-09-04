@@ -13,6 +13,24 @@ UWeaponWheelComponent::UWeaponWheelComponent()
 	CurSectionAngle = 0;
 	SectionCount = 4;
 	SectionSize = 360.0f / SectionCount;
+
+	if (UTexture2D* BowImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/bow.bow'")))
+	{
+		WeaponSectionDefaultImages.Add(BowImage);
+	}
+	if (UTexture2D* GauntletImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/gauntlet.gauntlet'")))
+	{
+		WeaponSectionDefaultImages.Add(GauntletImage);
+	}
+	if (UTexture2D* SpearImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/spear.spear'")))
+	{
+		WeaponSectionDefaultImages.Add(SpearImage);
+	}
+	if (UTexture2D* SwordImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/sword.sword'")))
+	{
+		WeaponSectionDefaultImages.Add(SwordImage);
+	}
+
 	// ...
 }
 

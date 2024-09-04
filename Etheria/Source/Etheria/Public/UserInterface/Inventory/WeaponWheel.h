@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Components/Image.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 #include "Blueprint/UserWidget.h"
 #include "WeaponWheel.generated.h"
 
 class UWeaponWheelComponent;
 class AEPlayer;
+class UWeaponWheelSectionImage;
 
 UCLASS()
 class ETHERIA_API UWeaponWheel : public UUserWidget
@@ -20,6 +23,8 @@ public:
 	/// Functions
 	/// </summary>
 	void CalculateSectionBounds();
+
+	void SettingSectionImage();
 
 	void CalculateSection();
 
@@ -42,13 +47,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "WeaponWheel", meta = (AllowPrivateAccess = "true"))
 	int32 SelectedAngle;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UWeaponWheelSectionImage> WeaponWheelSectionImageClass;
+
 protected:
 	/// <summary>
 	/// Functions
 	/// </summary>
 	virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
-	virtual void NativePreConstruct() override;
 
 	/// <summary>
 	/// Variables
@@ -61,9 +68,15 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* WeaponWheel;
 
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* WeaponSectionPanel; 
+
 	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
 	TArray<int32> MaxBounds;
 
 	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
 	TArray<int32> MinBounds;
+
+	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
+	TArray<UWidget*> WeaponImageWidget;
 };
