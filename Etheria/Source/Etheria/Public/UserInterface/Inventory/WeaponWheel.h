@@ -26,6 +26,9 @@ public:
 	void CheckSection();
 
 	void UpdateActiveSection();	// Update MI_WeaponWheel Globar Scalar Parameter Value - ActiveRotation Update
+
+	UFUNCTION(BlueprintCallable, Category = "WeaponWheel")
+	FRotator GetMouseRotation();
 	
 	/// <summary>
 	/// Variables

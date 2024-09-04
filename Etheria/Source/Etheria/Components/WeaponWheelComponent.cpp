@@ -2,8 +2,6 @@
 
 
 #include "Components/WeaponWheelComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
 UWeaponWheelComponent::UWeaponWheelComponent()
@@ -36,31 +34,6 @@ void UWeaponWheelComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, GetMouseRotation().ToString());
 	// ...
-}
-
-FRotator UWeaponWheelComponent::GetMouseRotation()
-{
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-	if (!PlayerController) return FRotator::ZeroRotator;
-
-	float MouseX, MouseY;
-	bool bGotMousePosition = PlayerController->GetMousePosition(MouseX, MouseY);
-	if (!bGotMousePosition)  return FRotator::ZeroRotator;
-
-	FVector2D ViewportSize;
-	GEngine->GameViewport->GetViewportSize(ViewportSize);
-
-	FVector2D ScreenCenter = ViewportSize * 0.5f;
-
-	FVector MousePositionVector(MouseX, MouseY, 0.0f);
-
-	FVector ScreenCenterVector(ScreenCenter.X, ScreenCenter.Y, 0.0f);
-
-	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(ScreenCenterVector, MousePositionVector);
-
-	LookAtRotation.Yaw = 180.0f - LookAtRotation.Yaw;
-
-	return LookAtRotation;
 }
 
 void UWeaponWheelComponent::ChangeCurSectionValue(int newVal)

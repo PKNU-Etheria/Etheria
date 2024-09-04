@@ -23,9 +23,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "WeaponWheel")
-	FRotator GetMouseRotation();
-
-	UFUNCTION(BlueprintCallable, Category = "WeaponWheel")
 	void ChangeCurSectionValue(int newVal);
 
 	FORCEINLINE int32 GetSectionCount() const { return SectionCount; };
