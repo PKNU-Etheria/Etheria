@@ -24,6 +24,16 @@ public:
 	FORCEINLINE void SetItemReference(UItemBase* ItemIn) { ItemReference = ItemIn; };
 	FORCEINLINE UItemBase* GetItemReference() const { return ItemReference; };
 protected:
+	/// <summary>
+	/// Functions
+	/// </summary>
+	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;	  // 마우스 버튼을 눌렸을 때 상호작용.
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;	// 닫기와 같은 버튼을 누를때 마우스버튼을 때야 적용이 되게끔.
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;	// 드래그 감지
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;	   // 같은 물품을 합칠때 -> 드래그로 쌓을때 같은 유형 판별후 스택을 조정.
+
 	/// <summary>	
 	/// Variables
 	/// </summary>
@@ -46,14 +56,4 @@ protected:
 	// 수량표시할 텍스트
 	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot", meta = (BindWidget));
 	UTextBlock* ItemQuantity;
-
-	/// <summary>
-	/// Functions
-	/// </summary>
-	virtual void NativeOnInitialized() override;
-	virtual void NativeConstruct() override;
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;	  // 마우스 버튼을 눌렸을 때 상호작용.
-	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;	// 닫기와 같은 버튼을 누를때 마우스버튼을 때야 적용이 되게끔.
-	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;	// 드래그 감지
-	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;	   // 같은 물품을 합칠때 -> 드래그로 쌓을때 같은 유형 판별후 스택을 조정.
 };
