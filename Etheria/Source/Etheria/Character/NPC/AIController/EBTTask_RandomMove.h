@@ -25,5 +25,5 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Search, meta = (AllowPrivateAccess = true))
-	float SearchRadius = 1500.f;
+	float SearchRadius = 200.f;
 };

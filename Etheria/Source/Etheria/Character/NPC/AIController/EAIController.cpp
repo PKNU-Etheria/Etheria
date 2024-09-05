@@ -39,15 +39,14 @@ void AEAIController::BeginPlay()
 	RunBehaviorTree(BehaviorTree);
 	BehaviorTreeComponent->StartTree(*BehaviorTree);
 
-
-	//if (GetPerceptionComponent()) 
-	//{
-	//	UE_LOG(LogTemp, Log, TEXT("EAIController : Perception Component Set!"));
-	//}
-	//else 
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("EAIController : No Perception Component!"));
-	//}
+	if (GetPerceptionComponent()) 
+	{
+		UE_LOG(LogTemp, Log, TEXT("EAIController : Perception Component Set!"));
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EAIController : No Perception Component!"));
+	}
 }
 
 void AEAIController::OnPossess(APawn* InPawn)
@@ -88,10 +87,10 @@ FRotator AEAIController::GetControlRotation() const
 
 void AEAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
 {
-	/*if (DetectedPawns.Num() > 0) 
-	{
-		UE_LOG(LogTemp, Log, TEXT("EAIController : Player Enter!"));
-	}*/
+	//if (DetectedPawns.Num() > 0) 
+	//{
+	//	UE_LOG(LogTemp, Log, TEXT("EAIController : Player Enter!"));
+	//}
 
 	for (size_t i = 0; i < DetectedPawns.Num(); i++)
 	{
@@ -105,8 +104,11 @@ void AEAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
 
 void AEAIController::OnTargetDetected(AActor* Actor, const FAIStimulus Stimulus)
 {
+	UE_LOG(LogTemp, Log, TEXT("EAIController : Find Player!!"));
+
 	if (auto const character = Cast<AECharacter>(Actor))
 	{
+		//UE_LOG(LogTemp, Log, TEXT("EAIController : Find Player!!"));
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Find Player!!");
 		Blackboard->SetValueAsBool(BlackboardKeys::CanSeePlayer, Stimulus.WasSuccessfullySensed());
 	}
@@ -132,6 +134,6 @@ void AEAIController::SetupPerceptionSystem()
 	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
 	GetPerceptionComponent()->SetDominantSense(*SightConfig->GetSenseImplementation());
-	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEAIController::OnTargetDected);
+	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEAIController::OnTargetDetected);
 	GetPerceptionComponent()->ConfigureSense(*SightConfig);
 }
