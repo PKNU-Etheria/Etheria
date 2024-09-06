@@ -77,6 +77,6 @@ Etheria/db
 Etheria/Etheria.sln
 Etheria/.vsconfig
 
-
-# StartContent (too heavy)
-Etheria/Content/StarterContent/
+# Ignore Content Assets
+Etheria/Content/StarterContent
+Etheria/Content/Mediterranean_Coast
