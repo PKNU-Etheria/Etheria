@@ -8,7 +8,6 @@
 #include "ECharacter.generated.h"
 
 UCLASS()
-class ETHERIA_API AECharacter : public ACharacter
 class ETHERIA_API AECharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()

@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class ETHERIA_API AEPlayer : public AECharacter, public IAbilitySystemInterface
+class ETHERIA_API AEPlayer : public AECharacter//, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -56,25 +56,50 @@ protected:
 
 	void GASInputPressed(int32 InputID);
 	void GASInputReleased(int32 InputID);
+
 	void Interact(int32 InputID);
 	void Attack(int32 InputID);
 	void Skill(int32 InputID);
 	void SpecialSkill(int32 InputID);
+	void Dash(int32 InputID);
+
+	void InventoryUI(int32 InputID);
+	void WeaponUI(int32 InputID);
+	void QuickSlot(int32 InputID);
 	// If you want to add input, add to here
 
 
 	// State
+	virtual void InitializeDelegate() override;
 
+	virtual void SetDead() override;
+
+	UFUNCTION()
+	virtual void OnOutOfHealth();
 
 	// Skill & Weapon
+	void SetWeapon();
+
+
+
+public:
+	// Animation
+	void SetMontage(UAnimMontage* sourceMontage, UAnimMontage* targetMontage) { sourceMontage = targetMontage; }
+	// To Change Montage needs some GA have UAnimMontage itself
+
+	UAnimMontage* GetInteractMontage() { return InteractMontage; }
+	UAnimMontage* GetAttackMontage() { return AttackMontage; }
+	UAnimMontage* GetSkillMontage() { return SkillMontage; }
+	UAnimMontage* GetSpecialSkillMontage() { return SpecialSkillMontage; }
+	UAnimMontage* GetDashMontage() { return DashMontage; }
 
 
 
 //Variable
 protected:
 	//ASC
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<class UAbilitySystemComponent> ASC;
+	//UPROPERTY(EditAnywhere, Category = GAS)
+	//TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
@@ -94,7 +119,7 @@ protected:
 
 
 	// Input
-	// ≥™¡ﬂø° πËø≠∑Œ ∞¸∏Æ
+	// ÎÇòÏ§ëÏóê Î∞∞Ïó¥Î°ú Í¥ÄÎ¶¨
 	UPROPERTY(VisibleAnywhere, Category = Input)
 	class UInputMappingContext* DefaultMappingContext;
 
@@ -119,4 +144,51 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* SpecialSkillAction;
 	
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> DashAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> InventoryUIAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> WeaponUIAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_01;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_02;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_03;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_04;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_05;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_06;
+
+
+	// Animation
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> InteractMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> AttackMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> SkillMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> SpecialSkillMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> DashMontage;
+
+
+	// Weapon
+	TObjectPtr<class EWeapon> Weapon;
 };

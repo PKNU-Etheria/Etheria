@@ -14,6 +14,9 @@
 #include "AbilitySystemComponent.h"
 #include "EPlayerController.h"
 #include "EPlayerState.h"
+#include "EPlayer.h"
+#include "Character/ECharacterAttributeSet.h"
+#include "Etheria/Weapon/EWeapon.h"
 
 AEPlayer::AEPlayer()
 {
@@ -65,6 +68,13 @@ AEPlayer::AEPlayer()
 	// Input
 	InitializeInputKey();
 
+	ConstructorHelpers::FObjectFinder<UAnimMontage> TEMPMONTAGE(TEXT("/Script/Engine.AnimMontage'/Game/Character/Player/Animation/TestMontage.TestMontage'"));
+	if (TEMPMONTAGE.Succeeded())
+	{
+		//SetMontage(AttackMontage, TEMPMONTAGE.Object);
+		AttackMontage = TEMPMONTAGE.Object;
+	}
+
 }
 
 UAbilitySystemComponent* AEPlayer::GetAbilitySystemComponent() const
@@ -110,40 +120,33 @@ void AEPlayer::PossessedBy(AController* NewController)
 		ASC = EPS->GetAbilitySystemComponent();
 		ASC->InitAbilityActorInfo(EPS, this);
 
-		int32 InputId = 0;
-		for (const auto& StartAbility : StartAbilities)
+		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+		EffectContextHandle.AddSourceObject(this);
+		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, 1, EffectContextHandle);
+		if (EffectSpecHandle.IsValid())
 		{
-			// ¾îºô¸®Æ¼ ºÎ¿©
-			FGameplayAbilitySpec StartSpec(StartAbility);
-			StartSpec.InputID = InputId++;
-			ASC->GiveAbility(StartSpec);
-
-			SetupGASInputComponent();
+			ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 		}
 
-		//for (const auto& StartInputAbility : StartInputAbilities)
-		//{
-		//	// ¾îºô¸®Æ¼ ºÎ¿©
-		//	FGameplayAbilitySpec StartSpec(StartInputAbility.Value);
-		//	StartSpec.InputID = StartInputAbility.Key;
-		//	ASC->GiveAbility(StartSpec);
-		//}
+		for (const auto& StartAbility : StartAbilities)
+		{
+			FGameplayAbilitySpec StartSpec(StartAbility);
+			ASC->GiveAbility(StartSpec);
+		}
 
-		//// ºùÀÇ ÇÔ¼ö´Â ¼­¹ö¿¡¼­¸¸ È£ÃâµÇ±â ¶§¹®¿¡ Å¬¶óÀÌ¾ðÆ®¿¡¼­´Â ¹Ø ÇÔ¼ö°¡ È£ÃâµÇÁö ¾Ê´Â´Ù.
-		//// µÑ ´Ù ÇØÁàµµ »ó°ü¾ø´Ù.
-		//SetupGASInputComponent();
+		for (const auto& StartInputAbility : StartInputAbilities)
+		{
+			FGameplayAbilitySpec StartSpec(StartInputAbility.Value);
+			StartSpec.InputID = StartInputAbility.Key;
+			ASC->GiveAbility(StartSpec);
+		}
 
-		//// Å¬·¡½º ÀÚÃ¼´Â ÇÃ·¹ÀÌ¾î¸¦ À§ÇÑ Å¬·¡½ºÀÌ±â ¶§¹®¿¡ CastChecked ÇØµµ µÊ
-		//APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
+		SetupGASInputComponent();
 
-		//// PgDn, PgUpÀ» ´©¸£¸é GAS Component¸¦ »ç¿ëÇÏ´Â Actor¸¦ º¯°æÇÒ ¼ö ÀÖ´Ù. (Player->NPC ¹ø°¥¾Æ°¡¸é¼­ È®ÀÎ °¡´É)
-		//// ÇÏÁö¸¸ NPC¸¦ º¸¸é ¾Æ¹«°Íµµ ÇÏÁö ¾Ê¾Æµµ ÇÃ·¹ÀÌ¾îÀÇ ÅÂ±×·Î ³ªÅ¸³ª´Â °ÍÀ» º¼ ¼ö ÀÖ´Ù. 
-		//// ÀÌ´Â ¹ö±×´Â ¾Æ´Ô, ÇÏÁö¸¸ ¼³Á¤À» ÇØÁà¾ß ÇÑ´Ù.
-		//// Config -> DefaultGame.ini¿¡¼­
-		//// [/Script/GameplayAbilities.AbilitySystemGlobals]
-		//// bUseDebugTargetFromHud = True
-		//// À§ µÎ ÁÙÀ» Ãß°¡ÇØÁà¾ß ÇÑ´Ù.
-		//PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
+		APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
+		PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
+
+		InitializeDelegate();
 	}
 }
 
@@ -173,10 +176,21 @@ void AEPlayer::SetupGASInputComponent()
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AEPlayer::GASInputPressed, 0);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AEPlayer::GASInputReleased, 0);
 
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AEPlayer::Interact, 1);
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AEPlayer::Attack, 2);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AEPlayer::Interact, 2);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AEPlayer::GASInputPressed, 1);
 		EnhancedInputComponent->BindAction(SkillAction, ETriggerEvent::Triggered, this, &AEPlayer::Skill, 3);
 		EnhancedInputComponent->BindAction(SpecialSkillAction, ETriggerEvent::Triggered, this, &AEPlayer::SpecialSkill, 4);
+		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &AEPlayer::Dash, 5);
+
+		EnhancedInputComponent->BindAction(InventoryUIAction, ETriggerEvent::Triggered, this, &AEPlayer::InventoryUI, 6);
+		EnhancedInputComponent->BindAction(WeaponUIAction, ETriggerEvent::Triggered, this, &AEPlayer::WeaponUI, 7);
+
+		EnhancedInputComponent->BindAction(QuickSlotAction_01, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 8);
+		EnhancedInputComponent->BindAction(QuickSlotAction_02, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 9);
+		EnhancedInputComponent->BindAction(QuickSlotAction_03, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 10);
+		EnhancedInputComponent->BindAction(QuickSlotAction_04, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 11);
+		EnhancedInputComponent->BindAction(QuickSlotAction_05, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 12);
+		EnhancedInputComponent->BindAction(QuickSlotAction_06, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 13);
 	}
 }
 
@@ -255,6 +269,51 @@ void AEPlayer::InitializeInputKey()
 	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_SpeicalSkill.IA_SpeicalSkill'"));
 	if (IA_SPECIALSKILL.Succeeded())
 		SpecialSkillAction = IA_SPECIALSKILL.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_DASH
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_Dash.IA_Dash'"));
+	if (IA_DASH.Succeeded())
+		DashAction = IA_DASH.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_INVENTORYUI
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_InventoryUI.IA_InventoryUI'"));
+	if (IA_INVENTORYUI.Succeeded())
+		InventoryUIAction = IA_INVENTORYUI.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_WEAPONUI
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_WeaponUI.IA_WeaponUI'"));
+	if (IA_WEAPONUI.Succeeded())
+		WeaponUIAction = IA_WEAPONUI.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUICKSLOT_01
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_QuickSlot_1.IA_QuickSlot_1'"));
+	if (IA_QUICKSLOT_01.Succeeded())
+		QuickSlotAction_01 = IA_QUICKSLOT_01.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUICKSLOT_02
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_QuickSlot_2.IA_QuickSlot_2'"));
+	if (IA_QUICKSLOT_02.Succeeded())
+		QuickSlotAction_02 = IA_QUICKSLOT_02.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUICKSLOT_03
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_QuickSlot_3.IA_QuickSlot_3'"));
+	if (IA_QUICKSLOT_03.Succeeded())
+		QuickSlotAction_03 = IA_QUICKSLOT_03.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUICKSLOT_04
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_QuickSlot_4.IA_QuickSlot_4'"));
+	if (IA_QUICKSLOT_04.Succeeded())
+		QuickSlotAction_04 = IA_QUICKSLOT_04.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUICKSLOT_05
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_QuickSlot_5.IA_QuickSlot_5'"));
+	if (IA_QUICKSLOT_05.Succeeded())
+		QuickSlotAction_05 = IA_QUICKSLOT_05.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUICKSLOT_06
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_QuickSlot_6.IA_QuickSlot_6'"));
+	if (IA_QUICKSLOT_06.Succeeded())
+		QuickSlotAction_06 = IA_QUICKSLOT_06.Object;
 }
 
 void AEPlayer::Move(const FInputActionInstance& Instance)
@@ -302,4 +361,51 @@ void AEPlayer::Skill(int32 InputID)
 void AEPlayer::SpecialSkill(int32 InputID)
 {
 	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : SpecialSkill"));
+}
+
+void AEPlayer::Dash(int32 InputID)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : Dash"));
+}
+
+void AEPlayer::InventoryUI(int32 InputID)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : InventoryUI"));
+}
+
+void AEPlayer::WeaponUI(int32 InputID)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : WeaponUI"));
+}
+
+void AEPlayer::QuickSlot(int32 InputID)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : QuickSlot"));
+}
+
+void AEPlayer::InitializeDelegate()
+{
+	//AttributeSet->OnOutOfHealth.AddDynamic(this, &ThisClass::OnOutOfHealth);
+	const UECharacterAttributeSet* CurrentAttributeSet = ASC->GetSet<UECharacterAttributeSet>();
+	// mutableë¡œ ì œì™¸ë¥¼ ë¸ë¦¬ê²Œì´íŠ¸ ë“±ë¡ì´ ê°€ëŠ¥
+	if (CurrentAttributeSet)
+	{
+		CurrentAttributeSet->OnOutOfHealth.AddDynamic(this, &AEPlayer::OnOutOfHealth);
+	}
+}
+
+void AEPlayer::SetDead()
+{
+	Super::SetDead();
+
+	APlayerController* PlayerController = Cast<AEPlayerController>(GetController());
+	if (PlayerController)
+	{
+		DisableInput(PlayerController);
+	}
+}
+
+void AEPlayer::OnOutOfHealth()
+{
+	SetDead();
 }
