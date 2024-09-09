@@ -22,7 +22,7 @@ AEAIController::AEAIController(FObjectInitializer const& ObjectInitializer)
 
 	if (BehaviourTreeObject.Succeeded())
 	{
-		UE_LOG(LogTemp, Log, TEXT("EAIController : Behaviour Tree Load Success!"));
+		// UE_LOG(LogTemp, Log, TEXT("EAIController : Behaviour Tree Load Success!"));
 		BehaviorTree = BehaviourTreeObject.Object;
 	}
 
@@ -39,14 +39,14 @@ void AEAIController::BeginPlay()
 	RunBehaviorTree(BehaviorTree);
 	BehaviorTreeComponent->StartTree(*BehaviorTree);
 
-	if (GetPerceptionComponent()) 
-	{
-		UE_LOG(LogTemp, Log, TEXT("EAIController : Perception Component Set!"));
-	}
-	else 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("EAIController : No Perception Component!"));
-	}
+	//if (GetPerceptionComponent()) 
+	//{
+	//	UE_LOG(LogTemp, Log, TEXT("EAIController : Perception Component Set!"));
+	//}
+	//else 
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("EAIController : No Perception Component!"));
+	//}
 }
 
 void AEAIController::OnPossess(APawn* InPawn)
@@ -55,7 +55,7 @@ void AEAIController::OnPossess(APawn* InPawn)
 
 	if (Blackboard)
 	{
-		UE_LOG(LogTemp, Log, TEXT("EAIController : Blackboard Initialize Success!"));
+		// UE_LOG(LogTemp, Log, TEXT("EAIController : Blackboard Initialize Success!"));
 		Blackboard->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	}
 }

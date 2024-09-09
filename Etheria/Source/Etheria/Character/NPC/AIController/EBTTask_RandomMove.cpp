@@ -19,7 +19,7 @@ UEBTTask_RandomMove::UEBTTask_RandomMove(FObjectInitializer const& ObjectInitial
 
 EBTNodeResult::Type UEBTTask_RandomMove::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	auto const Controller = Cast<AEAIController>(OwnerComp.GetAIOwner());
+	AEAIController* Controller = Cast<AEAIController>(OwnerComp.GetAIOwner());
 	auto const NPC = Controller->GetPawn();
 
 	FVector const NPCLocation = NPC->GetActorLocation();
