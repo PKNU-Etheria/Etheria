@@ -13,45 +13,45 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 	GENERATED_BODY()
 	FQuestStruct() {}
 
-	// Äù½ºÆ® Á¤º¸
+	// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 
 		// NPC ID
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int NPCID;
 
-		// Äù½ºÆ® ID
+		// ï¿½ï¿½ï¿½ï¿½Æ® ID
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int QuestID;
 
-		// Äù½ºÆ® ÀÌ¸§
+		// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ì¸ï¿½
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FName QuestName;
 
-		// Äù½ºÆ® ¼³¸í
+		// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FText QuestDescription;
 
 
 
-	// Äù½ºÆ® ÀüÁ¦ Á¶°Ç (Require)
+	// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Require)
 	
-		// ¼±Çà ·¹º§
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int Require_Level = 1;
 
-		// ¼±Çà ¾ÆÀÌÅÛ
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<int> Require_Items;
 
-		// ¼±Çà Äù½ºÆ®
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<int> Require_Quests;
 	
 
 
-	// Äù½ºÆ® ÁøÇàµµ (Progress)
+	// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½àµµ (Progress)
 
-		// ¸ó½ºÅÍ Ã³Ä¡
+		// ï¿½ï¿½ï¿½ï¿½ Ã³Ä¡
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<int> Progress_Monster;
 
@@ -61,7 +61,7 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<int>  Progress_Monster_ID;
 
-		// ¾ÆÀÌÅÛ È¹µæ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¹ï¿½ï¿½
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<int>  Progress_Item;
 
@@ -73,7 +73,7 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 
 
 
-	// Äù½ºÆ® º¸»ó
+	// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 
 };
 
@@ -109,16 +109,16 @@ struct ETHERIA_API FDialogueStruct : public FTableRowBase
 	FText Script;
 
 
-	// ´ÙÀ½ ½ºÅ©¸³Æ® ID (Branch O)
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ® ID (Branch O)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FBranchStruct> Branchs;
 
-	// ´ÙÀ½ ½ºÅ©¸³Æ® ID (Branch X)
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ® ID (Branch X)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int NextScriptID;
 
 
-	// ÇöÀç Scene IDÀÇ ScriptID¿¡¼­ Çàµ¿ÇÒ NPC ID (Behavior Tree·Î Á¦¾î)
+	// ï¿½ï¿½ï¿½ï¿½ Scene IDï¿½ï¿½ ScriptIDï¿½ï¿½ï¿½ï¿½ ï¿½àµ¿ï¿½ï¿½ NPC ID (Behavior Treeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int> ActionNPC_IDs;
 
@@ -128,7 +128,7 @@ struct ETHERIA_API FDialogueStruct : public FTableRowBase
 	bool bLoop = false;
 };
 
-// Äù½ºÆ® ´ëÈ­ Á¤º¸ ÀúÀå 
+// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 USTRUCT(BlueprintType)
 struct ETHERIA_API FQuestDialogueDataStruct : public FTableRowBase
 {
@@ -145,7 +145,7 @@ struct ETHERIA_API FQuestDialogueDataStruct : public FTableRowBase
 	UDataTable* ClearDialogueDB;
 };
 
-// ¾ÆÀÌÅÛ ¼öÄ¡ Á¤º¸
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 USTRUCT()
 struct FItemStatistics
 {
@@ -182,7 +182,7 @@ struct FItemTextData
 	FText UsageText;
 };
 
-// ¼öÄ¡Çü µ¥ÀÌÅÍ
+// ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 USTRUCT()
 struct FItemNumericData
 {
@@ -197,7 +197,7 @@ struct FItemNumericData
 	UPROPERTY(EditAnywhere)
 	bool bIsStackable;
 };
-// ¾ÆÀÌÄÜ, ¸Þ½¬ Á¤º¸
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Þ½ï¿½ ï¿½ï¿½ï¿½ï¿½
 USTRUCT()
 struct FItemAssetData
 {
@@ -217,7 +217,7 @@ struct FItemData : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")
-	FName ID;	// ±âº» µ¥ÀÌÅÍ Å×ÀÌºí °Ë»ö ÇÊµå ¿ªÇÒ
+	FName ID;	// ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½Ë»ï¿½ ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")
 	EItemType ItemType;

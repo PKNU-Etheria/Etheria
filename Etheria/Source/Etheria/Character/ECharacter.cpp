@@ -2,6 +2,7 @@
 
 #include "Character/ECharacter.h"
 #include "Perception/AISense_Sight.h"
+#include "Character/ECharacterAttributeSet.h"
 
 // Sets default values
 AECharacter::AECharacter()
@@ -10,6 +11,13 @@ AECharacter::AECharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SetupStimulus();
+	ASC = nullptr;
+	AttributeSet = nullptr;
+}
+
+UAbilitySystemComponent* AECharacter::GetAbilitySystemComponent() const
+{
+	return ASC;
 }
 
 // Called when the game starts or when spawned
@@ -33,7 +41,7 @@ void AECharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
-// AI perception component Stimulus(ÀÚ±Ø) ±¸Á¶Ã¼ »ý¼º
+// AI perception component Stimulus(ï¿½Ú±ï¿½) ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
 void AECharacter::SetupStimulus()
 {
 	Stimulus = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("Stimulus"));

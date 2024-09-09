@@ -5,6 +5,9 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/TimelineComponent.h"
+#include "Components/InventoryComponent.h"
+#include "Public/World/Pickup.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -15,6 +18,8 @@
 #include "EPlayerController.h"
 #include "EPlayerState.h"
 #include "Components/InteractComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Public/UserInterface/TutorialHUD.h"
 
 AEPlayer::AEPlayer()
 {
@@ -65,10 +70,13 @@ AEPlayer::AEPlayer()
 
 	// Create Interact Component
 	InteractComp = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
+	InteractComp->SetPlayer(this);
 
 	// Input
 	InitializeInputKey();
 
+	// Inventory Setting
+	InitializeInventorySet();
 }
 
 UAbilitySystemComponent* AEPlayer::GetAbilitySystemComponent() const
@@ -90,6 +98,18 @@ void AEPlayer::BeginPlay()
 		}
 	}
 
+	HUD = Cast<ATutorialHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+	FOnTimelineFloat AimLerpAlphaValue;
+	FOnTimelineEvent TimelineFinishedEvent;
+	AimLerpAlphaValue.BindUFunction(this, FName("UpdateCameraTimeline"));
+	TimelineFinishedEvent.BindUFunction(this, FName("CameraTimelineEnd"));
+
+	if (AimingCameraTimeline && AimingCameraCurve)
+	{
+		AimingCameraTimeline->AddInterpFloat(AimingCameraCurve, AimLerpAlphaValue);
+		AimingCameraTimeline->SetTimelineFinishedFunc(TimelineFinishedEvent);
+	}
 }
 
 void AEPlayer::Tick(float DeltaTime)
@@ -117,7 +137,7 @@ void AEPlayer::PossessedBy(AController* NewController)
 		int32 InputId = 0;
 		for (const auto& StartAbility : StartAbilities)
 		{
-			// ¾îºô¸®Æ¼ ºÎ¿©
+			// ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½Î¿ï¿½
 			FGameplayAbilitySpec StartSpec(StartAbility);
 			StartSpec.InputID = InputId++;
 			ASC->GiveAbility(StartSpec);
@@ -127,26 +147,26 @@ void AEPlayer::PossessedBy(AController* NewController)
 
 		//for (const auto& StartInputAbility : StartInputAbilities)
 		//{
-		//	// ¾îºô¸®Æ¼ ºÎ¿©
+		//	// ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½Î¿ï¿½
 		//	FGameplayAbilitySpec StartSpec(StartInputAbility.Value);
 		//	StartSpec.InputID = StartInputAbility.Key;
 		//	ASC->GiveAbility(StartSpec);
 		//}
 
-		//// ºùÀÇ ÇÔ¼ö´Â ¼­¹ö¿¡¼­¸¸ È£ÃâµÇ±â ¶§¹®¿¡ Å¬¶óÀÌ¾ðÆ®¿¡¼­´Â ¹Ø ÇÔ¼ö°¡ È£ÃâµÇÁö ¾Ê´Â´Ù.
-		//// µÑ ´Ù ÇØÁàµµ »ó°ü¾ø´Ù.
+		//// ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½Ç±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½.
+		//// ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½àµµ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 		//SetupGASInputComponent();
 
-		//// Å¬·¡½º ÀÚÃ¼´Â ÇÃ·¹ÀÌ¾î¸¦ À§ÇÑ Å¬·¡½ºÀÌ±â ¶§¹®¿¡ CastChecked ÇØµµ µÊ
+		//// Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ CastChecked ï¿½Øµï¿½ ï¿½ï¿½
 		//APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
 
-		//// PgDn, PgUpÀ» ´©¸£¸é GAS Component¸¦ »ç¿ëÇÏ´Â Actor¸¦ º¯°æÇÒ ¼ö ÀÖ´Ù. (Player->NPC ¹ø°¥¾Æ°¡¸é¼­ È®ÀÎ °¡´É)
-		//// ÇÏÁö¸¸ NPC¸¦ º¸¸é ¾Æ¹«°Íµµ ÇÏÁö ¾Ê¾Æµµ ÇÃ·¹ÀÌ¾îÀÇ ÅÂ±×·Î ³ªÅ¸³ª´Â °ÍÀ» º¼ ¼ö ÀÖ´Ù. 
-		//// ÀÌ´Â ¹ö±×´Â ¾Æ´Ô, ÇÏÁö¸¸ ¼³Á¤À» ÇØÁà¾ß ÇÑ´Ù.
-		//// Config -> DefaultGame.ini¿¡¼­
+		//// PgDn, PgUpï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GAS Componentï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Actorï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½. (Player->NPC ï¿½ï¿½ï¿½ï¿½ï¿½Æ°ï¿½ï¿½é¼­ È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+		//// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ NPCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ¹ï¿½ï¿½Íµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Æµï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½Â±×·ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½. 
+		//// ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½×´ï¿½ ï¿½Æ´ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
+		//// Config -> DefaultGame.iniï¿½ï¿½ï¿½ï¿½
 		//// [/Script/GameplayAbilities.AbilitySystemGlobals]
 		//// bUseDebugTargetFromHud = True
-		//// À§ µÎ ÁÙÀ» Ãß°¡ÇØÁà¾ß ÇÑ´Ù.
+		//// ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 		//PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
 	}
 }
@@ -166,6 +186,31 @@ void AEPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	// GAS Input
 	SetupGASInputComponent();
+}
+
+void AEPlayer::DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop)
+{
+	if (PlayerInventory->FindMatchingItem(ItemToDrop))
+	{	// ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½å¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ù¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½)
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.bNoFail = true;
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½ ï¿½ï¿½. ï¿½î¶² ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ ï¿½Ï´ï¿½ï¿½ï¿½ Ã¼Å©
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		// Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ù´ï¿½ ï¿½ï¿½ï¿½ï¿½ -> Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½Íºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+		const FVector SpawnLocation{ GetActorLocation() + (GetActorForwardVector() * 50.0f) };
+		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
+
+		const int32 RemovedQuantity = PlayerInventory->RemoveAmountOfItem(ItemToDrop, QuantityToDrop);
+
+		APickup* Pickup = GetWorld()->SpawnActor<APickup>(APickup::StaticClass(), SpawnTransform, SpawnParams);
+
+		Pickup->InitializeDrop(ItemToDrop, RemovedQuantity);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item to drop was somehow null!"));
+	}
 }
 
 void AEPlayer::SetupGASInputComponent()
@@ -307,4 +352,69 @@ void AEPlayer::Skill(int32 InputID)
 void AEPlayer::SpecialSkill(int32 InputID)
 {
 	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : SpecialSkill"));
+}
+
+void AEPlayer::Aim()
+{
+	if (!HUD->bIsMenuVisble)
+	{	
+		bAiming = true;
+		bUseControllerRotationYaw = true;	
+		GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+
+		if (AimingCameraTimeline)	
+		{	
+			AimingCameraTimeline->PlayFromStart();
+		}
+	}
+}
+
+void AEPlayer::StopAiming()
+{
+	if (bAiming)
+	{
+		bAiming = false;
+		bUseControllerRotationYaw = false;	
+		HUD->HideCrosshair();
+		GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+
+		if (AimingCameraTimeline)
+		{	
+			AimingCameraTimeline->Reverse();
+		}
+	}
+}
+
+void AEPlayer::InitializeInventorySet()
+{
+	PlayerInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerInventory"));
+	PlayerInventory->SetSlotsCapacity(20);
+	PlayerInventory->SetWeightCapacity(50.0f);
+}
+
+void AEPlayer::ToggleMenu()
+{
+	HUD->ToggleMenu();
+
+	if (HUD->bIsMenuVisble)
+	{
+		StopAiming();
+	}
+}
+
+void AEPlayer::UpdateCameraTimeline(const float TimelineValue) const
+{
+	const FVector CameraLocation = FMath::Lerp(DefaultCameraLocation, AimingCameraLocation, TimelineValue);
+	SpringArmComp->SocketOffset = CameraLocation;
+}
+
+void AEPlayer::CameraTimelineEnd()
+{
+	if (AimingCameraTimeline)
+	{
+		if (AimingCameraTimeline->GetPlaybackPosition() != 0.0f)
+		{
+			HUD->ShowCrosshair();
+		}
+	}
 }

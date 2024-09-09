@@ -5,16 +5,19 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "AbilitySystemInterface.h"
 #include "ECharacter.generated.h"
 
 UCLASS()
-class ETHERIA_API AECharacter : public ACharacter
+class ETHERIA_API AECharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	AECharacter();
+
+	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,7 +31,17 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+  // AI Perception
 	class UAIPerceptionStimuliSourceComponent* Stimulus;
 
 	void SetupStimulus();
+  
+	//ASC
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TObjectPtr<class UAbilitySystemComponent> ASC;
+
+	// Attribute
+	UPROPERTY()
+	TObjectPtr<class UECharacterAttributeSet> AttributeSet;
+
 };

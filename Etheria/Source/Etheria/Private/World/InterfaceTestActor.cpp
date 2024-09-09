@@ -33,7 +33,7 @@ void AInterfaceTestActor::BeginFocus()
 {
 	if (Mesh)
 	{
-		Mesh->SetRenderCustomDepth(true);	// ¸Þ½¬ÀÇ °æ°è¿¡ Á¢±Ù Çã¿ë
+		Mesh->SetRenderCustomDepth(true);	// ï¿½Þ½ï¿½ï¿½ï¿½ ï¿½ï¿½è¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	}
 }
 
@@ -56,7 +56,7 @@ void AInterfaceTestActor::EndInteract()
 
 }
 
-void AInterfaceTestActor::Interact(AItemTestCharacter* PlayerCharacter)
+void AInterfaceTestActor::Interact(ACharacter* PlayerCharacter)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Calling Interact override on interface test actor."));
 

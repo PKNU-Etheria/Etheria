@@ -3,9 +3,10 @@
 
 #include "UserInterface/Inventory/InventoryPanel.h"
 #include "World/ItemTestCharacter.h"
-#include "Public/Components/InventoryComponent.h"
+#include "Components/InventoryComponent.h"
 #include "Public/UserInterface/Inventory/InventoryPanel.h"
 #include "Public/UserInterface/Inventory/InventoryItemSlot.h"
+#include "Public/UserInterface/Inventory/ItemDragDropOperation.h"
 #include "Components/WrapBox.h"
 #include "Components/TextBlock.h"
 
@@ -27,22 +28,30 @@ void UInventoryPanel::NativeOnInitialized()
 
 void UInventoryPanel::SetInfoText() const
 {
-	WeightInfo->SetText(FText::Format(FText::FromString("{0}/{1}"), InventoryReference->GetInventoryTotalWeight(), InventoryReference->GetWeightCapacity()));
-	CapacityInfo->SetText(FText::Format(FText::FromString("{0}/{1}"), InventoryReference->GetInventoryContents().Num(), InventoryReference->GetSlotsCapacity()));
+	const FString WeightInfoValue{
+		FString::SanitizeFloat(InventoryReference->GetInventoryTotalWeight()) + "/" + FString::SanitizeFloat(InventoryReference->GetWeightCapacity())
+	};
+
+	const FString CapacityInfoValue{
+		FString::FromInt(InventoryReference->GetInventoryContents().Num()) + "/" + FString::FromInt(InventoryReference->GetSlotsCapacity())
+	};
+
+	WeightInfo->SetText(FText::FromString(WeightInfoValue));
+	CapacityInfo->SetText(FText::FromString(CapacityInfoValue));
 }
 
 void UInventoryPanel::RefreshInventory()
 {
 	if (InventoryReference && InventorySlotClass)
 	{
-		InventoryPanel->ClearChildren();
+		InventoryWrapBox->ClearChildren();
 
 		for (UItemBase* const& InventoryItem : InventoryReference->GetInventoryContents())
 		{
 			UInventoryItemSlot* ItemSlot = CreateWidget<UInventoryItemSlot>(this, InventorySlotClass);
 			ItemSlot->SetItemReference(InventoryItem);
 			
-			InventoryPanel->AddChildToWrapBox(ItemSlot);
+			InventoryWrapBox->AddChildToWrapBox(ItemSlot);
 		}
 
 		SetInfoText();
@@ -51,5 +60,14 @@ void UInventoryPanel::RefreshInventory()
 
 bool UInventoryPanel::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
+	const UItemDragDropOperation* ItemDragDrop = Cast<UItemDragDropOperation>(InOperation);
+
+	if (ItemDragDrop->SourceItem && InventoryReference)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Detected and item drop on InventoryPanel"));
+
+		return true;
+	}
+
 	return false;
 }
