@@ -28,18 +28,18 @@ struct FItemAddResult
 
 	};
 
-	// ÀÎº¥Åä¸®¿¡ µé¾î°¡´Â ¾ÆÀÌÅÛ ½ÇÁ¦ ¼ö·®. 
+	// ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½î°¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. 
 	UPROPERTY(BlueprintReadOnly, Category = "Item Add Result")
 	int32 ActualAmountAdded;
-	// ¾ÆÀÌÅÛ Ãß°¡ ÀÛ¾÷½Ã¿¡ ³ªÅ¸³»´Â »óÅÂ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½Û¾ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(BlueprintReadOnly, Category = "Item Add Result")
 	EItemAddResult OperationResult;
-	// °á°ú¿Í ÇÔ°Ô Àü´ÞµÇ´Â Á¤º¸ ¸Þ½ÃÁö
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ÞµÇ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½
 	UPROPERTY(BlueprintReadOnly, Category = "Item Add Result")
 	FText ResultMessage;
 
-	// È®ÀÎ ±â´É
-	static FItemAddResult AddedNone(const FText& ErrorText)	// ¾ò°íÀÚÇÏ´Â ¾ÆÀÌÅÛÀÌ ¾øÀ» ¶§ : ÀÎº¥Åä¸®°¡ ²Ë Ã¡°Å³ª, ´Ù¸¥ ¹®Á¦ ¹ß»ý. Áï 0À» ¹ÝÈ¯ÇÒ ¶§
+	// È®ï¿½ï¿½ ï¿½ï¿½ï¿½
+	static FItemAddResult AddedNone(const FText& ErrorText)	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ : ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ Ã¡ï¿½Å³ï¿½, ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½. ï¿½ï¿½ 0ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½
 	{
 		FItemAddResult AddedNoneResult;
 		AddedNoneResult.ActualAmountAdded = 0;
@@ -48,7 +48,7 @@ struct FItemAddResult
 
 		return AddedNoneResult;
 	};
-	static FItemAddResult AddedPartial(const int32 PartialAmountAdded, const FText& ErrorText)	//ÀÏºÎ¸¸ È¹µæÇßÀ» ¶§
+	static FItemAddResult AddedPartial(const int32 PartialAmountAdded, const FText& ErrorText)	//ï¿½ÏºÎ¸ï¿½ È¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 	{
 		FItemAddResult AddedPartialResult;
 		AddedPartialResult.ActualAmountAdded = PartialAmountAdded;
@@ -57,7 +57,7 @@ struct FItemAddResult
 
 		return AddedPartialResult;
 	};
-	static FItemAddResult AddedAll(const int32 AmountAdded, const FText& Message)	// ¸ðµÎ È¹µæÇßÀ» ¶§
+	static FItemAddResult AddedAll(const int32 AmountAdded, const FText& Message)	// ï¿½ï¿½ï¿½ È¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 	{
 		FItemAddResult AddedAllResult;
 		AddedAllResult.ActualAmountAdded = AmountAdded;
@@ -79,50 +79,50 @@ public:
 	/// </summary>
 	UInventoryComponent();
 
-	// ¾ÆÀÌÅÛ Ãß°¡¸¦ À§ÇÑ ÇÔ¼ö.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½.
 	UFUNCTION(Category = "Inventory")
 	FItemAddResult HandleAddItem(UItemBase* InputItem);
 
-	// ÇØ´ç ¾ÆÀÌÅÛ Æ÷ÀÎÅÍ°¡ ÀÎº¥Åä¸®¿¡ Á¸ÀçÇÏ´ÂÁö ¹× µ¿ÀÏÇÑÁö Ã¼Å©ÇÏ±â À§ÇÑ ÇÔ¼ö.
+	// ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½.
 	UFUNCTION(Category = "Inventory")
 	UItemBase* FindMatchingItem(UItemBase* ItemIn) const;
-	// ID·Î ¾ÆÀÌÅÛÀ» Ã£±â À§ÇÑ ÇÔ¼ö.
+	// IDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½.
 	UFUNCTION(Category = "Inventory")
 	UItemBase* FindNextItemByID(UItemBase* ItemIn) const;
-	// ¿©ºÐ °ø°£ Ã¼Å©
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
 	UFUNCTION(Category = "Inventory")
 	UItemBase* FindNextPartialStack(UItemBase* ItemIn) const;
 
-	// ÀÎº¥Åä¸®¿¡¼­ ¾ÆÀÌÅÛÀ» »èÁ¦.
+	// ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	UFUNCTION(Category = "Inventory")
 	void RemoveSingleInstanceOfItem(UItemBase* ItemToRemove);
-	// ¶³¾îÆ®¸®°íÀÚÇÏ´Â °³¼ö¸¸Å­ °¨¼Ò ¹× »èÁ¦.
+	// ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	UFUNCTION(Category = "Inventory")
 	int32 RemoveAmountOfItem(UItemBase* ItemIn, int32 DesiredAmountToRemove);
-	// ¾ÆÀÌÅÛ ºÐÇÒ.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	UFUNCTION(Category = "Inventory")
 	void SplitExistingStack(UItemBase* ItemIn, const int32 AmountToSplit);
 
 	// Getters
 	UFUNCTION(Category = "Inventory")
-	FORCEINLINE float GetInventoryTotalWeight() const { return InventoryTotalWeight; };	// ÀÎº¥Åä¸® ¹«°Ô ¹ÝÈ¯
+	FORCEINLINE float GetInventoryTotalWeight() const { return InventoryTotalWeight; };	// ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 	UFUNCTION(Category = "Inventory")
-	FORCEINLINE float GetWeightCapacity() const { return InventoryWeightCapacity; };	// ÀÎº¥Åä¸® ¿ë·® ¹ÝÈ¯
+	FORCEINLINE float GetWeightCapacity() const { return InventoryWeightCapacity; };	// ï¿½Îºï¿½ï¿½ä¸® ï¿½ë·® ï¿½ï¿½È¯
 	UFUNCTION(Category = "Inventory")
-	FORCEINLINE int32 GetSlotsCapacity() const { return InventorySlotsCapacity; };	// ÀÎº¥Åä¸® °³¼ö
+	FORCEINLINE int32 GetSlotsCapacity() const { return InventorySlotsCapacity; };	// ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½
 	UFUNCTION(Category = "Inventory")
-	FORCEINLINE TArray<UItemBase*> GetInventoryContents() const { return InventoryContents; };	// ÀÎº¥Åä¸® Á¤º¸ ¹è¿­ (¾ÆÀÌÅÛ ¸ðÀ½)
+	FORCEINLINE TArray<UItemBase*> GetInventoryContents() const { return InventoryContents; };	// ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 
 	// Setters
 	UFUNCTION(Category = "Inventory")
-	FORCEINLINE void SetSlotsCapacity(const int32 NewSlotsCapacity) { InventorySlotsCapacity = NewSlotsCapacity; };	// ÀÎº¥Åä¸® ¾÷±×·¹ÀÌµå½Ã È®Àå ¹× Ãà¼Ò ÇÔ¼ö.
+	FORCEINLINE void SetSlotsCapacity(const int32 NewSlotsCapacity) { InventorySlotsCapacity = NewSlotsCapacity; };	// ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½×·ï¿½ï¿½Ìµï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½.
 	UFUNCTION(Category = "Inventory")
-	FORCEINLINE void SetWeightCapacity(const float NewWeightCapacity) { InventoryWeightCapacity = NewWeightCapacity; };	// ÀÎº¥Åä¸® ¿ë·® ¼¼ÆÃ
+	FORCEINLINE void SetWeightCapacity(const float NewWeightCapacity) { InventoryWeightCapacity = NewWeightCapacity; };	// ï¿½Îºï¿½ï¿½ä¸® ï¿½ë·® ï¿½ï¿½ï¿½ï¿½
 
 	/// <summary>
 	/// Variables
 	/// </summary>
-	FOnInventoryUpdated OnInventoryUpdated; // µ¨¸®°ÔÀÌÆ® Ãß°¡. ¿ì¸®´Â HandleAddItemÀ» È£ÃâÇØ¼­ AddNewItemÇÔ¼ö·Î ¾ÆÀÌÅÛÀ» Ãß°¡ÇÒ °ÍÀÌ´Ù. ±×·³ ÀÎº¥Åä¸® UIµµ ¾÷µ¥ÀÌÆ®°¡ µÇ¾î¾ß ÇÏ±â À§ÇØ¼­ Ãß°¡ÇÔ.
+	FOnInventoryUpdated OnInventoryUpdated; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ß°ï¿½. ï¿½ì¸®ï¿½ï¿½ HandleAddItemï¿½ï¿½ È£ï¿½ï¿½ï¿½Ø¼ï¿½ AddNewItemï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½. ï¿½×·ï¿½ ï¿½Îºï¿½ï¿½ä¸® UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ß°ï¿½ï¿½ï¿½.
 
 protected:
 	/// <summary>
@@ -135,7 +135,7 @@ protected:
 	int32 CalculateWeightAddAmount(UItemBase* ItemIn, int32 RequestedAddAmount);
 	int32 CalculateNumberForFullStack(UItemBase* StackableItem, int32 InitialRequestedAddAmount);
 
-	// ½ÇÁ¦ Ãß°¡ÇÏ´Â ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛÀ» ÇÔ¼ö.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï´ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½.
 	void AddNewItem(UItemBase* Item, const int32 AmountToAdd);
 
 	/// <summary>

@@ -28,7 +28,7 @@ void UInventoryComponent::BeginPlay()
 UItemBase* UInventoryComponent::FindMatchingItem(UItemBase* ItemIn) const
 {
 	if (ItemIn)
-	{	// ÀÎº¥Åä¸®¿¡ ÇØ´ç ¾ÆÀÌÅÛÀÌ ÀÖÀ¸¸é ¹ÝÈ¯.
+	{	// ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯.
 		if (InventoryContents.Contains(ItemIn))
 		{
 			return ItemIn;
@@ -41,7 +41,7 @@ UItemBase* UInventoryComponent::FindMatchingItem(UItemBase* ItemIn) const
 UItemBase* UInventoryComponent::FindNextItemByID(UItemBase* ItemIn) const
 {
 	if (ItemIn)
-	{	// ÀÎº¥Åä¸®¿¡ ÇØ´ç ¾ÆÀÌµð¸¦ °¡Áø ¾ÆÀÌÅÛÀÌ ÀÖÀ¸¸é ¹ÝÈ¯. ÀÌÁß Æ÷ÀÎÅÍ »ç¿ë. Æ÷ÀÎÅÍ¸¦ Æ÷ÀÎÅÍ·Î °¡¸®Å´.
+	{	// ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½ï¿½Å´.
 		if (const TArray<TObjectPtr<UItemBase>>::ElementType* Result = InventoryContents.FindByKey(ItemIn))
 		{
 			return *Result;
@@ -52,9 +52,9 @@ UItemBase* UInventoryComponent::FindNextItemByID(UItemBase* ItemIn) const
 }
 
 UItemBase* UInventoryComponent::FindNextPartialStack(UItemBase* ItemIn) const
-{	// ÀÌ¹Ì ÀÎº¥Åä¸®¿¡ Á¸ÀçÇÏ´Â ¾ÆÀÌÅÛÀ¸·Î Ã¼Å©ÇÒ ÇÊ¿ä ¾øÀ½.
+{	// ï¿½Ì¹ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©ï¿½ï¿½ ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	if (const TArray<TObjectPtr<UItemBase>>::ElementType* Result = InventoryContents.FindByPredicate([&ItemIn](const UItemBase* InventoryItem)
-		{	// ItemIn¿¡ ´ëÇÑ Á¤º¸¸¦ ÀÎº¥Åä¸® ¾ÆÀÌÅÛµé°ú ºñ±³ for·çÇÁ¹® ´ë½Å ¶÷´ÙÇü½ÄÀÌ¿ë
+		{	// ItemInï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½Ûµï¿½ï¿½ ï¿½ï¿½ forï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¿ï¿½
 			return InventoryItem->ID == ItemIn->ID && !InventoryItem->IsFullItemStack();
 		}) 
 		)
@@ -103,10 +103,10 @@ int32 UInventoryComponent::RemoveAmountOfItem(UItemBase* ItemIn, int32 DesiredAm
 }
 
 void UInventoryComponent::SplitExistingStack(UItemBase* ItemIn, const int32 AmountToSplit)
-{	// ÀÎº¥Åä¸® ³»¿ë¹°ÀÇ ÃÑ °³¼ö°¡ ÀÎº¥Åä¸® ½½·Ô ¿ë·®º¸´Ù ÀÛ°Å³ª °°´Ù¸é.
-	// ÀÎº¥Åä¸® ¾È¿¡ ÀÖ´Â ³»¿ë¹°. ÇÈ¾÷ X
+{	// ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ë¹°ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½ë·®ï¿½ï¿½ï¿½ï¿½ ï¿½Û°Å³ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½.
+	// ï¿½Îºï¿½ï¿½ä¸® ï¿½È¿ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ë¹°. ï¿½È¾ï¿½ X
 	if (!(InventoryContents.Num() + 1 > InventorySlotsCapacity))
-	{	// ³»¿ë¹°À» ÂÉ°³¼­ ³Ö´Â´Ù.
+	{	// ï¿½ï¿½ï¿½ë¹°ï¿½ï¿½ ï¿½É°ï¿½ï¿½ï¿½ ï¿½Ö´Â´ï¿½.
 		RemoveAmountOfItem(ItemIn, AmountToSplit);
 		AddNewItem(ItemIn, AmountToSplit);
 	}
@@ -114,23 +114,23 @@ void UInventoryComponent::SplitExistingStack(UItemBase* ItemIn, const int32 Amou
 
 FItemAddResult UInventoryComponent::HandleNonStackableItems(UItemBase* InputItem, int32 RequestedAddAmount)
 {
-	// InputItemÀÇ weight°¡ À¯È¿ÇÑÁö Ã¼Å©.
+	// InputItemï¿½ï¿½ weightï¿½ï¿½ ï¿½ï¿½È¿ï¿½ï¿½ï¿½ï¿½ Ã¼Å©.
 	if (FMath::IsNearlyZero(InputItem->GetItemSingleWeight()) || InputItem->GetItemSingleWeight() < 0)
 	{
 		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. item has invalid weight value."), InputItem->TextData.Name));
 	}
-	// ¹«°Ô°¡ ÃÊ°ú µÉ °æ¿ì.
+	// ï¿½ï¿½ï¿½Ô°ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½.
 	if (InventoryTotalWeight + InputItem->GetItemSingleWeight() > GetWeightCapacity())
 	{
 		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. item would overflow weight limit."), InputItem->TextData.Name));
 	}
-	// °ø°£ÀÌ ÃÊ°úµÉ °æ¿ì.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
 	if (InventoryContents.Num() + 1 > InventorySlotsCapacity)
 	{
 		return FItemAddResult::AddedNone(FText::Format(FText::FromString("Could not add {0} to the inventory. All inventory slots are full."), InputItem->TextData.Name));
 	}
 
-	// ¾ÆÀÌÅÛ Ãß°¡
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 	AddNewItem(InputItem, RequestedAddAmount);
 	return FItemAddResult::AddedAll(RequestedAddAmount, FText::Format(FText::FromString("Successfully added {0} {1} to the inventory."), RequestedAddAmount, InputItem->TextData.Name));
 }
@@ -143,38 +143,38 @@ int32 UInventoryComponent::HandleStackableItems(UItemBase* InputItem, int32 Requ
 		return 0;
 	}
 
-	int32 AmountToDistribute = RequestedAddAmount;	// ÀÎº¥Åä¸®¿¡ ³Ö±â À§ÇÑ ³²Àº °³¼ö
+	int32 AmountToDistribute = RequestedAddAmount;	// ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-	// ³ÖÀ» ¾ÆÀÌÅÛÀÌ ÀÎº¥Åä¸®¿¡ ÀÌ¹Ì Á¸ÀçÇÒ °æ¿ì¿Í °³¼ö°¡ ÃÖ´ë °³¼ö°¡ ¾Æ´Ò°æ¿ì.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ò°ï¿½ï¿½.
 	UItemBase* ExistingItemStack = FindNextPartialStack(InputItem);
 
 	// distribute item stack over existing stacks
 	while (ExistingItemStack)
-	{	// Ç® ½ºÅÃ±îÁö ³²Àº °³¼ö °¡Á®¿À±â. (µé¾î°¥ ¼ö ÀÖ´Â Çã¿ë °ª)
+	{	// Ç® ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. (ï¿½ï¿½î°¥ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½)
 		const int32 AmountToMakeFullStack = CalculateNumberForFullStack(ExistingItemStack, AmountToDistribute);
-		//  ¹«°Ô ¿ë·® °í·ÁÇÏ±â. Ç® ½ºÅÃ±îÁö ³²Àº ¾ç Áß¿¡¼­ ½ÇÁ¦·Î ³ÖÀ» ¼ö ÀÖ´Â ¾ç.
+		//  ï¿½ï¿½ï¿½ï¿½ ï¿½ë·® ï¿½ï¿½ï¿½ï¿½Ï±ï¿½. Ç® ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½.
 		const int32 WeightLimitAddAmount = CalculateWeightAddAmount(ExistingItemStack, AmountToMakeFullStack);
 
-		// Ãß°¡ÇÒ ¼ö ÀÖ´Â ¾çÀÌ Çã¿ëÇÏ´Â ¿ë·®À» ³ÑÁö ¾Ê´Â °æ¿ì. Ãß°¡ °¡´ÉÇÑ ¹«°Ô°¡ ÀÖÀ» °æ¿ì
+		// ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ë·®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½. ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		if (WeightLimitAddAmount > 0)
-		{	// ÀÎº¥Åä¸®¿¡ ÀÖ´ø ±âÁ¸ ¾ÆÀÌÅÛ ¼ö·® º¯°æ ¹× ÀÎº¥Åä¸® ¹«°Ô º¯°æ.
+		{	// ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 			ExistingItemStack->SetQuantity(ExistingItemStack->Quantity + WeightLimitAddAmount);
 			InventoryTotalWeight += (ExistingItemStack->GetItemSingleWeight() * WeightLimitAddAmount);
-			// ÀÎº¥¿¡ Ãß°¡ÇÑ ½ºÅÃ °ª¸¸Å­ ÁÖ¿î ¾ÆÀÌÅÛ ¼ö·®À» ´Ù½Ã Á¶Á¤ÇØÁÖ±â À§ÇØ ¿¬»ê
+			// ï¿½Îºï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å­ ï¿½Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			AmountToDistribute -= WeightLimitAddAmount;
-			// ÁÖ¿î ¾ÆÀÌÅÛ ¼ö·® ´Ù½Ã Á¶Àý.
+			// ï¿½Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 			InputItem->SetQuantity(AmountToDistribute);
 
-			// ¾ÆÀÌÅÛÀ» Ãß°¡ÇßÀ» ¶§ ÃÖ´ë ¿ë·®ÀÌ ÃÊ°úÇÒ °æ¿ì
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ë·®ï¿½ï¿½ ï¿½Ê°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 			if (InventoryTotalWeight + ExistingItemStack->GetItemSingleWeight() > InventoryWeightCapacity)
-			{	// ÃÑ ¿ë·®ÀÌ ÀÎº¥Åä¸® ÇöÀç ¿ë·®°ú °°´Ù¸é. Áï, ÃÖ´ë ¿ë·®¿¡ µµ´ÞÇß´Ù¸é ·çÇÁ Å»Ãâ.
-				OnInventoryUpdated.Broadcast();	// ÀÎº¥ ¾÷µ¥ÀÌÆ®
-				return RequestedAddAmount - AmountToDistribute;	// µé¾î°£ °³¼ö
+			{	// ï¿½ï¿½ ï¿½ë·®ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½ë·®ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½. ï¿½ï¿½, ï¿½Ö´ï¿½ ï¿½ë·®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ Å»ï¿½ï¿½.
+				OnInventoryUpdated.Broadcast();	// ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+				return RequestedAddAmount - AmountToDistribute;	// ï¿½ï¿½î°£ ï¿½ï¿½ï¿½ï¿½
 			}
 		}
-		else if(WeightLimitAddAmount <= 0)	// ¸¸¾à Çã¿ëµÇ´Â °³¼ö°¡ 0ÀÌ¶ó¸é
-		{	// ³²Àº ½ºÅÃÀº ÀÖÁö¸¸ ÀÎº¥Åä¸®°¡ Çã¿ëÇÒ ¼ö ÀÖ´Â ¹«°Ô ¿ë·®ÀÌ Ã¡À» °æ¿ì.
-			// ¾ÆÀÌÅÛÀ» Ãß°¡ÇÒ ¼ö ÀÖ´Â ¿ë·®Àº Çã¿ëµÇÁö ¾ÊÀ½. Ãß°¡µÇ´Â °ÍÀ» ¸·±â.
+		else if(WeightLimitAddAmount <= 0)	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0ï¿½Ì¶ï¿½ï¿½
+		{	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ë·®ï¿½ï¿½ Ã¡ï¿½ï¿½ ï¿½ï¿½ï¿½.
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ë·®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ß°ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 			if (AmountToDistribute != RequestedAddAmount)
 			{	
 				OnInventoryUpdated.Broadcast();
@@ -184,58 +184,58 @@ int32 UInventoryComponent::HandleStackableItems(UItemBase* InputItem, int32 Requ
 			return 0;
 		}
 
-		if (AmountToDistribute <= 0)	// ¿ë·®µµ °³¼öµµ ¸ðµÎ ´Ù ½ºÅÃ °¡´É
-		{	// ¸ðµç ¾ÆÀÌÅÛÀº ±âÁ¸ ½ºÅÃ ¾ÆÀÌÅÛ¿¡ Ãß°¡µÊ.
+		if (AmountToDistribute <= 0)	// ï¿½ë·®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		{	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û¿ï¿½ ï¿½ß°ï¿½ï¿½ï¿½.
 			OnInventoryUpdated.Broadcast();
 			return RequestedAddAmount;
 		}
-		// ¿©ÀüÈ÷ ½×À» ¼ö ÀÖ´Â °ø°£ÀÌ ÀÖÀ» ¼öµµ ÀÖ±â ¶§¹®¿¡ ÇÑ¹ø´õ Ã¼Å©.
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ Ã¼Å©.
 		ExistingItemStack = FindNextPartialStack(InputItem);
 	}
 
-	// ½×À» ¼ö ¾ø´Ù¸é »õ·Î¿î ÀÎº¥Åä¸® ½½·ÔÀ» ¸¸µé¾î¾ßÇÔ. °ø°£ÀÌ ÀÖ´ÂÁö Ã¼Å©.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ Ã¼Å©.
 	if (InventoryContents.Num() + 1 <= InventorySlotsCapacity)
-	{	// ½ºÅÃ¿¡ ¿©À¯°¡ ¾ø¾î¼­ »õ·Î¿î °ø°£¿¡ ÇØ´ç ¾ÆÀÌÅÛÀ» »õ·Ó°Ô ¸¸µé ¼ö ÀÖ´À³Ä?
-		// °ø°£ÀÌ ÀÖÀ» °æ¿ì. ³²Àº ¾ÆÀÌÅÛ ¼ö·®À» Ãß°¡ÇÒ °ø°£ÀÌ ÀÖ´ÂÁö È®ÀÎ.
+	{	// ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½?
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½.
 		const int32 WeightLimitAddAmount = CalculateWeightAddAmount(InputItem, AmountToDistribute);
 
 		if (WeightLimitAddAmount > 0)
-		{	// Ãß°¡ÇÒ ¼ö ÀÖ´Â ¾çÀÌ ÀüÃ¼ ¾çº¸´Ù ÀÛÀ» °æ¿ì.
+		{	// ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½çº¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
 			if (WeightLimitAddAmount < AmountToDistribute)
-			{	// ÀÏºÎ¸¸ Ãß°¡ÇÒ ¼ö ÀÖµµ·Ï ÇÑ´Ù.
+			{	// ï¿½ÏºÎ¸ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 				AmountToDistribute -= WeightLimitAddAmount;
 				InputItem->SetQuantity(AmountToDistribute);
 
-				// Ãß°¡ÇÒ ¼ö ÀÖ´Â ¼ö·®¸¸Å­ ¾ÆÀÌÅÛÀ» »õ·Ó°Ô ¸¸µé¾î¼­ º¹Á¦ÇÑ´Ù.
+				// ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 				AddNewItem(InputItem->CreateItemCopy(), WeightLimitAddAmount);
 				return RequestedAddAmount - AmountToDistribute;
 			}
-			// ¾ÆÀÌÅÛÀÇ ¸ðµç ¼ö·®À» Ãß°¡ÇÒ ¼ö ÀÖÀ» °æ¿ì. ´Ù Ãß°¡ÇÑ´Ù.
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½. ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ñ´ï¿½.
 			AddNewItem(InputItem, AmountToDistribute);
 			return RequestedAddAmount;
 		}
-		// ¾ÆÀÌÅÛ ½½·ÔÀº ¿©À¯°¡ ÀÖÁö¸¸ ¿ë·®ÀÌ ºÎÁ·ÇÒ °æ¿ì.
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ë·®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
 		return RequestedAddAmount - AmountToDistribute;
 	}
 
-	// ½×À» ¼ö ¾ø°í Ãß°¡ ¿ë·® ½½·ÔÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» °æ¿ì.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ë·® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
 	return 0;
 }
 
 FItemAddResult UInventoryComponent::HandleAddItem(UItemBase* InputItem)
-{	// ¾ÆÀÌÅÛÀÌ ÀÎº¥Åä¸®¿¡ µé¾î¿Ã ¶§¸¶´Ù È®ÀÎÇÏ´Â ½ÃÀÛÁ¡.
+{	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 	if (GetOwner())
 	{
 		const int32 InitialRequestedAddAmount = InputItem->Quantity;
 
-		// ½ºÅÃÀÌ ¾ø´Â ¾ÆÀÌÅÛ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (!InputItem->NumericData.bIsStackable)
 		{
 			return HandleNonStackableItems(InputItem, InitialRequestedAddAmount);
 		}
 
-		// ½ºÅÃÀÎ ¾ÆÀÌÅÛ
-		const int32 StackableAmountAdded = HandleStackableItems(InputItem, InitialRequestedAddAmount);	 // Ãß°¡µÇ´Â ¾ç
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		const int32 StackableAmountAdded = HandleStackableItems(InputItem, InitialRequestedAddAmount);	 // ï¿½ß°ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½
 
 		if (StackableAmountAdded == InitialRequestedAddAmount)
 		{
@@ -263,12 +263,12 @@ void UInventoryComponent::AddNewItem(UItemBase* Item, const int32 AmountToAdd)
 	UItemBase* NewItem;
 
 	if (Item->bIsCopy || Item->bIsPickup)
-	{	// »çº»ÀÌ°Å³ª ¿ùµå¿¡¼­ ÇÈ¾÷ÀÏ °æ¿ì.
+	{	// ï¿½çº»ï¿½Ì°Å³ï¿½ ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½È¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
 		NewItem = Item;
 		NewItem->ResetItemFlags();
 	}
 	else
-	{	// ±âÁ¸ ¾ÆÀÌÅÛÀ» ½ºÅÃ ºÐÇÒÇÏ°Å³ª ´Ù¸¥ ÀÎº¥Åä¸® °ø°£À¸·Î µå·¡±ë(ÀÌµ¿)ÇÒ °æ¿ì
+	{	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°Å³ï¿½ ï¿½Ù¸ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½å·¡ï¿½ï¿½(ï¿½Ìµï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½
 		NewItem = Item->CreateItemCopy();
 	}
 

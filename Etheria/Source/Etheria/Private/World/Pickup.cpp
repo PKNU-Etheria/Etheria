@@ -26,9 +26,9 @@ void APickup::BeginPlay()
 }
 
 void APickup::InitializePickup(const TSubclassOf<UItemBase> BaseClass, const int32 InQuantity)
-{	// ÃÊ±â ¼¼ÆÃ
+{	// ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (ItemDataTable && !DesiredItemID.IsNone())
-	{	// ÇÈ¾÷ÇÒ ¾ÆÀÌÅÛ µ¥ÀÌÅÍ Á¤º¸µéÀ» ·ÎµåÇØ¼­ ¾÷µ¥ÀÌÆ®ÇÔ.
+	{	// ï¿½È¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½.
 		const FItemData* ItemData = ItemDataTable->FindRow<FItemData>(DesiredItemID, DesiredItemID.ToString());
 
 		ItemReference = NewObject<UItemBase>(this, BaseClass);
@@ -50,7 +50,7 @@ void APickup::InitializePickup(const TSubclassOf<UItemBase> BaseClass, const int
 }
 
 void APickup::InitializeDrop(UItemBase* ItemToDrop, const int32 InQuantity)
-{	// µå·ÓµÈ ¾ÆÀÌÅÛÀ» È¹µæÇÏ±â À§ÇÑ ¼¼ÆÃ. ÇÃ·¹ÀÌ¾î°¡ ÁÝ°í -> ÀÎº¥Åä¸®¿¡¼­ ¾÷µ¥ÀÌÆ®ÇÒ µ¥ÀÌÅÍ Á¤º¸¸¦ ¼¼ÆÃ.
+{	// ï¿½ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¹ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ý°ï¿½ -> ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	ItemReference = ItemToDrop;
 	InQuantity <= 0 ? ItemReference->SetQuantity(1) : ItemReference->SetQuantity(InQuantity);
 
@@ -74,7 +74,7 @@ void APickup::BeginFocus()
 {
 	if (PickupMesh)
 	{
-		PickupMesh->SetRenderCustomDepth(true);	// ¸Þ½¬ÀÇ °æ°è¿¡ Á¢±Ù Çã¿ë
+		PickupMesh->SetRenderCustomDepth(true);	// ï¿½Þ½ï¿½ï¿½ï¿½ ï¿½ï¿½è¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	}
 }
 
@@ -82,7 +82,7 @@ void APickup::EndFocus()
 {
 	if (PickupMesh)
 	{
-		PickupMesh->SetRenderCustomDepth(false);	// ¸Þ½¬ÀÇ °æ°è¿¡ Á¢±Ù Çã¿ë
+		PickupMesh->SetRenderCustomDepth(false);	// ï¿½Þ½ï¿½ï¿½ï¿½ ï¿½ï¿½è¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	}
 }
 
@@ -98,12 +98,12 @@ void APickup::Interact(ACharacter* PlayerCharacter)
 void APickup::TakePickup(const ACharacter* Taker)
 {
 	if (!IsPendingKillPending())
-	{	// ÇØ´ç ¾×ÅÍ°¡ ÆÄ±«µÇ±â ½ÃÀÛÇÒ ¶§! Áï ÇÃ·¹ÀÌ¾î°¡ ¾ÆÀÌÅÛÀ» ÁÖ¿üÀ» ¶§
+	{	// ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ä±ï¿½ï¿½Ç±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½! ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¿ï¿½ï¿½ï¿½ ï¿½ï¿½
 		if (ItemReference)
-		{	// ¾ÆÀÌÅÛ Á¤º¸°¡ À¯È¿ÇÏ¸é
+		{	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ï¿½Ï¸ï¿½
 			const AEPlayer* TPlayer = Cast<AEPlayer>(Taker);
 			if (UInventoryComponent* PlayerInventory = TPlayer->GetInventory())
-			{	// ÇÃ·¹ÀÌ¾î¿¡ ºÎÂøµÇ¾î ÀÖ´Â ÇÃ·¹ÀÌ¾î ÀÎº¥Åä¸® ÄÄÆ÷³ÍÆ®¸¦ Ã¼Å©.
+			{	// ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½Ö´ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ã¼Å©.
 				const FItemAddResult AddResult = PlayerInventory->HandleAddItem(ItemReference);
 
 				switch (AddResult.OperationResult)
@@ -128,9 +128,9 @@ void APickup::TakePickup(const ACharacter* Taker)
 				UE_LOG(LogTemp, Warning, TEXT("Player inventory component is null!"));
 			}
 
-			// ÇÃ·¹ÀÌ¾î ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛÀ» Ãß°¡
-			// Ãß°¡ ¿¬»êÀÇ °á°ú¸¦ ÅëÇØ.
-			// ¾ÆÀÌÅÛÀ» ÆÄ±«ÇÏ°Å³ª Á¶Á¤ÇÔ.
+			// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+			// ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Ï°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 		}
 		else
 		{

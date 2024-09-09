@@ -24,15 +24,15 @@ void UInteractionWidget::UpdateWidget(const FInteractableData* InteractableData)
 {
 	switch (InteractableData->InteractableType)
 	{
-	case EInteractableType::Pickup:	// ¾ÆÀÌÅÛ¿¡ ´ëÇÑ À§Á¬ Á¤º¸ ¾÷µ¥ÀÌÆ®.
-		KeyPressText->SetText(FText::FromString("Press"));	// »óÈ£ÀÛ¿ë ¿öµù
-		InteractionProgressBar->SetVisibility(ESlateVisibility::Collapsed);	// ¼û±è
+	case EInteractableType::Pickup:	// ï¿½ï¿½ï¿½ï¿½ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®.
+		KeyPressText->SetText(FText::FromString("Press"));	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+		InteractionProgressBar->SetVisibility(ESlateVisibility::Collapsed);	// ï¿½ï¿½ï¿½ï¿½
 
-		if (InteractableData->Quantity < 2)	// ¼ö·®ÀÌ 1°³ÀÏ °æ¿ì
+		if (InteractableData->Quantity < 2)	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		{	
 			QuantityText->SetVisibility(ESlateVisibility::Collapsed);
 		}
-		else  // ¼ö·®ÀÌ 2°³ ÀÌ»óÀÏ °æ¿ì.
+		else  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
 		{
 			QuantityText->SetText(FText::Format(NSLOCTEXT("InteractionWidget", "QuantityText", "x{0}"), InteractableData->Quantity));
 			QuantityText->SetVisibility(ESlateVisibility::Visible);

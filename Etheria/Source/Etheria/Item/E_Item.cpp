@@ -18,11 +18,11 @@ AE_Item::AE_Item()
 
 	RootComponent = Trigger;
 	Mesh->SetupAttachment(Trigger);
-	// Æ®¸®°Å ÇÁ·ÎÇÊ ¼³Á¤
+	// Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	//Trigger->SetCollisionProfileName(CPROFILE_ABTRIGGER);
 	Trigger->InitSphereRadius(200.0f);
 
-	// ¸Þ½¬ °¡Á®¿À±â
+	// ï¿½Þ½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> BoxMeshRef(TEXT("/Script/Engine.StaticMesh'/Game/ArenaBattle/Environment/Props/SM_Env_Breakables_Box1.SM_Env_Breakables_Box1'"));
 	if (BoxMeshRef.Object)
 	{
@@ -42,14 +42,14 @@ void AE_Item::NotifyActorBeginOverlap(AActor* Other)
 {
 	Super::NotifyActorBeginOverlap(Other);
 
-	// ¸Ô¾úÀ» ¶§ ¼öÇàÇÒ ·ÎÁ÷
+	// ï¿½Ô¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	InvokeGameplayCue(Other);
 	ApplyEffectToTarget(Other);
 
-	// Ä³¸¯ÅÍ°¡ ºÎ‹HÇûÀ» ¶§ ¸Þ½¬ ¼û°ÜÁÖ±â
+	// Ä³ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Î‹Hï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Þ½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½
 	Mesh->SetHiddenInGame(true);
-	SetActorEnableCollision(false);	// Ãæµ¹ Ã³¸®
-	SetLifeSpan(2.0f);		// ½ÃÇÑºÎ ¼±¾ð 2ÃÊµÚ ÀÚµ¿À¸·Î »ç¶óÁö°ÔÇÏ±â
+	SetActorEnableCollision(false);	// ï¿½æµ¹ Ã³ï¿½ï¿½
+	SetLifeSpan(2.0f);		// ï¿½ï¿½ï¿½Ñºï¿½ ï¿½ï¿½ï¿½ï¿½ 2ï¿½Êµï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
 }
 
 // Called when the game starts or when spawned

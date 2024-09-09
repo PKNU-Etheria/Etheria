@@ -35,7 +35,7 @@ public:
 	void TakePickup(const ACharacter* Taker);
 
 #if WITH_EDITOR
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;	// ÆíÁý±â¿¡¼­ ¼öÁ¤ÇÑ ³»¿ëÀ» Áï½Ã Àû¿ëÇÏ´Â ÀÌº¥Æ®.
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;	// ï¿½ï¿½ï¿½ï¿½ï¿½â¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ìºï¿½Æ®.
 #endif
 
 protected:

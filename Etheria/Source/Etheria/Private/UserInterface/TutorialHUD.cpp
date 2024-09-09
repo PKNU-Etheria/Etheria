@@ -28,9 +28,9 @@ void ATutorialHUD::HideMenu()
 }
 
 void ATutorialHUD::ToggleMenu()
-{	// ¸Þ´ºÃ¢ÀÌ ¶°ÀÖÀ¸¸é
+{	// ï¿½Þ´ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (bIsMenuVisble)
-	{	// ¸Þ´ºÃ¢À» ¸ÕÀú ¼û±è
+	{	// ï¿½Þ´ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		HideMenu();
 
 		const FInputModeGameOnly InputMode;
@@ -38,7 +38,7 @@ void ATutorialHUD::ToggleMenu()
 		GetOwningPlayerController()->SetShowMouseCursor(false);
 	}
 	else
-	{	// ¸Þ´º°¡ ¿­·ÁÀÖÀ» ¶§ UI¿ä¼ÒµéÀ» Å¬¸¯ÇÒ ¼ö ÀÖÀ½. Ä³¸¯ÅÍ Á¦¾î , Ä«¸Þ¶ó ¹«ºù µîµµ Æ÷ÇÔ.
+	{	// ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ UIï¿½ï¿½Òµï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ , Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½îµµ ï¿½ï¿½ï¿½ï¿½.
 		DisplayMenu();
 
 		const FInputModeGameAndUI InputMode;
@@ -97,10 +97,10 @@ void ATutorialHUD::BeginPlay()
 	Super::BeginPlay();
 
 	if (MainMenuClass)
-	{	// ¸ÞÀÎ ¸Þ´º À§Á¬ÀÌ ÀÖ´Ù¸é
-		MainMenuWidget = CreateWidget<UMainMenu>(GetWorld(), MainMenuClass); // ÇØ´ç À§Á¬À¸·Î ¼¼ÆÃ
-		MainMenuWidget->AddToViewport(5);	// ÀüÃ¼È­¸é ¼³Á¤, ¸Å°³ º¯¼ö´Â zÃà ¼±Á¤
-		MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);		// ¼û±è
+	{	// ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½
+		MainMenuWidget = CreateWidget<UMainMenu>(GetWorld(), MainMenuClass); // ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		MainMenuWidget->AddToViewport(5);	// ï¿½ï¿½Ã¼È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Å°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ zï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);		// ï¿½ï¿½ï¿½ï¿½
 	}
 
 	if (InteractionWidgetClass)

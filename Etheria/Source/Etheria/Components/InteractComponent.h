@@ -10,7 +10,7 @@
 class AEPlayer;
 
 USTRUCT()
-struct FInteractionData	// ╩Схёюш©К©║ ╢Кгя ╣╔юлем
+struct FInteractionData	// О©╫О©╫хёО©╫ш©К©║ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -20,7 +20,7 @@ struct FInteractionData	// ╩Схёюш©К©║ ╢Кгя ╣╔юлем
 	};
 
 	UPROPERTY()
-	AActor* CurrentInteractable;	// ╩Схёюш©К ╬вем
+	AActor* CurrentInteractable;	// О©╫О©╫хёО©╫ш©О©╫ О©╫О©╫О©╫О©╫
 
 	UPROPERTY()
 	float LastInteractionCheckTime;

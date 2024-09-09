@@ -15,7 +15,7 @@ class UItemBase;
 class UTimelineComponent;
 
 //USTRUCT()
-//struct FInteractionData	// »óÈ£ÀÛ¿ë¿¡ ´ëÇÑ µ¥ÀÌÅÍ
+//struct FInteractionData	// ï¿½ï¿½È£ï¿½Û¿ë¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //{
 //	GENERATED_USTRUCT_BODY()
 //
@@ -25,7 +25,7 @@ class UTimelineComponent;
 //	};
 //
 //	UPROPERTY()
-//	AActor* CurrentInteractable;	// »óÈ£ÀÛ¿ë ¾×ÅÍ
+//	AActor* CurrentInteractable;	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½
 //
 //	UPROPERTY()
 //	float LastInteractionCheckTime;
@@ -90,14 +90,14 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();//
 
-	void ToggleMenu();	// ÅäÅ¬ ¿Â/¿ÀÇÁÇÏ´Â Å°¿Í ¹ÙÀÎµù ½ÃÅ³ ÇÔ¼ö.
+	void ToggleMenu();	// ï¿½ï¿½Å¬ ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Å°ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½Å³ ï¿½Ô¼ï¿½.
 
-	void Aim();	// ÁÜ ¶¯±â±â
-	void StopAiming();	// ÁÜ Ãë¼Ò
+	void Aim();	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+	void StopAiming();	// ï¿½ï¿½ ï¿½ï¿½ï¿½
 	UFUNCTION()
-	void UpdateCameraTimeline(const float TimelineValue) const;		// ¼±Çü Å¸ÀÓ¶óÀÎ¿¡ µû¸¥ ÁÜ È¿°ú (±âÁ¸ º¤ÅÍ -> ¼öÁ¤ º¤ÅÍ)
+	void UpdateCameraTimeline(const float TimelineValue) const;		// ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ó¶ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È¿ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ -> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 	UFUNCTION()
-	void CameraTimelineEnd();	// Å¸ÀÓ ¶óÀÎ³¡³­µÚ ÀÌº¥Æ®
+	void CameraTimelineEnd();	// Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
 
 	void PerformInteractionCheck();
 
@@ -121,21 +121,21 @@ protected:
 	ATutorialHUD* HUD;
 
 	UPROPERTY(VisibleAnywhere, Category = "Character | Interaction")
-	TScriptInterface<IInteractionInterface> TargetInteractable;	// »óÈ£ÀÛ¿ë °¡´ÉÇÑ Ç×¸ñµé
+	TScriptInterface<IInteractionInterface> TargetInteractable;	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½
 
 	UPROPERTY(VisibleAnywhere, Category = "Character | Inventory")
 	UInventoryComponent* PlayerInventory;
 
-	// »óÈ£ÀÛ¿ë º¯¼öµé
-	float InteractionCheckFrequency;	// »óÈ£ÀÛ¿ë ÁÖ±â
+	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	float InteractionCheckFrequency;	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ö±ï¿½
 
-	float InteractionCheckDistance;	// »óÈ£ÀÛ¿ë °Å¸®
+	float InteractionCheckDistance;	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Å¸ï¿½
 
-	FTimerHandle TimerHandle_Interaction;	// Ã¼Å© ÁÖ±â
+	FTimerHandle TimerHandle_Interaction;	// Ã¼Å© ï¿½Ö±ï¿½
 
-	FInteractionData InteractionData;	// »óÈ£ÀÛ¿ë °¡´ÉÇÑ Ç×¸ñ -> ÃÖ±Ù¿¡ Á¢ÃË
+	FInteractionData InteractionData;	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ -> ï¿½Ö±Ù¿ï¿½ ï¿½ï¿½ï¿½ï¿½
 	
-	// Ä«¸Þ¶ó ÃÊÁ¡ À§Ä¡ Å¸ÀÓ¶óÀÎ ¼Ó¼º
+	// Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ Å¸ï¿½Ó¶ï¿½ï¿½ï¿½ ï¿½Ó¼ï¿½
 	UPROPERTY(VisibleAnywhere, Category = "Character | Camera")
 	FVector DefaultCameraLocation;
 	UPROPERTY(VisibleAnywhere, Category = "Character | Camera")
@@ -153,7 +153,7 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-	// »óÈ£ÀÛ¿ë ½Ã°£ÀÌ 0ÀÎ °æ¿ì¿¡´Â false 
+	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ 0ï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ false 
 	FORCEINLINE bool IsInteracting() const { return GetWorldTimerManager().IsTimerActive(TimerHandle_Interaction); };
 
 	FORCEINLINE UInventoryComponent* GetInventory() const { return PlayerInventory; };
