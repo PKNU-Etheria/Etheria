@@ -26,4 +26,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
+	// Attribute
+	UPROPERTY()
+	TObjectPtr<class UECharacterAttributeSet> AttributeSet;
 };
