@@ -10,7 +10,6 @@ AECharacter::AECharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SetupStimulus();
 	ASC = nullptr;
 	AttributeSet = nullptr;
 }
@@ -40,12 +39,3 @@ void AECharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-
-// AI perception component Stimulus(�ڱ�) ����ü ����
-void AECharacter::SetupStimulus()
-{
-	Stimulus = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("Stimulus"));
-	Stimulus->RegisterForSense(TSubclassOf<UAISense_Sight>());
-	Stimulus->RegisterWithPerceptionSystem();
-}
-

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "AbilitySystemInterface.h"
 #include "ECharacter.generated.h"
 
@@ -30,12 +29,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-private:
-  // AI Perception
-	class UAIPerceptionStimuliSourceComponent* Stimulus;
-
-	void SetupStimulus();
-  
+protected:
 	//ASC
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
