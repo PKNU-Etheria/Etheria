@@ -358,7 +358,7 @@ void AEPlayer::SpecialSkill(int32 InputID)
 
 void AEPlayer::Aim()
 {
-	if (!HUD->bIsMenuVisble)
+	if (!HUD->bIsInventoryVisble)
 	{	
 		bAiming = true;
 		bUseControllerRotationYaw = true;	
@@ -400,7 +400,7 @@ void AEPlayer::ToggleMenu(int32 InputID)
 
 	HUD->ToggleMenu();
 
-	if (HUD->bIsMenuVisble)
+	if (HUD->bIsInventoryVisble)
 	{
 		StopAiming();
 	}

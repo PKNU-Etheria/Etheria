@@ -1,15 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserInterface/MainMenu.h"
+#include "UserInterface/Inventory.h"
 #include "Character/Player/EPlayer.h"
 #include "Components/InventoryComponent.h"
 #include "Components/Button.h"
 #include "Public/Items/ItemBase.h"
 #include "Public/UserInterface/Inventory/ItemDragDropOperation.h"
+#include "Public/UserInterface/Inventory/InventoryWeaponWheel.h"
 
 
-void UMainMenu::NativeOnInitialized()
+void UInventory::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
@@ -19,24 +20,20 @@ void UMainMenu::NativeOnInitialized()
 		InventoryReference = PlayerCharacter->GetInventory();
 	}
 
-	EquipmentButton = Cast<UButton>(GetWidgetFromName(TEXT("Button_Equipment")));
-	EquipmentButton->OnClicked.AddDynamic(this, &UMainMenu::OnEquipmentButtonClicked);
-	ConsumableButton = Cast<UButton>(GetWidgetFromName(TEXT("Button_Consumable")));
-	ConsumableButton->OnClicked.AddDynamic(this, &UMainMenu::OnConsumableButtonClicked);
-	IngredientButton = Cast<UButton>(GetWidgetFromName(TEXT("Button_Ingredient")));
-	IngredientButton->OnClicked.AddDynamic(this, &UMainMenu::OnIngredientButtonClicked);
-	QuestButton = Cast<UButton>(GetWidgetFromName(TEXT("Button_Quest")));
-	QuestButton->OnClicked.AddDynamic(this, &UMainMenu::OnQuestButtonClicked);
+	EquipmentButton->OnClicked.AddDynamic(this, &UInventory::OnEquipmentButtonClicked);
+	ConsumableButton->OnClicked.AddDynamic(this, &UInventory::OnConsumableButtonClicked);
+	IngredientButton->OnClicked.AddDynamic(this, &UInventory::OnIngredientButtonClicked);
+	QuestButton->OnClicked.AddDynamic(this, &UInventory::OnQuestButtonClicked);
 }
 
-void UMainMenu::NativeConstruct()
+void UInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	PlayerCharacter = Cast<AEPlayer>(GetOwningPlayerPawn());
 }
 
-bool UMainMenu::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+bool UInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	const UItemDragDropOperation* ItemDragDrop = Cast<UItemDragDropOperation>(InOperation);
 
@@ -50,22 +47,30 @@ bool UMainMenu::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& 
 	return false;
 }
 
-void UMainMenu::OnEquipmentButtonClicked()
+void UInventory::OnEquipmentButtonClicked()
 {
 	InventoryReference->ChangeInventoryType(EItemType::Weapon);
+
+	InventoryWeaponWheel->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UMainMenu::OnConsumableButtonClicked()
+void UInventory::OnConsumableButtonClicked()
 {
 	InventoryReference->ChangeInventoryType(EItemType::Consumable);
+
+	InventoryWeaponWheel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UMainMenu::OnIngredientButtonClicked()
+void UInventory::OnIngredientButtonClicked()
 {
 	InventoryReference->ChangeInventoryType(EItemType::Ingredient);
+
+	InventoryWeaponWheel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UMainMenu::OnQuestButtonClicked()
+void UInventory::OnQuestButtonClicked()
 {
 	InventoryReference->ChangeInventoryType(EItemType::Quest);
+
+	InventoryWeaponWheel->SetVisibility(ESlateVisibility::Collapsed);
 }

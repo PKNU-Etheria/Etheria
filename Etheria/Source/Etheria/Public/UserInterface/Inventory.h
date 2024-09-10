@@ -4,17 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "MainMenu.generated.h"
+#include "Inventory.generated.h"
 
 class AEPlayer;
 class UInventoryComponent;
+class UInventoryWeaponWheel;
 /**
  * 
  */
 UCLASS()
-class ETHERIA_API UMainMenu : public UUserWidget
+class ETHERIA_API UInventory : public UUserWidget
 {
 	GENERATED_BODY()
+public:
+	UPROPERTY()
+	AEPlayer* PlayerCharacter;
+
+	UPROPERTY()
+	UInventoryComponent* InventoryReference;
+
 
 protected:
 	/// <summary>
@@ -36,18 +44,17 @@ protected:
 	/// <summary>
 	/// Variables
 	/// </summary>
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* EquipmentButton;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* ConsumableButton;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* IngredientButton;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* QuestButton;
-public:
-	UPROPERTY()
-	AEPlayer* PlayerCharacter;
 
-	UPROPERTY()
-	UInventoryComponent* InventoryReference;
+	UPROPERTY(VisibleAnywhere, Category = "InventoryWeaponWheel", meta = (BindWidget));
+	UInventoryWeaponWheel* InventoryWeaponWheel;
+
+	// ConSumable Item Setting
 };
