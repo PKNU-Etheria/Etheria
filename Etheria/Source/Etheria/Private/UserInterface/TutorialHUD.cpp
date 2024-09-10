@@ -20,7 +20,7 @@ void ATutorialHUD::DisplayMenu()
 
 void ATutorialHUD::HideMenu()
 {
-	if (MainMenuWidget)
+		if (MainMenuWidget)
 	{
 		bIsMenuVisble = false;
 		MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
