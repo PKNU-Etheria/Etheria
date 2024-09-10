@@ -33,3 +33,12 @@ enum class EItemType : uint8
 	Consumable UMETA(DisplayName = "Consumable"),	// �Һ� ������
 	Quest UMETA(DisplayName = "Quest"),	// ����Ʈ ������
 };
+
+UENUM()
+enum class WeaponType : uint8
+{
+	Bow UMETA(DisplayName = "Bow"),
+	Gauntlet UMETA(DisplayName = "Gauntlet"),
+	Spear UMETA(DisplayName = "Spear"),
+	Sword UMETA(DisplayName = "Sword")
+};
