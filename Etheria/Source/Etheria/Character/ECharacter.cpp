@@ -4,6 +4,7 @@
 #include "Character/ECharacter.h"
 #include "Character/ECharacterAttributeSet.h"
 
+
 // Sets default values
 AECharacter::AECharacter()
 {
@@ -12,7 +13,6 @@ AECharacter::AECharacter()
 
 	ASC = nullptr;
 	AttributeSet = nullptr;
-
 }
 
 UAbilitySystemComponent* AECharacter::GetAbilitySystemComponent() const

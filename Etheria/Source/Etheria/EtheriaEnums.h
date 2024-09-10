@@ -4,29 +4,40 @@
 
 #include "CoreMinimal.h"
 
+// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 UENUM(BlueprintType)
-enum class ETestEnum : uint8
+enum class EQuestInteractStatus : uint8
 {
-	ETE_Test,
+	EQIS_None,
+	EQIS_Accepting,
+	EQIS_Clearing,
 };
 
-// ¾ÆÀÌÅÛ µî±Þ
+UENUM(BlueprintType)
+enum class EQuestDetailType : uint8
+{
+	EQDT_Startable,
+	EQDT_Progressing,
+	EQDT_Cleared,
+};
+
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 UENUM()
 enum class EItemQuality : uint8
 {
-	Normal UMETA(DisplayName = "Normal"),	// ÀÏ¹Ý
-	Rear UMETA(DisplayName = "Rear"),	// ·¹¾î
-	Epic UMETA(DisplayName = "Epic"),	// Èñ±Í
-	Legend UMETA(DisplayName = "Legend"),	// Àü¼³
-	Special UMETA(DisplayName = "Special"),	// Æ¯º°
+	Normal UMETA(DisplayName = "Normal"),	// ï¿½Ï¹ï¿½
+	Rear UMETA(DisplayName = "Rear"),	// ï¿½ï¿½ï¿½ï¿½
+	Epic UMETA(DisplayName = "Epic"),	// ï¿½ï¿½ï¿½
+	Legend UMETA(DisplayName = "Legend"),	// ï¿½ï¿½ï¿½ï¿½
+	Special UMETA(DisplayName = "Special"),	// Æ¯ï¿½ï¿½
 };
 
-// ¾ÆÀÌÅÛ Å¸ÀÔ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½
 UENUM()
 enum class EItemType : uint8
 {
-	Ingredient UMETA(DisplayName = "Ingredient"), // Àç·á ¾ÆÀÌÅÛ
-	Weapon UMETA(DisplayName = "Weapon"),	// ¹«±â
-	Consumable UMETA(DisplayName = "Consumable"),	// ¼Òºñ ¾ÆÀÌÅÛ
-	Quest UMETA(DisplayName = "Quest"),	// Äù½ºÆ® ¾ÆÀÌÅÛ
+	Ingredient UMETA(DisplayName = "Ingredient"), // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	Weapon UMETA(DisplayName = "Weapon"),	// ï¿½ï¿½ï¿½ï¿½
+	Consumable UMETA(DisplayName = "Consumable"),	// ï¿½Òºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	Quest UMETA(DisplayName = "Quest"),	// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 };

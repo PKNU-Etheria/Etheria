@@ -5,6 +5,7 @@
 #include "GameplayEffectExtension.h"
 #include "Character/Player/Tag/EPlayerGameAbilityTag.h"
 
+
 UECharacterAttributeSet::UECharacterAttributeSet() :
 	Health(100.0f),
 	MaxHealth(1000.0f),

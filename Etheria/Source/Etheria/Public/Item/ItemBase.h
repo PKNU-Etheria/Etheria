@@ -23,7 +23,7 @@ public:
 	int32 Quantity;
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")
-	FName ID;	// ±âº» µ¥ÀÌÅÍ Å×ÀÌºí °Ë»ö ÇÊµå ¿ªÇÒ
+	FName ID;	// ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½Ë»ï¿½ ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")
 	EItemType ItemType;

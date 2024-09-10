@@ -5,6 +5,9 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/TimelineComponent.h"
+#include "Components/InventoryComponent.h"
+#include "Public/World/Pickup.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -14,9 +17,12 @@
 #include "AbilitySystemComponent.h"
 #include "EPlayerController.h"
 #include "EPlayerState.h"
-#include "EPlayer.h"
+//#include "EPlayer.h"
 #include "Character/ECharacterAttributeSet.h"
 #include "Etheria/Weapon/EWeapon.h"
+#include "Components/InteractComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Public/UserInterface/TutorialHUD.h"
 
 AEPlayer::AEPlayer()
 {
@@ -65,6 +71,10 @@ AEPlayer::AEPlayer()
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	CameraComp->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	// Create Interact Component
+	InteractComp = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
+	InteractComp->SetPlayer(this);
+
 	// Input
 	InitializeInputKey();
 
@@ -75,6 +85,8 @@ AEPlayer::AEPlayer()
 		AttackMontage = TEMPMONTAGE.Object;
 	}
 
+	// Inventory Setting
+	InitializeInventorySet();
 }
 
 UAbilitySystemComponent* AEPlayer::GetAbilitySystemComponent() const
@@ -96,6 +108,18 @@ void AEPlayer::BeginPlay()
 		}
 	}
 
+	HUD = Cast<ATutorialHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+	FOnTimelineFloat AimLerpAlphaValue;
+	FOnTimelineEvent TimelineFinishedEvent;
+	AimLerpAlphaValue.BindUFunction(this, FName("UpdateCameraTimeline"));
+	TimelineFinishedEvent.BindUFunction(this, FName("CameraTimelineEnd"));
+
+	if (AimingCameraTimeline && AimingCameraCurve)
+	{
+		AimingCameraTimeline->AddInterpFloat(AimingCameraCurve, AimLerpAlphaValue);
+		AimingCameraTimeline->SetTimelineFinishedFunc(TimelineFinishedEvent);
+	}
 }
 
 void AEPlayer::Tick(float DeltaTime)
@@ -167,6 +191,31 @@ void AEPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	SetupGASInputComponent();
 }
 
+void AEPlayer::DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop)
+{
+	if (PlayerInventory->FindMatchingItem(ItemToDrop))
+	{	// ���ο� ���͸� ���忡 �����ϱ� ���� Ŭ���� ����(�پ��� ����ü �Լ� ����)
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.bNoFail = true;
+		// ������ �������� �� ���ο� ���� ���� �������� �ʵ��� ��. � ������Ʈ�� �������̵� �ϴ��� üũ
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		// ĳ���� �տ� �����ٴ� ���� -> ĳ���� ���ο��� ����Ǵ� �ͺ��� ����.
+		const FVector SpawnLocation{ GetActorLocation() + (GetActorForwardVector() * 50.0f) };
+		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
+
+		const int32 RemovedQuantity = PlayerInventory->RemoveAmountOfItem(ItemToDrop, QuantityToDrop);
+
+		APickup* Pickup = GetWorld()->SpawnActor<APickup>(APickup::StaticClass(), SpawnTransform, SpawnParams);
+
+		Pickup->InitializeDrop(ItemToDrop, RemovedQuantity);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item to drop was somehow null!"));
+	}
+}
+
 void AEPlayer::SetupGASInputComponent()
 {
 	if (IsValid(ASC) && IsValid(InputComponent))
@@ -191,6 +240,9 @@ void AEPlayer::SetupGASInputComponent()
 		EnhancedInputComponent->BindAction(QuickSlotAction_04, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 11);
 		EnhancedInputComponent->BindAction(QuickSlotAction_05, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 12);
 		EnhancedInputComponent->BindAction(QuickSlotAction_06, ETriggerEvent::Triggered, this, &AEPlayer::QuickSlot, 13);
+
+
+		//EnhancedInputComponent->BindAction(QuestAction, ETriggerEvent::Started, this, &AEPlayer::ShowQuest, 5);
 	}
 }
 
@@ -314,6 +366,11 @@ void AEPlayer::InitializeInputKey()
 	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_QuickSlot_6.IA_QuickSlot_6'"));
 	if (IA_QUICKSLOT_06.Succeeded())
 		QuickSlotAction_06 = IA_QUICKSLOT_06.Object;
+
+	// static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUEST
+	// (TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_Quest.IA_Quest'"));
+	// if (IA_QUEST.Succeeded())
+	// 	QuestAction = IA_QUEST.Object;
 }
 
 void AEPlayer::Move(const FInputActionInstance& Instance)
@@ -346,6 +403,7 @@ void AEPlayer::Look(const FInputActionInstance& Instance)
 void AEPlayer::Interact(int32 InputID)
 {
 	UE_LOG(LogTemp, Warning, TEXT("AEPlayer : Interact"));
+	InteractComp->Interact();
 }
 
 void AEPlayer::Attack(int32 InputID)
@@ -408,4 +466,74 @@ void AEPlayer::SetDead()
 void AEPlayer::OnOutOfHealth()
 {
 	SetDead();
+}
+
+void AEPlayer::Aim()
+{
+	if (!HUD->bIsMenuVisble)
+	{	
+		bAiming = true;
+		bUseControllerRotationYaw = true;	
+		GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+
+		if (AimingCameraTimeline)	
+		{	
+			AimingCameraTimeline->PlayFromStart();
+		}
+	}
+}
+
+void AEPlayer::StopAiming()
+{
+	if (bAiming)
+	{
+		bAiming = false;
+		bUseControllerRotationYaw = false;	
+		HUD->HideCrosshair();
+		GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+
+		if (AimingCameraTimeline)
+		{	
+			AimingCameraTimeline->Reverse();
+		}
+	}
+}
+
+void AEPlayer::InitializeInventorySet()
+{
+	PlayerInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerInventory"));
+	PlayerInventory->SetSlotsCapacity(20);
+	PlayerInventory->SetWeightCapacity(50.0f);
+}
+
+void AEPlayer::ToggleMenu()
+{
+	HUD->ToggleMenu();
+
+	if (HUD->bIsMenuVisble)
+	{
+		StopAiming();
+	}
+}
+
+void AEPlayer::UpdateCameraTimeline(const float TimelineValue) const
+{
+	const FVector CameraLocation = FMath::Lerp(DefaultCameraLocation, AimingCameraLocation, TimelineValue);
+	SpringArmComp->SocketOffset = CameraLocation;
+}
+
+void AEPlayer::CameraTimelineEnd()
+{
+	if (AimingCameraTimeline)
+	{
+		if (AimingCameraTimeline->GetPlaybackPosition() != 0.0f)
+		{
+			HUD->ShowCrosshair();
+		}
+	}
+}
+
+void AEPlayer::ShowQuest(int32 InputID)
+{
+	Delegate_ShowQuest.Broadcast();
 }
