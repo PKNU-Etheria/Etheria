@@ -9,6 +9,7 @@
 /**
  * 
  */
+class UBehaviorTree;
 class UBehaviorTreeComponent;
 class UBlackboardComponent;
 
@@ -38,32 +39,32 @@ protected:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float AISightRadius = 500.f;
+	float AISightRadius;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float AISightAge = 5.f;
+	float AISightAge;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float AILoseSightRadius = AISightRadius + 50.f;
+	float AILoseSightRadius;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float AIFieldOfView = 90.f;
+	float AIFieldOfView;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
 	bool bIsPlayerDetected = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float DistanceToPlayer = 0.f;
+	float DistanceToPlayer;
 
 protected:
 	class UAISenseConfig_Sight* SightConfig;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = true))
 	UBlackboardComponent* BlackboardComponent;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = true))
 	UBehaviorTreeComponent* BehaviorTreeComponent;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = true))
-	class UBehaviorTree* BehaviorTree;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = true))
+	UBehaviorTree* BehaviorTree;
 };

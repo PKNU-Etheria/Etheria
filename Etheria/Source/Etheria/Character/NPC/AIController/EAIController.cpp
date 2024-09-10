@@ -16,15 +16,15 @@
 
 AEAIController::AEAIController(FObjectInitializer const& ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviourTreeObject(TEXT("/Script/AIModule.BehaviorTree'/Game/Character/NPC/AIContorller/BP_EAIBehaviorTree.BP_EAIBehaviorTree'"));
+	//static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviourTreeObject(TEXT("/Script/AIModule.BehaviorTree'/Game/Character/NPC/AIContorller/BP_EAIBehaviorTree.BP_EAIBehaviorTree'"));
 
-	if (BehaviourTreeObject.Succeeded())
-	{
-		// UE_LOG(LogTemp, Log, TEXT("EAIController : Behaviour Tree Load Success!"));
-		BehaviorTree = BehaviourTreeObject.Object;
-	}
+	//if (BehaviourTreeObject.Succeeded())
+	//{
+	//	// UE_LOG(LogTemp, Log, TEXT("EAIController : Behaviour Tree Load Success!"));
+	//	BehaviorTree = BehaviourTreeObject.Object;
+	//}
 
 	BehaviorTreeComponent = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComponent"));
 	Blackboard = ObjectInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("Blackboard"));
@@ -36,8 +36,11 @@ void AEAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	RunBehaviorTree(BehaviorTree);
-	BehaviorTreeComponent->StartTree(*BehaviorTree);
+	if (BehaviorTree) 
+	{
+		RunBehaviorTree(BehaviorTree);
+		BehaviorTreeComponent->StartTree(*BehaviorTree);
+	}
 
 	//if (GetPerceptionComponent()) 
 	//{
@@ -53,7 +56,7 @@ void AEAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	if (Blackboard)
+	if (BehaviorTree && Blackboard)
 	{
 		// UE_LOG(LogTemp, Log, TEXT("EAIController : Blackboard Initialize Success!"));
 		Blackboard->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
@@ -64,15 +67,6 @@ void AEAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	//if (bIsPlayerDetected) 
-	//{
-	//	AECharacter* Player = Cast<AECharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-	//	if (Player) 
-	//	{
-	//		MoveToActor(Player, 5.0f);
-	//	}
-	//}
 }
 
 FRotator AEAIController::GetControlRotation() const
@@ -87,16 +81,9 @@ FRotator AEAIController::GetControlRotation() const
 
 void AEAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
 {
-	//if (DetectedPawns.Num() > 0) 
-	//{
-	//	UE_LOG(LogTemp, Log, TEXT("EAIController : Player Enter!"));
-	//}
-
 	for (size_t i = 0; i < DetectedPawns.Num(); i++)
 	{
 		DistanceToPlayer = GetPawn()->GetDistanceTo(DetectedPawns[i]);
-
-		//UE_LOG(LogTemp, Log, TEXT("EAIController : Distance %f"), DistanceToPlayer);
 	}
 
 	bIsPlayerDetected = true;
@@ -108,8 +95,7 @@ void AEAIController::OnTargetDetected(AActor* Actor, const FAIStimulus Stimulus)
 
 	if (auto const character = Cast<AECharacter>(Actor))
 	{
-		//UE_LOG(LogTemp, Log, TEXT("EAIController : Find Player!!"));
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Find Player!!");
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Find Player!!");
 		Blackboard->SetValueAsBool(BlackboardKeys::CanSeePlayer, Stimulus.WasSuccessfullySensed());
 	}
 }
