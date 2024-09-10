@@ -3,6 +3,7 @@
 #include "Character/NPC/NeutralNPC/NPC_Base.h"
 #include "Quest/QuestSubSystem.h"
 #include "Components/QuestComponent.h"
+#include "Perception/AISense_Sight.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -12,6 +13,8 @@ ANPC_Base::ANPC_Base()
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	SetupStimulus();
 }
 
 // Called when the game starts or when spawned
@@ -180,3 +183,11 @@ void ANPC_Base::ClearQuest_Callback(int InNPCID, int InQuestID)
 	// QuestSubSystem->ClearQuest(InQuestID);
 }
 
+// AI perception component Stimulus(자극) 구조체 생성
+// TODO : Enemy, NeutralNPC 공통 부모 생성해서 거기 붙이기
+void ANPC_Base::SetupStimulus()
+{
+	Stimulus = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("Stimulus"));
+	Stimulus->RegisterForSense(TSubclassOf<UAISense_Sight>());
+	Stimulus->RegisterWithPerceptionSystem();
+}

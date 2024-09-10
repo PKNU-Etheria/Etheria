@@ -7,6 +7,7 @@
 #include "NPCInterface.h"
 #include "EtheriaStructs.h"
 #include "Etheria/Character/ECharacter.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "NPC_Base.generated.h"
 
 UCLASS()
@@ -49,6 +50,9 @@ public:
 	UFUNCTION()
 	void ClearQuest_Callback(int InNPCID, int InQuestID);
 
+	// AI
+	void SetupStimulus();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int NPCID = -1;
@@ -58,6 +62,9 @@ public:
 	TMap<int, FQuestStruct*> ProgressingQuests;
 	TMap<int, FQuestStruct*> ClearableQuests;
 	TMap<int, FQuestStruct*> ClearedQuests;
+
+	// AI
+	class UAIPerceptionStimuliSourceComponent* Stimulus;
 
 private:
 	class UQuestSubSystem* QuestSubSystem;
