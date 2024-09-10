@@ -245,7 +245,7 @@ void AItemTestCharacter::ToggleMenu()
 {
 	HUD->ToggleMenu();
 	// �޴��� ������
-	if (HUD->bIsMenuVisble)
+	if (HUD->bIsInventoryVisble)
 	{	// �� ���
 		StopAiming();
 	}
@@ -253,7 +253,7 @@ void AItemTestCharacter::ToggleMenu()
 
 void AItemTestCharacter::Aim()
 {	// ��
-	if (!HUD->bIsMenuVisble)
+	if (!HUD->bIsInventoryVisble)
 	{	// �޴��� �ƴ� ���¶�� �� ����.
 		bAiming = true;
 		bUseControllerRotationYaw = true;	// �÷��̾�� ī�޶�� ���� �����δ�.
