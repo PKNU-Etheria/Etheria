@@ -6,11 +6,14 @@
 #include "Character/ECharacter.h"
 #include "InputActionValue.h"
 #include "AbilitySystemInterface.h"
+#include "Public/Interfaces/InteractionInterface.h"
+#include "Public/UserInterface/TutorialHUD.h"
 #include "EPlayer.generated.h"
 
-/**
- * 
- */
+class UInventoryComponent;
+class UItemBase;
+class UTimelineComponent;
+
 UCLASS()
 class ETHERIA_API AEPlayer : public AECharacter, public IAbilitySystemInterface
 {
@@ -35,11 +38,20 @@ public:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 public:
+	bool bAiming;	// Aim
+
 	/** Returns SpringArmComponent subobject **/
 	FORCEINLINE class USpringArmComponent* GetSpringArmComponent() const { return SpringArmComp; }
 	/** Returns CameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComp; }
 
+	FORCEINLINE class UInteractComponent* GetInteractComponent() const { return InteractComp; }
+
+	FORCEINLINE class ATutorialHUD* GetHUD() const { return HUD; };
+
+	FORCEINLINE UInventoryComponent* GetInventory() const { return PlayerInventory; };
+
+	void DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop);
 
 protected:
 	// ASC
@@ -61,7 +73,19 @@ protected:
 	void Skill(int32 InputID);
 	void SpecialSkill(int32 InputID);
 	// If you want to add input, add to here
+	void Aim();	// Zoom In
+	void StopAiming();	// Zoom Out
 
+	// Inventory
+	void InitializeInventorySet();
+	void ToggleMenu();	 // Inventory ToggleOn/Off
+
+	// Interaction 
+	UFUNCTION()
+	void UpdateCameraTimeline(const float TimelineValue) const;		// linear timeline Zoom In
+	UFUNCTION()
+	void CameraTimelineEnd();	// Event after timeline finish
+	
 
 	// State
 
@@ -98,7 +122,7 @@ protected:
 	class UInteractComponent* InteractComp;
 
 	// Input
-	// ³ªÁß¿¡ ¹è¿­·Î °ü¸®
+	// ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(VisibleAnywhere, Category = Input)
 	class UInputMappingContext* DefaultMappingContext;
 
@@ -122,5 +146,28 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* SpecialSkillAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ToggleAction;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* AimAction;
+
+	// Inventory 
+	UPROPERTY()
+	ATutorialHUD* HUD;
+
+	UPROPERTY(VisibleAnywhere, Category = "Character | Inventory")
+	UInventoryComponent* PlayerInventory;
+
+	// Zoom
+	UPROPERTY(VisibleAnywhere, Category = "Character | Camera")
+	FVector DefaultCameraLocation;
+	UPROPERTY(VisibleAnywhere, Category = "Character | Camera")
+	FVector AimingCameraLocation;
+
+	TObjectPtr<UTimelineComponent> AimingCameraTimeline;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character | Aim Timeline")
+	UCurveFloat* AimingCameraCurve;
 };

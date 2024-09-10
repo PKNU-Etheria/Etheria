@@ -67,11 +67,11 @@ class ETHERIA_API IInteractionInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void BeginFocus();	// ¾î¶² ¾ÆÀÌÅÛ°ú »óÈ£ÀÛ¿ëÇÏ´ÂÁö ¾ÆÀÌÅÛ ÁÖº¯¿¡ Ç¥½Ã(ºû °°Àº °ÍÀ¸·Î)
+	virtual void BeginFocus();	// ï¿½î¶² ï¿½ï¿½ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Öºï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½(ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 	virtual void EndFocus();
 	virtual void BeginInteract();
 	virtual void EndInteract();
-	virtual void Interact(AItemTestCharacter* PlayerCharacter);
+	virtual void Interact(ACharacter* PlayerCharacter);
 	
 	FInteractableData InteractableData;
 };

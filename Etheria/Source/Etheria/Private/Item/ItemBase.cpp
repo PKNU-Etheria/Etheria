@@ -2,7 +2,7 @@
 
 
 #include "Items/ItemBase.h"
-#include "Public/Components/InventoryComponent.h"
+#include "Components/InventoryComponent.h"
 
 UItemBase::UItemBase() : bIsCopy(false), bIsPickup(false)
 {
@@ -15,7 +15,7 @@ void UItemBase::ResetItemFlags()
 }
 
 UItemBase* UItemBase::CreateItemCopy() const
-{	// ÀÎº¥Åä¿¡ ¾ÆÀÌÅÛÀ» Ãß°¡ÇÒ ¶§ º¹»ç. »õ·Î¿î °´Ã¼¸¦ »ý¼ºÇÏ°í Á¤Àû Å¬·¡½º¸¦ ¾òÀ½.
+{	// ï¿½Îºï¿½ï¿½ä¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	UItemBase* ItemCopy = NewObject <UItemBase>(StaticClass());
 
 	ItemCopy->ID = this->ID;
@@ -26,6 +26,7 @@ UItemBase* UItemBase::CreateItemCopy() const
 	ItemCopy->NumericData = this->NumericData;
 	ItemCopy->ItemStatistics = this->ItemStatistics;
 	ItemCopy->AssetData = this->AssetData;
+
 	ItemCopy->bIsCopy = true;
 
 	return ItemCopy;
@@ -37,13 +38,17 @@ void UItemBase::SetQuantity(const int32 NewQuantity)
 	{
 		Quantity = FMath::Clamp(NewQuantity, 0, NumericData.bIsStackable ? NumericData.MaxStackSize : 1);
 
-		//  ÇÏ³ªÀÇ ½ºÅÃÀÌ ´Ù¸¥ ½ºÅÃ¿¡ º´ÇÕµÇ°Å³ª »èÁ¦µÉ ¶§ - ¼ö·®À» º¯°æÇÒ ¶§¸¶´Ù ÇÊÅÍ¸µ(setQAuantity ÇÔ¼ö¸¦ ÅëÇØ)
-		if (OwningInventory)
+		//  ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ÕµÇ°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½(setQAuantity ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+		if (this->OwningInventory)
 		{
-			if(Quantity <= 0)
+			if(this->Quantity <= 0)
 			{
-				OwningInventory->RemoveSingleInstanceOfItem(this);
+				this->OwningInventory->RemoveSingleInstanceOfItem(this);
 			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ItemBase OwningInventory was null (item May be a pickup)."));
 		}
 	}
 
