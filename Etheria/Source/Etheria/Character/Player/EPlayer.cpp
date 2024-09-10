@@ -226,6 +226,8 @@ void AEPlayer::SetupGASInputComponent()
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AEPlayer::Attack, 2);
 		EnhancedInputComponent->BindAction(SkillAction, ETriggerEvent::Triggered, this, &AEPlayer::Skill, 3);
 		EnhancedInputComponent->BindAction(SpecialSkillAction, ETriggerEvent::Triggered, this, &AEPlayer::SpecialSkill, 4);
+
+		EnhancedInputComponent->BindAction(QuestAction, ETriggerEvent::Started, this, &AEPlayer::ShowQuest, 5);
 	}
 }
 
@@ -304,6 +306,11 @@ void AEPlayer::InitializeInputKey()
 	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_SpeicalSkill.IA_SpeicalSkill'"));
 	if (IA_SPECIALSKILL.Succeeded())
 		SpecialSkillAction = IA_SPECIALSKILL.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUEST
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_Quest.IA_Quest'"));
+	if (IA_QUEST.Succeeded())
+		QuestAction = IA_QUEST.Object;
 }
 
 void AEPlayer::Move(const FInputActionInstance& Instance)
@@ -417,4 +424,7 @@ void AEPlayer::CameraTimelineEnd()
 			HUD->ShowCrosshair();
 		}
 	}
+void AEPlayer::ShowQuest(int32 InputID)
+{
+	Delegate_ShowQuest.Broadcast();
 }
