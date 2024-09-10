@@ -17,7 +17,7 @@ class UTimelineComponent;
 DECLARE_MULTICAST_DELEGATE(FShowQuest);
 
 UCLASS()
-class ETHERIA_API AEPlayer : public AECharacter, public IAbilitySystemInterface
+class ETHERIA_API AEPlayer : public AECharacter
 {
 	GENERATED_BODY()
 
@@ -99,10 +99,6 @@ protected:
 
 //Variable
 protected:
-	//ASC
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<class UAbilitySystemComponent> ASC;
-
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
 
