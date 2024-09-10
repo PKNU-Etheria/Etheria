@@ -58,8 +58,8 @@ public:
 	// if interaction time is zero = false 
 	bool IsInteracting() const;
 	
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UQuestComponent* QuestComponent;
 
 public:

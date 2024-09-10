@@ -29,31 +29,31 @@ protected:
 	/// </summary>
 	virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;	  // ¸¶¿ì½º ¹öÆ°À» ´­·ÈÀ» ¶§ »óÈ£ÀÛ¿ë.
-	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;	// ´Ý±â¿Í °°Àº ¹öÆ°À» ´©¸¦¶§ ¸¶¿ì½º¹öÆ°À» ¶§¾ß Àû¿ëÀÌ µÇ°Ô²û.
-	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;	// µå·¡±× °¨Áö
-	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;	   // °°Àº ¹°Ç°À» ÇÕÄ¥¶§ -> µå·¡±×·Î ½×À»¶§ °°Àº À¯Çü ÆÇº°ÈÄ ½ºÅÃÀ» Á¶Á¤.
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;	  // ï¿½ï¿½ï¿½ì½º ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½.
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;	// ï¿½Ý±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì½ºï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç°Ô²ï¿½.
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;	// ï¿½å·¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;	   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½ï¿½Ä¥ï¿½ï¿½ -> ï¿½å·¡ï¿½×·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Çºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
 	/// <summary>	
 	/// Variables
 	/// </summary>
 	
-	// µå·¡±× ¾Ø µå·ÓÇÒ ¶§ Ç×¸ñ ½½·ÔÀÌ ÇÏ³ª »ý¼ºµÊ. ½Ã°¢Àû ±¸¼º¿ä¼Ò¸¸ º¸°üµÊ.
+	// ï¿½å·¡ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Slot");
 	TSubclassOf<UDragItemVisual> DragItemVisualClass;
-	// ¾ÆÀÌÅÛ ÅøÆÁ ½Ã°¢Àû ¿ä¼Ò
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Slot");
 	TSubclassOf<UInventoryTooltip> ToolTipClass;
-	// ¾ÆÀÌÅÛ µ¥ÀÌÅÍ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot")
 	UItemBase* ItemReference;
-	// Å×µÎ¸®(»ö»ó º¯°æ µî)
+	// ï¿½×µÎ¸ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
 	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot", meta = (BindWidget));
 	UBorder* ItemBorder;
-	// ¾ÆÀÌÄÜ 
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot", meta = (BindWidget));
 	UImage* ItemIcon;
-	// ¼ö·®Ç¥½ÃÇÒ ÅØ½ºÆ®
+	// ï¿½ï¿½ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ®
 	UPROPERTY(VisibleAnywhere, Category = "Inventory Slot", meta = (BindWidget));
 	UTextBlock* ItemQuantity;
 };

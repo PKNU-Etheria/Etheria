@@ -2,6 +2,7 @@
 
 
 #include "Character/ECharacter.h"
+//#include "Character/ECharacterAttributeSet.h"
 
 // Sets default values
 AECharacter::AECharacter()
@@ -9,6 +10,13 @@ AECharacter::AECharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	ASC = nullptr;
+	AttributeSet = nullptr;
+}
+
+UAbilitySystemComponent* AECharacter::GetAbilitySystemComponent() const
+{
+	return ASC;
 }
 
 // Called when the game starts or when spawned

@@ -4,6 +4,8 @@
 #include "Components/QuestComponent.h"
 #include "Quest/QuestSubSystem.h"
 #include "Quest/Widget_Dialogue.h"
+#include "Quest/Widgets/Widget_Quest.h"
+#include "Character/Player/EPlayer.h"
 #include "Character/NPC/NeutralNPC/NPCInterface.h"
 #include "Character/NPC/NeutralNPC/NPC_Base.h"
 #include "Kismet/GameplayStatics.h"
@@ -36,6 +38,11 @@ void UQuestComponent::BeginPlay()
 		return;
 	}
 
+	AEPlayer* player = Cast<AEPlayer>(GetOwner());
+	if (player)
+	{
+		player->Delegate_ShowQuest.AddUObject(this, &UQuestComponent::ShowQuest);
+	}
 }
 
 
@@ -49,40 +56,14 @@ void UQuestComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UQuestComponent::Interact(INPCInterface* InNPC)
 {
-	//if (InteractingStatus != EQuestInteractStatus::EQIS_None)
-	//{
-	//	// If Before Dialogue Has Branch -> Return
-	//	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx - 1)
-	//		&& CurrentDialgoues[CurrentScriptIdx - 1]->Branchs.Num() > 0)
-	//	{
-	//		return;
-	//	}
+	if (InteractingStatus != EQuestInteractStatus::EQIS_None)
+	{
+		if (BranchNum > 0)
+			return;
 
-	//	ShowNextDialgoue();
-	//	return;
-	//}
-
-	//ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
-	//if (!player) return;
-
-	//AController* controller = player->GetController();
-	//if (!controller) return;
-
-	//TArray<AActor*> IgnoreActors;	FHitResult hitResult;
-	//IgnoreActors.Add(player);
-
-	//FVector start = player->GetActorLocation();
-	//FRotator ControllerRot = controller->GetControlRotation();
-	//FVector ControllerForwardVec = UKismetMathLibrary::GetForwardVector(ControllerRot);
-	//FVector end = start + Interact_Range * ControllerForwardVec;
-
-	//ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
-
-	//UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
-	//	TraceType, false, IgnoreActors,
-	//	EDrawDebugTrace::ForDuration, hitResult, true);
-
-	//INPCInterface* hitActor = Cast<INPCInterface>(hitResult.GetActor());
+		ShowNextDialgoue();
+		return;
+	}
 
 	ANPC_Base* NPC = Cast<ANPC_Base>(InNPC);
 	if (IsValid(NPC))
@@ -108,6 +89,16 @@ void UQuestComponent::StartDialogue(int QuestID)
 {
 	if (!QuestSubSystem) return;
 
+	// Set Input Mode
+	APlayerController* controller = UGameplayStatics::GetPlayerController(this, 0);
+	if(controller)
+	{
+		FInputModeGameAndUI InputMode;
+		controller->SetInputMode(InputMode);
+		controller->bShowMouseCursor = true;
+	}
+
+	// Get Dialogue Data
 	const FQuestDialogueDataStruct* DialogueData = QuestSubSystem->GetQuestDialgoue(QuestID);
 	if (!DialogueData) return;
 
@@ -130,10 +121,8 @@ void UQuestComponent::StartDialogue(int QuestID)
 
 	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx))
 	{
-		UE_LOG(LogTemp, Display, TEXT("%s : %s"), 
-			*CurrentDialgoues[CurrentScriptIdx]->NPCName.ToString(), *CurrentDialgoues[CurrentScriptIdx]->Script.ToString());
 		ShowDialgoue(*CurrentDialgoues[CurrentScriptIdx]);
-		CurrentScriptIdx++;
+		CurrentScriptIdx = CurrentDialgoues[CurrentScriptIdx]->NextScriptID;
 	}
 }
 
@@ -141,36 +130,36 @@ void UQuestComponent::ShowNextDialgoue()
 {
 	if (!QuestSubSystem) return;
 
-	// Show Next Dialogue
-	if (CurrentDialgoues.IsValidIndex(CurrentScriptIdx)
-		&& CurrentDialgoues[CurrentScriptIdx]->NextScriptID != -1)
-	{
-		UE_LOG(LogTemp, Display, TEXT("%s : %s"),
-			*CurrentDialgoues[CurrentScriptIdx]->NPCName.ToString(), *CurrentDialgoues[CurrentScriptIdx]->Script.ToString());
-		ShowDialgoue(*CurrentDialgoues[CurrentScriptIdx]);
-		CurrentScriptIdx++;
-	}
 	// Close Dialogue
-	else
+	if (CurrentScriptIdx == -1 || !CurrentDialgoues.IsValidIndex(CurrentScriptIdx))
 	{
 		if (InteractingStatus == EQuestInteractStatus::EQIS_Accepting)
 		{
-			UE_LOG(LogTemp, Display, TEXT("UQuestComponent : Close Dialogue & Accept Quest"));
 			CloseDialogue();
 			QuestSubSystem->AcceptQuest(DialogueQuestID);
 		}
 		else if (InteractingStatus == EQuestInteractStatus::EQIS_Clearing)
 		{
-			UE_LOG(LogTemp, Display, TEXT("UQuestComponent : Close Dialogue & Clear Quest"));
 			CloseDialogue();
 			QuestSubSystem->ClearQuest(DialogueQuestID);
 		}
-
 
 		DialogueQuestID = -1;
 		CurrentScriptIdx = 0;
 		InteractingStatus = EQuestInteractStatus::EQIS_None;
 	}
+	// Show Next Dialogue
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("Branch Num : %d"), CurrentDialgoues[CurrentScriptIdx]->Branchs.Num());
+		int i = (*CurrentDialgoues[CurrentScriptIdx]).Branchs.Num();
+		BranchNum = (*CurrentDialgoues[CurrentScriptIdx]).Branchs.Num();
+		BranchNum = i;
+
+		ShowDialgoue(*CurrentDialgoues[CurrentScriptIdx]);
+		CurrentScriptIdx = CurrentDialgoues[CurrentScriptIdx]->NextScriptID;
+	}
+	
 }
 
 void UQuestComponent::ShowDialgoue(const FDialogueStruct& DialogueInfo)
@@ -192,16 +181,70 @@ void UQuestComponent::ShowDialgoue(const FDialogueStruct& DialogueInfo)
 
 void UQuestComponent::BranchSelected(const FBranchStruct& BranchInfo)
 {
+	BranchNum = 0;
 	CurrentScriptIdx = BranchInfo.NextScriptID;
 	ShowNextDialgoue();
 }
 
 void UQuestComponent::CloseDialogue()
 {
+	// Set Input Mode
+	APlayerController* controller = UGameplayStatics::GetPlayerController(this, 0);
+	if (controller)
+	{
+		FInputModeGameAndUI InputMode;
+		controller->SetInputMode(InputMode);
+		controller->bShowMouseCursor = true;
+	}
+
 	if (DialogueWidget)
 	{
 		DialogueWidget->RemoveFromParent();
 		DialogueWidget = nullptr;
+	}
+}
+
+void UQuestComponent::ShowQuest()
+{
+	if (!QuestWidgetClass)
+		return;
+
+	if (!QuestWidget)
+	{
+		APawn* owningPawn = Cast<APawn>(GetOwner());
+		if (!owningPawn) return;
+		APlayerController* playerController = Cast<APlayerController>(owningPawn->GetController());
+		if (!playerController) return;
+		QuestWidget = CreateWidget<UWidget_Quest>(playerController, QuestWidgetClass);
+		QuestWidget->AddToViewport();
+
+		FInputModeGameAndUI InputMode;
+		playerController->SetInputMode(InputMode);
+		playerController->bShowMouseCursor = true;
+	}
+	else if (QuestWidget)
+	{
+		// Toggle Input Mode
+		ESlateVisibility newVisibility = 
+			QuestWidget->GetVisibility() == ESlateVisibility::Collapsed ?
+			ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed;
+		QuestWidget->SetVisibility(newVisibility);
+
+		APlayerController* controller = UGameplayStatics::GetPlayerController(this, 0);
+		if (!controller) return;
+
+		if (newVisibility == ESlateVisibility::Collapsed)
+		{
+			FInputModeGameOnly InputMode;
+			controller->SetInputMode(InputMode);
+			controller->bShowMouseCursor = false;
+		}
+		else if (newVisibility == ESlateVisibility::SelfHitTestInvisible)
+		{
+			FInputModeGameAndUI InputMode;
+			controller->SetInputMode(InputMode);
+			controller->bShowMouseCursor = true;
+		}
 	}
 }
 

@@ -213,6 +213,8 @@ void AEPlayer::SetupGASInputComponent()
 		EnhancedInputComponent->BindAction(ToggleAction, ETriggerEvent::Started, this, &AEPlayer::ToggleMenu, 5);
 		EnhancedInputComponent->BindAction(WeaponWheelAction, ETriggerEvent::Ongoing, this, &AEPlayer::InputWeaponWheelPressed, 6);
 		EnhancedInputComponent->BindAction(WeaponWheelAction, ETriggerEvent::Completed, this, &AEPlayer::ReleasedWeaponWheelPressed, 6);
+
+		EnhancedInputComponent->BindAction(QuestAction, ETriggerEvent::Started, this, &AEPlayer::ShowQuest, 5);
 	}
 }
 
@@ -306,6 +308,10 @@ void AEPlayer::InitializeInputKey()
 	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_WeaponWheel.IA_WeaponWheel'"));
 	if (IA_AIM.Succeeded())
 		WeaponWheelAction = IA_WeaponWheel.Object;
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_QUEST
+	(TEXT("/Script/EnhancedInput.InputAction'/Game/Character/Player/Input/Actions/IA_Quest.IA_Quest'"));
+	if (IA_QUEST.Succeeded())
+		QuestAction = IA_QUEST.Object;
 }
 
 void AEPlayer::Move(const FInputActionInstance& Instance)
@@ -443,4 +449,7 @@ void AEPlayer::CameraTimelineEnd()
 			HUD->ShowCrosshair();
 		}
 	}
+void AEPlayer::ShowQuest(int32 InputID)
+{
+	Delegate_ShowQuest.Broadcast();
 }

@@ -13,6 +13,14 @@ enum class EQuestInteractStatus : uint8
 	EQIS_Clearing,
 };
 
+UENUM(BlueprintType)
+enum class EQuestDetailType : uint8
+{
+	EQDT_Startable,
+	EQDT_Progressing,
+	EQDT_Cleared,
+};
+
 // ������ ���
 UENUM()
 enum class EItemQuality : uint8

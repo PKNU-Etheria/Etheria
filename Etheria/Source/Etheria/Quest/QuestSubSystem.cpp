@@ -16,7 +16,7 @@ UQuestSubSystem::UQuestSubSystem()
 
 		for (const auto& Quest : AllQuests)
 		{
-			// ¼±Çà Äù½ºÆ® X && ¿ä±¸»çÇ× X && Level 1 
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® X && ï¿½ä±¸ï¿½ï¿½ï¿½ï¿½ X && Level 1 
 			if (Quest->Require_Quests.Num() == 0 && Quest->Require_Items.Num() == 0 && Quest->Require_Level <= 1)
 				AvailableQuests.Add(TTuple<int, FQuestStruct*>(Quest->QuestID, Quest));
 			else
@@ -279,4 +279,38 @@ const FQuestDialogueDataStruct* UQuestSubSystem::GetQuestDialgoue(int QuestID)
 	if (!DialogueRef) return nullptr;
 
 	return (*DialogueRef);
+}
+
+const FQuestStruct UQuestSubSystem::GetQuest(int QuestID)
+{
+	FQuestStruct** QuestRefPtr = UnavailableQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return **QuestRefPtr;
+	}
+
+	QuestRefPtr = AvailableQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return **QuestRefPtr;
+	}
+	QuestRefPtr = ProgressingQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return **QuestRefPtr;
+	}
+
+	QuestRefPtr = ClearableQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return **QuestRefPtr;
+	}
+
+	QuestRefPtr = ClearedQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return **QuestRefPtr;
+	}
+
+	return FQuestStruct();
 }

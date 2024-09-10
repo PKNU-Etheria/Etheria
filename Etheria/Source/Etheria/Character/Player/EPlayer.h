@@ -15,6 +15,8 @@ class UItemBase;	// ItemData
 class UWeaponWheelComponent;	// WeaponWheel
 class UTimelineComponent;	// AimTimeLine
 
+DECLARE_MULTICAST_DELEGATE(FShowQuest);
+
 UCLASS()
 class ETHERIA_API AEPlayer : public AECharacter, public IAbilitySystemInterface
 {
@@ -94,6 +96,7 @@ protected:
 	UFUNCTION()
 	void CameraTimelineEnd();	// Event after timeline finish
 	
+	void ShowQuest(int32 InputID);
 
 	// State
 
@@ -157,6 +160,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ToggleAction;
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* QuestAction;
+
+	// Delegates
+public:
+	FShowQuest Delegate_ShowQuest;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* AimAction;
