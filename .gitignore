@@ -79,4 +79,6 @@ Etheria/.vsconfig
 
 # Ignore Content Assets
 Etheria/Content/StarterContent
-Etheria/Content/Mediterranean_Coast
+
+# Ignore Plugins
+Etheria/Plugins
