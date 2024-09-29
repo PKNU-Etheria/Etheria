@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Public/Interfaces/InteractionInterface.h"
+#include "Item/Item/Interface/InteractionInterface.h"
 #include "InteractComponent.generated.h"
 
 class AEPlayer;

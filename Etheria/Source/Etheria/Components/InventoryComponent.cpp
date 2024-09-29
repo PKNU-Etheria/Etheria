@@ -3,7 +3,7 @@
 
 #include "Components/InventoryComponent.h"
 #include "Components/InventoryComponent.h"
-#include "Public/Items/ItemBase.h"
+#include "Item/Item/ItemBase.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()

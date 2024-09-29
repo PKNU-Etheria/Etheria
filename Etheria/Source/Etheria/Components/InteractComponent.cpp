@@ -9,7 +9,7 @@
 #include "Character/NPC/NeutralNPC/NPCInterface.h"
 #include "Character/NPC/NeutralNPC/NPC_Base.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Public/Interfaces/InteractionInterface.h"
+#include "Item/Item/Interface/InteractionInterface.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
