@@ -24,13 +24,15 @@ public:
 	/// </summary>
 	void CalculateSectionBounds();
 
-	void SettingSectionImage();
+	void SettingSectionImageSlot();
 
 	void CalculateSection();
 
 	void CheckSection();
 
 	void UpdateActiveSection();	// Update MI_WeaponWheel Globar Scalar Parameter Value - ActiveRotation Update
+
+	void RefreshSection();
 
 	UFUNCTION(BlueprintCallable, Category = "WeaponWheel")
 	FRotator GetMouseRotation();
@@ -78,5 +80,5 @@ protected:
 	TArray<int32> MinBounds;
 
 	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
-	TArray<UWidget*> WeaponImageWidget;
+	TArray<TObjectPtr<UWeaponWheelSectionImage>> WeaponImageWidget;
 };

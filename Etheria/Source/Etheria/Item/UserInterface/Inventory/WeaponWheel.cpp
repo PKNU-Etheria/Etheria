@@ -1,10 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserInterface/Inventory/WeaponWheel.h"
+#include "WeaponWheel.h"
 #include "Character/Player/EPlayer.h"
 #include "Components/WeaponWheelComponent.h"
-#include "Public/UserInterface/Inventory/WeaponWheelSectionImage.h"
+#include "WeaponWheelSectionImage.h"
+#include "Item/Item/ItemBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -17,6 +18,7 @@ void UWeaponWheel::NativeOnInitialized()
 	{
 		WeaponWheelReference = PlayerCharacter->GetWeaponWheel();
 		WeaponWheelReference->OnWeaponWheelWidgetUpdated.AddUObject(this, &UWeaponWheel::UpdateActiveSection);
+		WeaponWheelReference->OnWeaponWheelUpdated.AddUObject(this, &UWeaponWheel::RefreshSection);
 	}
 
 	if (WeaponSectionPanel)
@@ -48,8 +50,6 @@ void UWeaponWheel::NativeOnInitialized()
 	MinBounds.Empty();
 
 	CalculateSectionBounds();
-
-	SettingSectionImage();
 }
 
 void UWeaponWheel::NativeConstruct()
@@ -57,6 +57,8 @@ void UWeaponWheel::NativeConstruct()
 	Super::NativeConstruct();
 
 	PlayerCharacter = Cast<AEPlayer>(GetOwningPlayerPawn());
+
+	SettingSectionImageSlot();
 }
 
 void UWeaponWheel::CalculateSectionBounds()
@@ -84,7 +86,7 @@ void UWeaponWheel::CalculateSectionBounds()
 	}
 }
 
-void UWeaponWheel::SettingSectionImage()
+void UWeaponWheel::SettingSectionImageSlot()
 {
 	if (!WeaponWheelSectionImageClass || !WeaponSectionPanel) return; // 클래스 또는 패널이 없으면 리턴
 
@@ -96,19 +98,19 @@ void UWeaponWheel::SettingSectionImage()
 
 	FVector InitialRotationAxis = FVector(0.0f, -1.0f, 0.0f);
 
+	if (!WeaponWheelReference) return;
 	// 4개의 섹션을 패널에 추가
 	for (int32 i = 0; i < WeaponWheelReference->GetSectionCount(); ++i)
 	{
 		// UWeaponWheelSectionImage 위젯을 생성
 		UWeaponWheelSectionImage* NewSectionImage = CreateWidget<UWeaponWheelSectionImage>(this, WeaponWheelSectionImageClass);
-		NewSectionImage->GetWeaponIcon()->SetBrushFromTexture(WeaponWheelReference->WeaponSectionDefaultImages[i]);
 
 		if (NewSectionImage)
 		{
 			// 패널에 새 위젯 추가
 			WeaponSectionPanel->AddChild(NewSectionImage);
 			WeaponImageWidget.Add(NewSectionImage);
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Check Section Children: %d"), WeaponSectionPanel->GetAllChildren().Num()));
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Check Section Children: %d"), WeaponSectionPanel->GetAllChildren().Num()));
 		}
 
 		UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(NewSectionImage->Slot);
@@ -117,7 +119,7 @@ void UWeaponWheel::SettingSectionImage()
 		CanvasSlot->SetAnchors(FAnchors(0.5f, 0.5f, 0.5f, 0.5f));
 		CanvasSlot->SetAlignment(FVector2D(0.5f, 0.5f));
 
-		float AngleDegrees = i * WeaponWheelReference->GetSectionSize();
+		float AngleDegrees = 360.0f-((i+1) * WeaponWheelReference->GetSectionSize());
 
 		FVector RotatedVector = InitialRotationAxis.RotateAngleAxis(AngleDegrees, FVector(0.0f, 0.0f, 1.0f));
 		FVector2D Position2D(RotatedVector.X * 250.0f, RotatedVector.Y * 250.0f); // 250.0f is the radius from the center.
@@ -128,8 +130,8 @@ void UWeaponWheel::SettingSectionImage()
 		// Set the size of each widget (can be adjusted to fit icon dimensions).
 		CanvasSlot->SetSize(FVector2D(200.0f, 200.0f));
 
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Add Weapon Section Image : %d"), i));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Widget Position: %f, %f"), Position2D.X, Position2D.Y));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Add Weapon Section Image : %d"), i));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Widget Position: %f, %f"), Position2D.X, Position2D.Y));
 
 	}
 }
@@ -198,6 +200,24 @@ void UWeaponWheel::UpdateActiveSection()
 
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("RotationValue : %f"), RotationValue));
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("Updated SelectedRotation: %d, %d"), MinBounds[SelectedAngle], MaxBounds[SelectedAngle]));
+	}
+}
+
+void UWeaponWheel::RefreshSection()
+{
+	if (WeaponWheelReference)
+	{
+		for (int i = 0; i < WeaponWheelReference->GetSectionCount(); i++)
+		{	
+			if (WeaponWheelReference->GetInventoryContents()[i] != nullptr)
+			{
+				WeaponImageWidget[i]->GetWeaponIcon()->SetBrushFromTexture(WeaponWheelReference->GetInventoryContents()[i]->AssetData.Icon);
+			}
+			else
+			{
+				WeaponImageWidget[i]->GetWeaponIcon()->SetBrushFromTexture(WeaponWheelReference->WeaponSectionDefaultData[i]->AssetData.Icon);
+			}
+		}
 	}
 }
 
