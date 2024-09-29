@@ -6,8 +6,8 @@
 #include "Character/ECharacter.h"
 #include "InputActionValue.h"
 #include "AbilitySystemInterface.h"
-#include "Public/Interfaces/InteractionInterface.h"
-#include "Public/UserInterface/TutorialHUD.h"
+#include "Item/Item/Interface/InteractionInterface.h"
+#include "Item/UserInterface/TutorialHUD.h"
 #include "EPlayer.generated.h"
 
 class UInventoryComponent;	// Inventory
@@ -18,7 +18,7 @@ class UTimelineComponent;	// AimTimeLine
 DECLARE_MULTICAST_DELEGATE(FShowQuest);
 
 UCLASS()
-class ETHERIA_API AEPlayer : public AECharacter, public IAbilitySystemInterface
+class ETHERIA_API AEPlayer : public AECharacter//, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -57,6 +57,9 @@ public:
 	FORCEINLINE UWeaponWheelComponent* GetWeaponWheel() const { return PlayerWeaponWheel; }
 
 	void DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop);
+
+	bool CanSetWeapon();
+	void SetWeapon(class AWeapon* NewWeapon);
 
 protected:
 	// ASC
@@ -108,8 +111,8 @@ protected:
 //Variable
 protected:
 	//ASC
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<class UAbilitySystemComponent> ASC;
+	//UPROPERTY(EditAnywhere, Category = GAS)
+	//TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
@@ -194,4 +197,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character | Aim Timeline")
 	UCurveFloat* AimingCameraCurve;
+
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	USkeletalMeshComponent* Weapon;
+
+	UPROPERTY(VIsibleAnyWhere, Category=Weapon)
+	class AWeapon* CurrentWeapon;
 };

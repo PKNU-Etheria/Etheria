@@ -10,7 +10,7 @@
 #include "Components/TimelineComponent.h"
 #include "Components/InventoryComponent.h"
 #include "Components/WeaponWheelComponent.h"
-#include "Public/World/Pickup.h"
+#include "Item/Item/Pickup.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -20,7 +20,8 @@
 #include "AbilitySystemComponent.h"
 #include "Components/InteractComponent.h"
 #include "DrawDebugHelpers.h"
-#include "Public/UserInterface/TutorialHUD.h"
+#include "Item/UserInterface/TutorialHUD.h"
+#include "Weapon/Weapon.h"
 
 AEPlayer::AEPlayer()
 {
@@ -194,6 +195,22 @@ void AEPlayer::DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop)
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Item to drop was somehow null!"));
+	}
+}
+
+bool AEPlayer::CanSetWeapon()
+{
+	return true;
+}
+
+void AEPlayer::SetWeapon(AWeapon* NewWeapon)
+{
+	FName WeaponSocket(TEXT("hand_rSocket"));
+	if (NewWeapon)
+	{
+		NewWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
+		NewWeapon->SetOwner(this);
+		CurrentWeapon = NewWeapon;
 	}
 }
 
@@ -449,6 +466,8 @@ void AEPlayer::CameraTimelineEnd()
 			HUD->ShowCrosshair();
 		}
 	}
+}
+
 void AEPlayer::ShowQuest(int32 InputID)
 {
 	Delegate_ShowQuest.Broadcast();
