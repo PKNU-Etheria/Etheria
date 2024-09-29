@@ -1,10 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserInterface/Inventory/InventoryWeaponWheel.h"
-#include "Public/UserInterface/Inventory/ItemDragDropOperation.h"
+#include "InventoryWeaponWheel.h"
+#include "ItemDragDropOperation.h"
 #include "Character/Player/EPlayer.h"
 #include "Components/InventoryComponent.h"
+
+void UInventoryWeaponWheel::SettingSectionImage()
+{
+}
+
+void UInventoryWeaponWheel::RefreshSectioin()
+{
+
+}
 
 void UInventoryWeaponWheel::NativeOnInitialized()
 {
@@ -13,15 +22,22 @@ void UInventoryWeaponWheel::NativeOnInitialized()
 	PlayerCharacter = Cast<AEPlayer>(GetOwningPlayerPawn());
 	if (PlayerCharacter)
 	{
-		InventoryReference = PlayerCharacter->GetInventory();
+		WeaponWheelReference = PlayerCharacter->GetWeaponWheel();
+		WeaponWheelReference->OnWeaponWheelWidgetUpdated.AddUObject(this, &UWeaponWheel::UpdateActiveSection);
+		WeaponWheelReference->OnWeaponWheelUpdated.AddUObject(this, &UWeaponWheel::RefreshSection);
 	}
+
+	InventoryWeaponSlot.Add(SwordSlot);
+	InventoryWeaponSlot.Add(SpearSlot);
+	InventoryWeaponSlot.Add(GauntletSlot);
+	InventoryWeaponSlot.Add(CaneSlot);
 }
 
 bool UInventoryWeaponWheel::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	const UItemDragDropOperation* ItemDragDrop = Cast<UItemDragDropOperation>(InOperation);
 
-	if (ItemDragDrop->SourceItem && InventoryReference)
+	if (ItemDragDrop->SourceItem && WeaponWheelReference)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Detected and item drop on InventoryWeaponWheel"));
 
