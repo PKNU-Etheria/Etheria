@@ -43,10 +43,10 @@ enum class EItemType : uint8
 };
 
 UENUM()
-enum class WeaponType : uint8
+enum class EWeaponType : uint8
 {
-	Bow UMETA(DisplayName = "Bow"),
-	Gauntlet UMETA(DisplayName = "Gauntlet"),
+	Sword UMETA(DisplayName = "Bow"),
 	Spear UMETA(DisplayName = "Spear"),
-	Sword UMETA(DisplayName = "Sword")
+	Gauntlet UMETA(DisplayName = "Gauntlet"),
+	Cane UMETA(DisplayName = "Sword")
 };
