@@ -207,7 +207,10 @@ struct FItemAssetData
 	UTexture2D* Icon;
 
 	UPROPERTY(EditAnywhere)
-	UStaticMesh* Mesh;
+	UStaticMesh* Mesh;	// No Animation
+
+	UPROPERTY(EditAnywhere)
+	USkeletalMesh* SkeletalMesh;	// if Item Have Animation
 };
 
 
@@ -215,6 +218,7 @@ USTRUCT()
 struct FItemData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
+	FItemData() {};
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")
 	FName ID;	// �⺻ ������ ���̺� �˻� �ʵ� ����
@@ -235,5 +239,21 @@ struct FItemData : public FTableRowBase
 	FItemNumericData NumericData;
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FItemAssetData AssetData;
+};
+
+USTRUCT()
+struct FWeaponData : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+	FWeaponData() {};
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Data")
+	FName ID;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Data")
+	EWeaponType WeaponType;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Data")
 	FItemAssetData AssetData;
 };
