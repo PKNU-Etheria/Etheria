@@ -7,8 +7,7 @@
 #include "WeaponWheelComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnWeaponWheelWidgetUpdated);	// Update WeaponWheel Widget
-
-class UItemBase;
+DECLARE_MULTICAST_DELEGATE(FOnWeaponWheelUpdated);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ETHERIA_API UWeaponWheelComponent : public UActorComponent
@@ -25,7 +24,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "WeaponWheel")
-	void ChangeCurSectionValue(int newVal);
+	void ChangeCurSectionValue(int newVal);	// 웨폰휠에서 값이 변경되면 -> 플레이어 장착 무기 체크
+
+	UFUNCTION(BlueprintCallable, Category = "WeaponWheel")
+	void ChangeWeaponWheelSectionItem(int SlotIndex, UItemBase* Item = nullptr);	// 인벤토리 웨폰휠에서 값이 변경되면 -> 즉 웨폰휠 컴포넌트의 내용물이 업데이트 되면은 업데이트 (플레이어 장착무기, 웨폰휠 이미지, 이미지 웨폰휠 이미지)
 
 	FORCEINLINE int32 GetSectionCount() const { return SectionCount; };
 	FORCEINLINE float GetSectionSize() const { return SectionSize; };
@@ -36,12 +38,13 @@ public:
 	/// <summary>
 	/// Variables
 	/// </summary>
-	FOnWeaponWheelWidgetUpdated OnWeaponWheelWidgetUpdated;	// add update WeaponWheelWidget(WeaponWheel)
+	FOnWeaponWheelWidgetUpdated OnWeaponWheelWidgetUpdated;	// add update WeaponWheelWidget(WeaponWheel) -> ActiveSection
+	FOnWeaponWheelUpdated OnWeaponWheelUpdated;	// Refresh Data Update related on WeaponWheel
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "WeaponWheel", meta = (AllowPrivateAccess = "true"))
 	int32 CurSectionAngle;	// Player Setting WeaponWheel Section index(Weapon)
 
-	TArray<UTexture2D*> WeaponSectionDefaultImages;	// 0: Bow, 1: Gauntlet, 2: Spear, 3: Sword
+	TArray<class UItemBase*> WeaponSectionDefaultData;	// 0: Sword, 1: Spear, 2: Gauntlet , 3: Cane
 
 protected:
 	/// <summary>
@@ -49,6 +52,8 @@ protected:
 	/// </summary>
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	void ChangeWeapon(UItemBase* Item);
 
 	/// <summary>
 	/// Variables
@@ -62,5 +67,5 @@ protected:
 	float SectionSize;
 
 	UPROPERTY(VisibleAnywhere, Category = "WeaponWheel")
-	TArray<TObjectPtr<UItemBase>> WeaponWheelContents;
+	TArray<TObjectPtr<class UItemBase>> WeaponWheelContents;
 };

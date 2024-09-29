@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Components/WeaponWheelComponent.h"
+#include "EtheriaStructs.h"
+#include "Item/Item/ItemBase.h"
 
 // Sets default values for this component's properties
 UWeaponWheelComponent::UWeaponWheelComponent()
@@ -14,23 +15,6 @@ UWeaponWheelComponent::UWeaponWheelComponent()
 	SectionCount = 4;
 	SectionSize = 360.0f / SectionCount;
 
-	if (UTexture2D* BowImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/bow.bow'")))
-	{
-		WeaponSectionDefaultImages.Add(BowImage);
-	}
-	if (UTexture2D* GauntletImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/gauntlet.gauntlet'")))
-	{
-		WeaponSectionDefaultImages.Add(GauntletImage);
-	}
-	if (UTexture2D* SpearImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/spear.spear'")))
-	{
-		WeaponSectionDefaultImages.Add(SpearImage);
-	}
-	if (UTexture2D* SwordImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/sword.sword'")))
-	{
-		WeaponSectionDefaultImages.Add(SwordImage);
-	}
-
 	// ...
 }
 
@@ -42,6 +26,44 @@ void UWeaponWheelComponent::BeginPlay()
 
 	// ...
 	
+	if (UTexture2D* SwordImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/sword.sword'")))
+	{
+		UItemBase* SwordItemBase = NewObject<UItemBase>(this, UItemBase::StaticClass());
+		SwordItemBase->AssetData.Icon = SwordImage;
+
+		WeaponSectionDefaultData.Add(SwordItemBase);
+	}
+	if (UTexture2D* SpearImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/spear.spear'")))
+	{
+		UItemBase* SpearItemBase = NewObject<UItemBase>(this, UItemBase::StaticClass());
+		SpearItemBase->AssetData.Icon = SpearImage;
+
+		WeaponSectionDefaultData.Add(SpearItemBase);
+	}
+	if (UTexture2D* GauntletImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/gauntlet.gauntlet'")))
+	{
+		UItemBase* GauntletItemBase = NewObject<UItemBase>(this, UItemBase::StaticClass());
+		GauntletItemBase->AssetData.Icon = GauntletImage;
+
+		WeaponSectionDefaultData.Add(GauntletItemBase);
+	}
+	if (UTexture2D* CaneImage = LoadObject<UTexture2D>(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Item/Textures/Weapon/bow.bow'")))
+	{
+		UItemBase* CaneItemBase = NewObject<UItemBase>(this, UItemBase::StaticClass());
+		CaneItemBase->AssetData.Icon = CaneImage;
+
+		WeaponSectionDefaultData.Add(CaneItemBase);
+	}
+
+	for (auto item : WeaponSectionDefaultData)
+	{
+		WeaponWheelContents.Add(item);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Item Count : %d %d"), WeaponSectionDefaultData.Num(), WeaponWheelContents.Num());
+
+	OnWeaponWheelWidgetUpdated.Broadcast();
+	OnWeaponWheelUpdated.Broadcast();
 }
 
 
@@ -58,5 +80,9 @@ void UWeaponWheelComponent::ChangeCurSectionValue(int newVal)
 {
 	CurSectionAngle = newVal;
 	OnWeaponWheelWidgetUpdated.Broadcast();
+}
+
+void UWeaponWheelComponent::ChangeWeaponWheelSectionItem(int SlotIndex, UItemBase* Item)
+{
 }
 
