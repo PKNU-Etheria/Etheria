@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Public/Interfaces/InteractionInterface.h"
-#include "Items/ItemBase.h"
+#include "Interface/InteractionInterface.h"
+#include "ItemBase.h"
 #include "Pickup.generated.h"
 
 class UDataTable;

@@ -6,30 +6,13 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Components/InteractComponent.h"
-#include "Public/Interfaces/InteractionInterface.h"
-#include "Public/UserInterface/TutorialHUD.h"
+#include "Item/Item/Interface/InteractionInterface.h"
+#include "Item/UserInterface/TutorialHUD.h"
 #include "ItemTestCharacter.generated.h"
 
 class UInventoryComponent;
 class UItemBase;
 class UTimelineComponent;
-
-//USTRUCT()
-//struct FInteractionData	// 상호작용에 대한 데이터
-//{
-//	GENERATED_USTRUCT_BODY()
-//
-//	FInteractionData() : CurrentInteractable(nullptr), LastInteractionCheckTime(0.0f)
-//	{
-//
-//	};
-//
-//	UPROPERTY()
-//	AActor* CurrentInteractable;	// 상호작용 액터
-//
-//	UPROPERTY()
-//	float LastInteractionCheckTime;
-//};
 
 UCLASS(config = Game)
 class ETHERIA_API AItemTestCharacter : public ACharacter

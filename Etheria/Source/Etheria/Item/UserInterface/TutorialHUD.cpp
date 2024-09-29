@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserInterface/TutorialHUD.h"
-#include "UserInterface/Inventory.h"
-#include "UserInterface/Interaction/InteractionWidget.h"
-#include "UserInterface/Inventory/WeaponWheel.h"
+#include "TutorialHUD.h"
+#include "Inventory.h"
+#include "Item/UserInterface/Interaction/InteractionWidget.h"
+#include "Item/UserInterface/Inventory/WeaponWheel.h"
 
 ATutorialHUD::ATutorialHUD()
 {

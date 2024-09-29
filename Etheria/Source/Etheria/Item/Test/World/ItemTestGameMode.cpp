@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "World/ItemTestGameMode.h"
+#include "ItemTestGameMode.h"
 #include "Character/Player/EPlayer.h"
 #include "Character/Player/EPlayerController.h"
 #include "Character/Player/EPlayerState.h"

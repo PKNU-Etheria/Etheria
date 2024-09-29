@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "World/ItemTestCharacter.h"
+#include "ItemTestCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Components/InventoryComponent.h"
 #include "Character/Player/EPlayer.h"
-#include "Public/World/Pickup.h"
+#include "Item/Item/Pickup.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"

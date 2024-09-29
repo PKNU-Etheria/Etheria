@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Interfaces/InteractionInterface.h"
-#include "Public/World/ItemTestCharacter.h"
+#include "InteractionInterface.h"
+#include "Item/Test/World/ItemTestCharacter.h"
 
 // Add default functionality here for any IInteractionInterface functions that are not pure virtual.
 

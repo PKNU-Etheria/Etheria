@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Public/Interfaces/InteractionInterface.h"
+#include "Item/Item/Interface/InteractionInterface.h"
 #include "InterfaceTestActor.generated.h"
 
 UCLASS()

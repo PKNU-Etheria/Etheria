@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Item/Item/Interface/InteractionInterface.h"
 #include "Blueprint/UserWidget.h"
-#include "Public/Interfaces/InteractionInterface.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "InteractionWidget.generated.h"
+
+class AEPlayer;
 
 UCLASS()
 class ETHERIA_API UInteractionWidget : public UUserWidget
@@ -16,7 +18,7 @@ class ETHERIA_API UInteractionWidget : public UUserWidget
 	
 public:
 	UPROPERTY(VisibleAnywhere, Category = "Interaction Widget | Player Reference")
-	AItemTestCharacter* PlayerReference;
+	AEPlayer* PlayerReference;
 
 	void UpdateWidget(const FInteractableData* InteractableData) const;
 

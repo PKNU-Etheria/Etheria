@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "Public/Interfaces/InteractionInterface.h"
+#include "Item/Item/Interface/InteractionInterface.h"
 #include "TutorialHUD.generated.h"
 
 class UInventory;

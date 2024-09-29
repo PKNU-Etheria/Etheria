@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserInterface/Inventory/InventoryItemSlot.h"
-#include "Public/UserInterface/Inventory/InventoryTooltip.h"
-#include "Public/UserInterface/Inventory/DragItemVisual.h"
-#include "Public/UserInterface/Inventory/ItemDragDropOperation.h"
+#include "InventoryItemSlot.h"
+#include "InventoryTooltip.h"
+#include "DragItemVisual.h"
+#include "ItemDragDropOperation.h"
 #include "Components/Border.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
-#include "Public/Items/ItemBase.h"
+#include "Item/Item/Pickup.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Input/Reply.h"
 #include "Input/Events.h"

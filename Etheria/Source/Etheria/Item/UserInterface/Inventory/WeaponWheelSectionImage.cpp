@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserInterface/Inventory/WeaponWheelSectionImage.h"
+#include "WeaponWheelSectionImage.h"
 #include "Components/Image.h"
-#include "Public/Items/ItemBase.h"
+#include "Item/Item/ItemBase.h"
 
 void UWeaponWheelSectionImage::NativeOnInitialized()
 {

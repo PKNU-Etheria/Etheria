@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserInterface/Interaction/InteractionWidget.h"
+#include "InteractionWidget.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 

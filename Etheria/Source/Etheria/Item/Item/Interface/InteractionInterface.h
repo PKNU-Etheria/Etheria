@@ -6,8 +6,6 @@
 #include "UObject/Interface.h"
 #include "InteractionInterface.generated.h"
 
-class AItemTestCharacter;
-
 UENUM()
 enum class EInteractableType : uint8
 {

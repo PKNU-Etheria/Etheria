@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserInterface/Inventory.h"
+#include "Inventory.h"
 #include "Character/Player/EPlayer.h"
 #include "Components/InventoryComponent.h"
 #include "Components/Button.h"
-#include "Public/Items/ItemBase.h"
-#include "Public/UserInterface/Inventory/ItemDragDropOperation.h"
-#include "Public/UserInterface/Inventory/InventoryWeaponWheel.h"
+#include "Item/Item/ItemBase.h"
+#include "Item/UserInterface/Inventory/ItemDragDropOperation.h"
+#include "Item/UserInterface/Inventory/InventoryWeaponWheel.h"
 
 
 void UInventory::NativeOnInitialized()
