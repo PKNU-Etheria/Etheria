@@ -40,6 +40,7 @@ enum class EItemType : uint8
 	Weapon UMETA(DisplayName = "Weapon"),	// ����
 	Consumable UMETA(DisplayName = "Consumable"),	// �Һ� ������
 	Quest UMETA(DisplayName = "Quest"),	// ����Ʈ ������
+	Default UMETA(DisplayName = "Default")		// is same null
 };
 
 UENUM()

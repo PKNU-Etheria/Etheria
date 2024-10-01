@@ -2,10 +2,20 @@
 
 
 #include "ItemBase.h"
+#include "EtheriaEnums.h"
+#include "EtheriaStructs.h"
 #include "Components/InventoryComponent.h"
 
 UItemBase::UItemBase() : bIsCopy(false), bIsPickup(false)
 {
+	OwningInventory = nullptr;
+	Quantity = 0;
+	ID = "";
+	ItemType = EItemType::Default;
+	ItemQuality = EItemQuality::Normal;
+	NumericData = FItemNumericData();
+	TextData = FItemTextData();
+	AssetData = FItemAssetData();
 }
 
 void UItemBase::ResetItemFlags()
