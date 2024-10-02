@@ -56,9 +56,9 @@ void UInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
 
-	UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
+	/*UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
 		TraceType, false, IgnoreActors,
-		EDrawDebugTrace::ForDuration, hitResult, true);
+		EDrawDebugTrace::ForDuration, hitResult, true);*/
 
 	INPCInterface* NPC_If = Cast<INPCInterface>(hitResult.GetActor());
 	if (NPC_If)

@@ -14,4 +14,9 @@ class ETHERIA_API AMonster_Base : public AEnemy_Base
 {
 	GENERATED_BODY()
 	
+public:
+	
+
+public:
+
 };
