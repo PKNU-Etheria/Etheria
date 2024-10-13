@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Pawn.h"
 #include "Etheria/Character/ECharacter.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/ArrowComponent.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Enemy_Base.generated.h"
 
@@ -20,9 +23,15 @@ public:
 
 	// AI
 	void SetupStimulus();
-	
 
 public:
 	// AI
 	class UAIPerceptionStimuliSourceComponent* Stimulus;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
+	float AttackRange;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
+	float MoveSpeed;
 };

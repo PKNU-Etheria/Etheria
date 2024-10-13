@@ -18,14 +18,6 @@ AEAIController::AEAIController(FObjectInitializer const& ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	//static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviourTreeObject(TEXT("/Script/AIModule.BehaviorTree'/Game/Character/NPC/AIContorller/BP_EAIBehaviorTree.BP_EAIBehaviorTree'"));
-
-	//if (BehaviourTreeObject.Succeeded())
-	//{
-	//	// UE_LOG(LogTemp, Log, TEXT("EAIController : Behaviour Tree Load Success!"));
-	//	BehaviorTree = BehaviourTreeObject.Object;
-	//}
-
 	BehaviorTreeComponent = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComponent"));
 	Blackboard = ObjectInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("Blackboard"));
 
@@ -36,20 +28,11 @@ void AEAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (BehaviorTree) 
+	if (BehaviorTree)
 	{
 		RunBehaviorTree(BehaviorTree);
 		BehaviorTreeComponent->StartTree(*BehaviorTree);
 	}
-
-	//if (GetPerceptionComponent()) 
-	//{
-	//	UE_LOG(LogTemp, Log, TEXT("EAIController : Perception Component Set!"));
-	//}
-	//else 
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("EAIController : No Perception Component!"));
-	//}
 }
 
 void AEAIController::OnPossess(APawn* InPawn)

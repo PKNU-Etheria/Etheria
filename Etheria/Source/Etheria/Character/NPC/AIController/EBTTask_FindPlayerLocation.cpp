@@ -34,11 +34,14 @@ EBTNodeResult::Type UEBTTask_FindPlayerLocation::ExecuteTask(UBehaviorTreeCompon
 		{
 			Controller->GetBlackboard()->SetValueAsVector(BlackboardKeys::TargetLocation, TargetLocation.Location);
 		}
+
 	}
 	else 
 	{
 		Controller->GetBlackboard()->SetValueAsVector(BlackboardKeys::TargetLocation, PlayerLocation);
 	}
+
+	
 
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 
