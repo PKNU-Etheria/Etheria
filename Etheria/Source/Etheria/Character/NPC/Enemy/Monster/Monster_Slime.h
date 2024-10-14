@@ -13,5 +13,8 @@ UCLASS()
 class ETHERIA_API AMonster_Slime : public AMonster_Base
 {
 	GENERATED_BODY()
+
+public:
+	AMonster_Slime();
 	
 };

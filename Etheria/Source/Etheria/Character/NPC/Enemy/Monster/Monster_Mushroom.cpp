@@ -3,3 +3,6 @@
 
 #include "Character/NPC/Enemy/Monster/Monster_Mushroom.h"
 
+AMonster_Mushroom::AMonster_Mushroom()
+{
+}

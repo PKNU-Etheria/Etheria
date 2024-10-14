@@ -14,4 +14,6 @@ class ETHERIA_API AMonster_Chest : public AMonster_Base
 {
 	GENERATED_BODY()
 	
+public:
+	AMonster_Chest();
 };

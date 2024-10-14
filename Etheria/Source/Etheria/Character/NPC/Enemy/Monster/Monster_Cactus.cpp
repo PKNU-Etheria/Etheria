@@ -3,3 +3,6 @@
 
 #include "Character/NPC/Enemy/Monster/Monster_Cactus.h"
 
+AMonster_Cactus::AMonster_Cactus()
+{
+}

@@ -14,4 +14,7 @@ class ETHERIA_API AMonster_Mushroom : public AMonster_Base
 {
 	GENERATED_BODY()
 	
+public:
+	AMonster_Mushroom();
+
 };

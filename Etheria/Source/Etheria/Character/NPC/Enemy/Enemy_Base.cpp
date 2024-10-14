@@ -25,3 +25,16 @@ void AEnemy_Base::SetupStimulus()
 		Stimulus->RegisterWithPerceptionSystem();
 	}
 }
+
+void AEnemy_Base::SetDead()
+{
+	PlayDeadAnimation();
+	SetActorEnableCollision(false);
+}
+
+void AEnemy_Base::PlayDeadAnimation()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->StopAllMontages(0.0f);
+	AnimInstance->Montage_Play(DeadMontage, 1.0f);
+}

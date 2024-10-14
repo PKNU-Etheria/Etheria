@@ -3,3 +3,7 @@
 
 #include "Character/NPC/Enemy/Monster/Monster_Base.h"
 
+AMonster_Base::AMonster_Base()
+{
+}
+

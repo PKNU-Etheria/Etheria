@@ -21,17 +21,24 @@ class ETHERIA_API AEnemy_Base : public AECharacter
 public:
 	AEnemy_Base();
 
+	FORCEINLINE class UAnimMontage* GetDeadMontage() const { return DeadMontage; }
+
+
+
 	// AI
 	void SetupStimulus();
+
+protected:
+	virtual void SetDead();
+	void PlayDeadAnimation();
 
 public:
 	// AI
 	class UAIPerceptionStimuliSourceComponent* Stimulus;
 
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
-	float AttackRange;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
-	float MoveSpeed;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UAnimMontage> DeadMontage;
 };
