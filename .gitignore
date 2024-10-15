@@ -81,3 +81,4 @@ Etheria/.vsconfig
 
 # StartContent (too heavy)
 Etheria/Content/StarterContent/
+Etheria/Plugins/*
