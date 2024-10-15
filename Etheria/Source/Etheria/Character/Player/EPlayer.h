@@ -10,6 +10,31 @@
 #include "Public/UserInterface/TutorialHUD.h"
 #include "EPlayer.generated.h"
 
+UENUM(BlueprintType)
+enum EInputValue : uint8
+{
+	//E_Look			UMETA(DisplayName = "Look"),
+	//E_Move			UMETA(DisplayName = "Move"),
+
+	E_Jump			UMETA(DisplayName = "Jump"),
+	E_Interact		UMETA(DisplayName = "Interact"),
+	E_Quest			UMETA(DisplayName = "Quest"),
+	E_Attack		UMETA(DisplayName = "Attack"),
+	E_Skill			UMETA(DisplayName = "Skill"),
+	E_SpecialSkill	UMETA(DisplayName = "SpecialSkill"),
+	E_Dash			UMETA(DisplayName = "Dash"),
+
+	E_InventoryUI	UMETA(DisplayName = "InventoryUI"),
+	E_WeaponUI		UMETA(DisplayName = "WeaponUI"),
+
+	E_QuickSlot_01	UMETA(DisplayName = "QuickSlot_01"),
+	E_QuickSlot_02	UMETA(DisplayName = "QuickSlot_02"),
+	E_QuickSlot_03	UMETA(DisplayName = "QuickSlot_03"),
+	E_QuickSlot_04	UMETA(DisplayName = "QuickSlot_04"),
+	E_QuickSlot_05	UMETA(DisplayName = "QuickSlot_05"),
+	E_QuickSlot_06	UMETA(DisplayName = "QuickSlot_06"),
+};
+
 class UInventoryComponent;
 class UItemBase;
 class UTimelineComponent;
@@ -68,12 +93,18 @@ protected:
 	void Move(const struct FInputActionInstance& Instance);
 	void Look(const struct FInputActionInstance& Instance);
 
-	void GASInputPressed(int32 InputID);
-	void GASInputReleased(int32 InputID);
-	void Interact(int32 InputID);
-	void Attack(int32 InputID);
-	void Skill(int32 InputID);
-	void SpecialSkill(int32 InputID);
+	void GASInputPressed(EInputValue InputID);
+	void GASInputReleased(EInputValue InputID);
+
+	void Interact(EInputValue InputID);
+	void Attack(EInputValue InputID);
+	void Skill(EInputValue InputID);
+	void SpecialSkill(EInputValue InputID);
+	void Dash(EInputValue InputID);
+
+	void InventoryUI(EInputValue InputID);
+	void WeaponUI(EInputValue InputID);
+	void QuickSlot(EInputValue InputID);
 	// If you want to add input, add to here
 	void Aim();	// Zoom In
 	void StopAiming();	// Zoom Out
@@ -88,12 +119,35 @@ protected:
 	UFUNCTION()
 	void CameraTimelineEnd();	// Event after timeline finish
 	
-	void ShowQuest(int32 InputID);
+	void ShowQuest(EInputValue InputID);
 
 	// State
+	virtual void InitializeDelegate() override;
 
+	virtual void SetDead() override;
+
+	UFUNCTION()
+	virtual void OnOutOfHealth();
 
 	// Skill & Weapon
+	//void SetWeapon();
+
+
+	// Animation
+	void InitializeMontage();
+
+
+
+public:
+	// Animation
+	void SetMontage(UAnimMontage* sourceMontage, UAnimMontage* targetMontage) { sourceMontage = targetMontage; }
+	// To Change Montage needs some GA have UAnimMontage itself
+
+	UAnimMontage* GetInteractMontage() { return InteractMontage; }
+	UAnimMontage* GetAttackMontage() { return AttackMontage; }
+	UAnimMontage* GetSkillMontage() { return SkillMontage; }
+	UAnimMontage* GetSpecialSkillMontage() { return SpecialSkillMontage; }
+	UAnimMontage* GetDashMontage() { return DashMontage; }
 
 
 
@@ -121,7 +175,6 @@ protected:
 	class UInteractComponent* InteractComp;
 
 	// Input
-	// ���߿� �迭�� ����
 	UPROPERTY(VisibleAnywhere, Category = Input)
 	class UInputMappingContext* DefaultMappingContext;
 
@@ -148,6 +201,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ToggleAction;
+
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* QuestAction;
 
@@ -155,6 +209,57 @@ protected:
 public:
 	FShowQuest Delegate_ShowQuest;
 	
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> DashAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> InventoryUIAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> WeaponUIAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_01;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_02;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_03;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_04;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_05;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<class UInputAction> QuickSlotAction_06;
+
+
+	// Animation
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> InteractMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> AttackMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> SkillMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> SpecialSkillMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> DashMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> DeathMontage;
+
+
+	// Weapon
+	// TObjectPtr<class EWeapon> Weapon;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* AimAction;
 

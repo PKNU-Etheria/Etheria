@@ -30,6 +30,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
+	virtual void InitializeDelegate();
+	virtual void SetDead();
+
+protected:
 	//ASC
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
@@ -38,4 +42,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UECharacterAttributeSet> AttributeSet;
 
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TSubclassOf<class UGameplayEffect> InitStatEffect;
+
+	//UPROPERTY(EditAnywhere, Category = GAS)
+	//float Level;
 };
