@@ -16,6 +16,8 @@ void UEPGA_MonsterMeleeAttack::ActivateAbility(FGameplayAbilitySpecHandle Handle
 
 	AMonster_Base* Monster = CastChecked<AMonster_Base>(ActorInfo->AvatarActor.Get());
 
+	// TODO : Montage Null check
+
 	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("MonsterAttack"), Monster->GetAttackActionMontage(), 1.0f);
 	PlayAttackTask->OnCompleted.AddDynamic(this, &UEPGA_MonsterMeleeAttack::OnCompleteCallback);
 	PlayAttackTask->OnInterrupted.AddDynamic(this, &UEPGA_MonsterMeleeAttack::OnInterruptedCallback);

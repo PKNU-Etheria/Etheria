@@ -16,4 +16,6 @@ class ETHERIA_API AMonster_Beholder : public AMonster_Base
 	
 public:
 	AMonster_Beholder();
+
+
 };
