@@ -29,7 +29,8 @@ EBTNodeResult::Type UEBTTask_RandomMove::ExecuteTask(UBehaviorTreeComponent& Own
 	
 	if (NavSystem->GetRandomPointInNavigableRadius(NPCLocation, SearchRadius, TargetLocation, nullptr))
 	{
-		Controller->GetBlackboardComponent()->SetValueAsVector(BlackboardKeys::TargetLocation, TargetLocation.Location);
+		Controller->GetBlackboardComponent()->SetValueAsVector(BlackboardKeys::TargetLocation, TargetLocation.Location);\
+
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 
 		return EBTNodeResult::Succeeded;

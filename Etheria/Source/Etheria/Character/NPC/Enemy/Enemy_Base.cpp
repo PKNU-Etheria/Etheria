@@ -3,6 +3,9 @@
 
 #include "Enemy_Base.h"
 #include "Perception/AISense_Sight.h"
+#include "Components/ArrowComponent.h"
+#include "Components/SceneComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 AEnemy_Base::AEnemy_Base()
@@ -15,6 +18,23 @@ AEnemy_Base::AEnemy_Base()
 void AEnemy_Base::SetupStimulus()
 {
 	Stimulus = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("Stimulus"));
-	Stimulus->RegisterForSense(TSubclassOf<UAISense_Sight>());
-	Stimulus->RegisterWithPerceptionSystem();
+
+	if (Stimulus) 
+	{
+		Stimulus->RegisterForSense(TSubclassOf<UAISense_Sight>());
+		Stimulus->RegisterWithPerceptionSystem();
+	}
+}
+
+void AEnemy_Base::SetDead()
+{
+	PlayDeadAnimation();
+	SetActorEnableCollision(false);
+}
+
+void AEnemy_Base::PlayDeadAnimation()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->StopAllMontages(0.0f);
+	AnimInstance->Montage_Play(DeadMontage, 1.0f);
 }
