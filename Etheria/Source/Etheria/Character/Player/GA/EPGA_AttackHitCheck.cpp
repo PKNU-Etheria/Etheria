@@ -15,6 +15,7 @@ UEPGA_AttackHitCheck::UEPGA_AttackHitCheck()
 void UEPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	UE_LOG(LogTemp, Warning, TEXT("UEPGA_AttackHitCheck : ActivateAbility"));
 
 	CurrentLevel = TriggerEventData->EventMagnitude;
 
@@ -40,6 +41,10 @@ void UEPGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
 		}
 
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UEPGA_AttackHitCheck : Target Not Detected"));
 	}
 
 	bool bReplicatedEndAbility = true;

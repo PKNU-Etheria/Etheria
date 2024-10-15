@@ -48,6 +48,6 @@ void AECharacter::InitializeDelegate()
 
 void AECharacter::SetDead()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("SetDead"));
 }
 

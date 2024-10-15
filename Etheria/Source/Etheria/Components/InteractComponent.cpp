@@ -56,9 +56,9 @@ void UInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Pawn);
 
-	UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
-		TraceType, false, IgnoreActors,
-		EDrawDebugTrace::ForDuration, hitResult, true);
+	//UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
+	//	TraceType, false, IgnoreActors,
+	//	EDrawDebugTrace::ForDuration, hitResult, true);
 
 	INPCInterface* NPC_If = Cast<INPCInterface>(hitResult.GetActor());
 	if (NPC_If)
@@ -130,7 +130,7 @@ void UInteractComponent::PerformInteractionCheck()
 
 	if (LookDirection > 0) 
 	{
-		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 1.0f, 0, 2.0f);
+		//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 1.0f, 0, 2.0f);
 
 		FCollisionQueryParams QueryParams;	
 		QueryParams.AddIgnoredActor(Player);	

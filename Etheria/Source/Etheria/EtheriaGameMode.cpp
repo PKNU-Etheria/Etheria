@@ -10,15 +10,16 @@
 AEtheriaGameMode::AEtheriaGameMode()
 {
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Character/Player/BP_EPlayer.BP_EPlayer_C"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Script/Engine.Blueprint'/Game/Character/Player/BP_EPlayer.BP_EPlayer_C'"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
-	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(TEXT("/Game/Character/Player/BP_EPlayerController.BP_EPlayerController_C"));
+	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(TEXT("/Script/Engine.Blueprint'/Game/Character/Player/BP_EPlayerController.BP_EPlayerController_C'"));
 	if (PlayerControllerBPClass.Class != NULL)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerControllerBPClass.Class != NULL"));
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
 
