@@ -77,6 +77,8 @@ Etheria/db
 Etheria/Etheria.sln
 Etheria/.vsconfig
 
+# Ignore Content Assets
+Etheria/Content/StarterContent
 
-# StartContent (too heavy)
-Etheria/Content/StarterContent/
+# Ignore Plugins
+Etheria/Plugins

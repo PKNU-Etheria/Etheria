@@ -53,5 +53,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = GAS, Meta = (Categories = GameplayCue))
 	FGameplayTag GameplayCueTag;
-
 };
