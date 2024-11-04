@@ -38,22 +38,20 @@ protected:
 
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float AISightRadius;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
+	float AISightRadius = 500.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float AISightAge;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
+	float AISightAge = 5.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float AILoseSightRadius;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
+	float AILoseSightRadius = AISightRadius + 50.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
-	float AIFieldOfView;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
+	float AIFieldOfView = 90.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
 	bool bIsPlayerDetected = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
 	float DistanceToPlayer;
 
 protected:

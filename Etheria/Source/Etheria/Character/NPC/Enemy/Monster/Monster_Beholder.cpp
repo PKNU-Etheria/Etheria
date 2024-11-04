@@ -12,11 +12,17 @@ AMonster_Beholder::AMonster_Beholder()
 	if (AttackActionMontageRef.Object)
 	{
 		AttackActionMontage = AttackActionMontageRef.Object;
+		UE_LOG(LogTemp, Log, TEXT("Monster_Beholder : AttackActionMontage Load Successful"));
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Monster_Beholder : AttackActionMontage Load Fail"));
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> DeadMontageRef(BEHOLDER_DEAD_MOTION);
 	if (DeadMontageRef.Object) 
 	{
 		DeadMontage = DeadMontageRef.Object;
+		UE_LOG(LogTemp, Log, TEXT("Monster_Beholder : DeadMontage Load Successful"));
 	}
 }

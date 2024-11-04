@@ -1,7 +1,7 @@
 #pragma once
 
 #define BEHOLDER_DEAD_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/Beholder/Beholder_Die_ANIM.Beholder_Die_ANIM'")
-#define BEHOLDER_ATTACK_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/Beholder/Beholder_Attack01_ANIM.Beholder_Attack01_ANIM'")
+#define BEHOLDER_ATTACK_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/PBR/Beholder/Beholder_Attack01_ANIM.Beholder_Attack01_ANIM'")
 #define BEHOLDER_GETHIT_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/Beholder/Beholder_GetHit_ANIM.Beholder_GetHit_ANIM'")
 
 #define CACTUS_DEAD_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/Cactus/Cactus_Die_ANIM.Cactus_Die_ANIM'")
