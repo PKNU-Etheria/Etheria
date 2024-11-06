@@ -4,12 +4,18 @@
 #include "Character/NPC/NeutralNPC/NPC_Base.h"
 #include "Quest/QuestSubSystem.h"
 #include "Components/QuestComponent.h"
+#include "Components/NPCWidgetComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Character/NPC/Widget/Widget_FloatingNpcDesc.h"
 
 // Sets default values
 ANPC_Base::ANPC_Base()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	NPCWidgetComp = CreateDefaultSubobject<UNPCWidgetComponent>(FName("NPCWidgetComp"));
+	NPCWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
@@ -34,6 +40,15 @@ void ANPC_Base::BeginPlay()
 	QuestSubSystem->Clear_Delegate.AddUObject(this, &ANPC_Base::ClearQuest_Callback);
 
 	QuestSubSystem->InitializeNPC(this);
+
+	UUserWidget* widget = NPCWidgetComp->GetWidget();
+	if (!widget) return;
+	UWidget_FloatingNpcDesc* NPCWidget = Cast<UWidget_FloatingNpcDesc>(widget);
+	if (!NPCWidget) return;
+
+	NPCWidget->SetNPCName(NPCName);
+
+	UpdateNPCState();
 }
 
 // Called every frame
@@ -118,6 +133,8 @@ void ANPC_Base::QuestAvailable_Callback(int InNPCID, int InQuestID)
 	UnavailableQuests.Remove(InQuestID);
 	AvailableQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
 
+	UpdateNPCState();
+
 	// if(AvailableQuests.Num() > 0)
 }
 
@@ -137,6 +154,8 @@ void ANPC_Base::QuestClearable_Callback(int InNPCID, int InQuestID)
 	ProgressingQuests.Remove(InQuestID);
 	ClearableQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
 
+	UpdateNPCState();
+
 	// if(ClearableQuests.Num() > 0)
 }
 
@@ -154,6 +173,8 @@ void ANPC_Base::AcceptQuest_Callback(int InNPCID, int InQuestID)
 	// Available -> Progressing
 	ProgressingQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
 	AvailableQuests.Remove(InQuestID);
+
+	UpdateNPCState();
 
 	// Accepting Quest
 	// QuestSubSystem->AcceptQuest(InQuestID);
@@ -174,7 +195,30 @@ void ANPC_Base::ClearQuest_Callback(int InNPCID, int InQuestID)
 	ClearedQuests.Add(TTuple<int, FQuestStruct*>(InQuestID, Quest));
 	ClearableQuests.Remove(InQuestID);
 
+	UpdateNPCState();
+
 	// Clearing Quest
 	// QuestSubSystem->ClearQuest(InQuestID);
+}
+
+void ANPC_Base::UpdateNPCState()
+{
+	UUserWidget* widget = NPCWidgetComp->GetWidget();
+	if (!widget) return;
+	UWidget_FloatingNpcDesc* NPCWidget = Cast<UWidget_FloatingNpcDesc>(widget);
+	if (!NPCWidget) return;
+
+	if (ClearableQuests.Num() > 0)
+	{
+		NPCWidget->SetNPCStatsus(ENPCState::ENS_Clearable);
+	}
+	else if (AvailableQuests.Num() > 0)
+	{
+		NPCWidget->SetNPCStatsus(ENPCState::ENS_Acceptable);
+	}
+	else
+	{
+		NPCWidget->SetNPCStatsus(ENPCState::ENS_None);
+	}
 }
 

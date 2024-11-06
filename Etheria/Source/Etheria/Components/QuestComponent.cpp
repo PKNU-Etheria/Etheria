@@ -98,9 +98,10 @@ void UQuestComponent::StartDialogue(int QuestID)
 		controller->bShowMouseCursor = true;
 	}
 
-	// Get Dialogue Data
+	// Get Quest & Dialogue Data
+	CurrentQuestData = QuestSubSystem->GetQuestData(QuestID);
 	const FQuestDialogueDataStruct* DialogueData = QuestSubSystem->GetQuestDialgoue(QuestID);
-	if (!DialogueData) return;
+	if (!CurrentQuestData || !DialogueData) return;
 
 	CurrentDialgoues.Empty();
 
@@ -135,8 +136,9 @@ void UQuestComponent::ShowNextDialgoue()
 	{
 		if (InteractingStatus == EQuestInteractStatus::EQIS_Accepting)
 		{
-			CloseDialogue();
-			QuestSubSystem->AcceptQuest(DialogueQuestID);
+			/*CloseDialogue();
+			QuestSubSystem->AcceptQuest(DialogueQuestID);*/
+			return;
 		}
 		else if (InteractingStatus == EQuestInteractStatus::EQIS_Clearing)
 		{

@@ -40,6 +40,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	const FQuestStruct GetQuest(int QuestID);
 
+	FQuestStruct* GetQuestData(int QuestID);
+
 public:
 	// Related to Inventory (Quantity = Player Owning Item Qunatity)
 	// Unavailable && Progressing Check
@@ -51,11 +53,13 @@ public:
 
 	// Update From NPC (Player Interacts With NPC)
 	// Available -> Progressing
+	UFUNCTION(BlueprintCallable)
 	void AcceptQuest(int QuestID);
 
 	// Update From NPC (Player Interacts With NPC)
 	// Unavailable Check
 	// Clearable -> Clear
+	UFUNCTION(BlueprintCallable)
 	void ClearQuest(int QuestID);
 
 private:

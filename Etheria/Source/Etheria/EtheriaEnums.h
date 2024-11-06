@@ -21,6 +21,14 @@ enum class EQuestDetailType : uint8
 	EQDT_Cleared,
 };
 
+UENUM(BlueprintType)
+enum class ENPCState : uint8
+{
+	ENS_None,
+	ENS_Acceptable,
+	ENS_Clearable
+};
+
 // ������ ���
 UENUM()
 enum class EItemQuality : uint8

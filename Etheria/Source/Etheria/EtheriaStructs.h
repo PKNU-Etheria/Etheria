@@ -126,6 +126,10 @@ struct ETHERIA_API FDialogueStruct : public FTableRowBase
 	// Should Loop
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bLoop = false;
+
+	//  Acceptable
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bAcceptable = false;
 };
 
 // ����Ʈ ��ȭ ���� ���� 

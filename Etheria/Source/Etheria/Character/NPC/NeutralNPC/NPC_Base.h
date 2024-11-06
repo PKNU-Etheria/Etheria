@@ -48,9 +48,15 @@ public:
 	UFUNCTION()
 	void ClearQuest_Callback(int InNPCID, int InQuestID);
 
+private:
+	void UpdateNPCState();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int NPCID = -1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName NPCName = FName("NPC");
 
 	TMap<int, FQuestStruct*> UnavailableQuests;
 	TMap<int, FQuestStruct*> AvailableQuests;
@@ -60,4 +66,8 @@ public:
 
 private:
 	class UQuestSubSystem* QuestSubSystem;
+
+protected:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	class UNPCWidgetComponent* NPCWidgetComp;
 };

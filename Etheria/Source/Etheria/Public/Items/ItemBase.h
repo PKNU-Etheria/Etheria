@@ -29,7 +29,7 @@ public:
 	int32 Quantity;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
-	FName ID;	// ±âº» µ¥ÀÌÅÍ Å×ÀÌºí °Ë»ö ÇÊµå ¿ªÇÒ
+	FName ID;	// ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½Ë»ï¿½ ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	EItemType ItemType;
@@ -49,8 +49,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FItemAssetData AssetData;
 
-	bool bIsCopy;	// »çº»ÀÎ°¡? ÀÌ¹Ì ÀÎº¥Åä¸®¾È¿¡ ÇØ´ç ¾ÆÀÌÅÛÀÌ ÀÖ´Ù¸é
-	bool bIsPickup;	// ¿ùµå¿¡¼­ ÁÖ¿ï¼öÀÖ´Ù¸é.
+	bool bIsCopy;	// ï¿½çº»ï¿½Î°ï¿½? ï¿½Ì¹ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½È¿ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½
+	bool bIsPickup;	// ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½Ö¿ï¿½ï¿½ï¿½Ö´Ù¸ï¿½.
 
 	/// <summary>
 	/// Functions

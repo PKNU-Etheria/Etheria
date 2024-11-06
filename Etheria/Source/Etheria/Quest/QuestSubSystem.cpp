@@ -314,3 +314,37 @@ const FQuestStruct UQuestSubSystem::GetQuest(int QuestID)
 
 	return FQuestStruct();
 }
+
+FQuestStruct* UQuestSubSystem::GetQuestData(int QuestID)
+{
+	FQuestStruct** QuestRefPtr = UnavailableQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return *QuestRefPtr;
+	}
+
+	QuestRefPtr = AvailableQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return *QuestRefPtr;
+	}
+	QuestRefPtr = ProgressingQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return *QuestRefPtr;
+	}
+
+	QuestRefPtr = ClearableQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return *QuestRefPtr;
+	}
+
+	QuestRefPtr = ClearedQuests.Find(QuestID);
+	if (QuestRefPtr && *QuestRefPtr)
+	{
+		return *QuestRefPtr;
+	}
+
+	return nullptr;
+}

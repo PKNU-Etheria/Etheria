@@ -43,11 +43,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Interact_Radius = 50;
 
+public:
+	FQuestStruct* CurrentQuestData;
+
+	UPROPERTY(BlueprintReadOnly)
+	int DialogueQuestID = -1;
+
 private:
 	EQuestInteractStatus InteractingStatus = EQuestInteractStatus::EQIS_None;
-
+	
 	TArray<FDialogueStruct*> CurrentDialgoues;
-	int DialogueQuestID = -1;
 	int CurrentScriptIdx = 0;
 
 	UPROPERTY()

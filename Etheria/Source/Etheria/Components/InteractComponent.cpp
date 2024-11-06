@@ -53,7 +53,7 @@ void UInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	UKismetSystemLibrary::SphereTraceSingle(player, start, end, Interact_Radius,
 		TraceType, false, IgnoreActors,
-		EDrawDebugTrace::ForDuration, hitResult, true);
+		EDrawDebugTrace::None, hitResult, true);
 
 	INPCInterface* NPC_If = Cast<INPCInterface>(hitResult.GetActor());
 	if (NPC_If)
