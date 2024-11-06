@@ -76,12 +76,16 @@ void UQuestComponent::Interact(INPCInterface* InNPC)
 void UQuestComponent::TryAcceptQuest(int QuestID)
 {
 	InteractingStatus = EQuestInteractStatus::EQIS_Accepting;
+	DialogueQuestID = QuestID;
+	CurrentScriptIdx = 0;
 	StartDialogue(QuestID);
 }
 
 void UQuestComponent::TryClearQuest(int QuestID)
 {
 	InteractingStatus = EQuestInteractStatus::EQIS_Clearing;
+	DialogueQuestID = QuestID;
+	CurrentScriptIdx = 0;
 	StartDialogue(QuestID);
 }
 

@@ -78,6 +78,26 @@ struct ETHERIA_API FQuestStruct : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
+struct ETHERIA_API FQuestDataStruct : public FTableRowBase
+{
+	GENERATED_BODY()
+	FQuestDataStruct() {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int QuestID = -1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FQuestStruct QuestInfo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataTable* AcceptDialogueDB;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataTable* ClearDialogueDB;
+};
+
+
+USTRUCT(BlueprintType)
 struct ETHERIA_API FBranchStruct : public FTableRowBase
 {
 	GENERATED_BODY()

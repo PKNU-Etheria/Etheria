@@ -49,9 +49,10 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int DialogueQuestID = -1;
 
-private:
+	UPROPERTY(BlueprintReadWrite)
 	EQuestInteractStatus InteractingStatus = EQuestInteractStatus::EQIS_None;
 	
+private:
 	TArray<FDialogueStruct*> CurrentDialgoues;
 	int CurrentScriptIdx = 0;
 
