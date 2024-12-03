@@ -18,29 +18,29 @@ public:
 	AE_Item();
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	virtual void NotifyActorBeginOverlap(class AActor* Other) override;	// ¾ÆÀÌÅÛ »óÀÚ¿Í Ä³¸¯ÅÍ°¡ ¿À¹ö·¦ÀÌ ¹ß»ýÇÒ ¶§ ¹ßµ¿µÇ´Â ÇÔ¼ö.
+	virtual void NotifyActorBeginOverlap(class AActor* Other) override;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ Ä³ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ßµï¿½ï¿½Ç´ï¿½ ï¿½Ô¼ï¿½.
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// »óÀÚ¸¦ ÃÊ±âÈ­ ½ÃÅ³ ¶§ »ç¿ëÇÒ ÇÔ¼ö
+	// ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½Å³ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	virtual void PostInitializeComponents() override;
-	// »óÀÚ¸¦ ¸Ô¾úÀ» ¶§ ¸ÔÀº ´ë»ó¿¡°Ô °ÔÀÓÇÃ·¹ÀÌ ÀÌÆåÆ®¸¦ Àû¿ë½ÃÄÑÁÖ´Â ÇÔ¼ö 
+	// ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Ô¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ó¿¡°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Ô¼ï¿½ 
 	void ApplyEffectToTarget(AActor* Target);
-	// »óÀÚ¿¡ ´ëÇÑ ÀÚÃ¼ ÀÌÆåÆ® Àç»ýÇÏ±â À§ÇÑ ÇÔ¼ö
+	// ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	void InvokeGameplayCue(AActor* Target);
 
 protected:
-	// »óÀÚ¸¦ ±¸¼ºÇÒ ÁÖ¿ä Å¬·¡½º °´Ã¼µéÀ» »ý¼º
+	// ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¿ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;
-	// Æ®¸®°Å¸¦ À§ÇÑ ¿ø ÄÄÆ÷³ÍÆ®
+	// Æ®ï¿½ï¿½ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 
 	UPROPERTY(VisibleAnywhere, Category = Sphere)
 	TObjectPtr<class USphereComponent> Trigger;
-	// ½ºÅÂÆ½ ¸Þ½¬ ÄÄÆ÷³ÍÆ®
+	// ï¿½ï¿½ï¿½ï¿½Æ½ ï¿½Þ½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 
 	UPROPERTY(VisibleAnywhere, Category = Box)
 	TObjectPtr<class UStaticMeshComponent> Mesh;
@@ -48,8 +48,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> GameplayEffectClass;
 
-	// Å¥¿¡ °ü·ÃµÈ ÅÂ±×. ±¸Á¶Ã¼¶ó¼­ Á¤¹æ ¼±¾ð ÇÒ ¼ö ¾ø¾î¼­ ¹Ù·Î ¾²±â ¶§¹®¿¡. Çì´õ¸¦ Ãß°¡ÇÔ
-	// ¸ÞÅ¸¸¦ ³ÖÀ¸¸é ? -> ÀÌ ÅÂ±×°¡ °ÔÀÓÇÃ·¹ÀÌ Å¥·Î ½ÃÀÛÇÏ´Â ÅÂ±×¸¸ °É·¯¼­ º¸¿©ÁÖ°Ô µÊ.
+	// Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ ï¿½Â±ï¿½. ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½î¼­ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½
+	// ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ? -> ï¿½ï¿½ ï¿½Â±×°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Â±×¸ï¿½ ï¿½É·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½ï¿½.
 
 	UPROPERTY(EditAnywhere, Category = GAS, Meta = (Categories = GameplayCue))
 	FGameplayTag GameplayCueTag;
