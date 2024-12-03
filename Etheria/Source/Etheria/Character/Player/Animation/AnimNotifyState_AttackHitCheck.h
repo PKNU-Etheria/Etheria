@@ -27,10 +27,26 @@ public:
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime) override;
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
 
+	UPROPERTY(EditAnywhere, Category = Attack)
+	FName StartSocket;
+
+	UPROPERTY(EditAnywhere, Category = Attack)
+	FName EndSocket;
+
+	UPROPERTY(EditAnywhere, Category = Attack)
+	float Radius = 0;
+
+	UPROPERTY(EditAnywhere)
+	float Damage = 0;
+
 protected:
 	UPROPERTY(EditAnywhere)
 	FGameplayTag TriggerGameplayTag;
 
-	UPROPERTY(EditAnywhere)
-	float DamageRate;
+	TArray<AActor*> DamagedActors;
+
+private:
+	class USkeletalMeshComponent* MeshComponent;
+	bool TimeDilationApplied = false;
+	FTimerHandle TimeDilationHandle;
 };

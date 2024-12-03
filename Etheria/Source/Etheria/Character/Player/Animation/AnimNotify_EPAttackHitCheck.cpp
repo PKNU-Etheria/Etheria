@@ -25,7 +25,6 @@ void UAnimNotify_EPAttackHitCheck::Notify(USkeletalMeshComponent* MeshComp, UAni
 		{
 			FGameplayEventData PayloadData;
 			PayloadData.EventMagnitude = ComboAttackLevel;
-			// 내가 지정한 ASC를 가진 특정 액터에 태그를 넣어서 이벤트를 발동시키는 함수
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerActor, TriggerGameplayTag, PayloadData);
 		}
 	}

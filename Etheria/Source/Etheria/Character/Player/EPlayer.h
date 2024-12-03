@@ -259,6 +259,11 @@ public:
 
 	// Weapon
 	// TObjectPtr<class EWeapon> Weapon;
+	UPROPERTY()
+	TObjectPtr<class AEWeaponBase> Weapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<AEWeaponBase> DefaultWeaponClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* AimAction;

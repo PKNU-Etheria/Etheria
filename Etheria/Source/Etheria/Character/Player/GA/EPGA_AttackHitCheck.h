@@ -23,7 +23,6 @@ protected:
 	UFUNCTION()
 	void OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle);
 
-	// GA에서 UE를 사용하기 위함 (블루프린트에서 지정)
 	UPROPERTY(EditAnywhere, Category = "GAS")
 	TSubclassOf<class UGameplayEffect> AttackDamageEffect;
 

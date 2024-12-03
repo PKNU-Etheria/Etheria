@@ -18,7 +18,7 @@
 #include "EPlayerController.h"
 #include "EPlayerState.h"
 #include "Character/ECharacterAttributeSet.h"
-//#include "Etheria/Weapon/EWeapon.h"
+#include "Etheria/Item/EWeaponBase.h"
 #include "Components/InteractComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Public/UserInterface/TutorialHUD.h"
@@ -82,6 +82,12 @@ AEPlayer::AEPlayer()
 
 	// Inventory Setting
 	InitializeInventorySet();
+
+	static ConstructorHelpers::FClassFinder<AEWeaponBase> WeaponBlueprint(TEXT("/Script/Engine.Blueprint'/Game/Character/Player/Animation/Weapon/BP_Sword.BP_Sword_C'"));
+	if (WeaponBlueprint.Succeeded())
+	{
+		DefaultWeaponClass = WeaponBlueprint.Class;
+	}
 }
 
 UAbilitySystemComponent* AEPlayer::GetAbilitySystemComponent() const
@@ -122,6 +128,16 @@ void AEPlayer::BeginPlay()
 		AimingCameraTimeline->AddInterpFloat(AimingCameraCurve, AimLerpAlphaValue);
 		AimingCameraTimeline->SetTimelineFinishedFunc(TimelineFinishedEvent);
 	}
+
+	if (DefaultWeaponClass && !Weapon)
+	{
+		//Weapon = GetWorld()->SpawnActor<AEWeaponBase>(DefaultWeaponClass, FTransform::Identity);
+		//if (Weapon)
+		//{
+		//	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sword_Start"));
+		//}
+	}
+
 }
 
 void AEPlayer::Tick(float DeltaTime)
@@ -216,7 +232,7 @@ void AEPlayer::DropItem(UItemBase* ItemToDrop, const int32 QuantityToDrop)
 		SpawnParams.bNoFail = true;
 		// ������ �������� �� ���ο� ���� ���� �������� �ʵ��� ��. � ������Ʈ�� �������̵� �ϴ��� üũ
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		// ĳ���� �տ� �����ٴ� ���� -> ĳ���� ���ο��� ����Ǵ� �ͺ��� ����.
+		// ĳ���� �տ� �����ٴ� ���� -> ĳ���� ���ο��� ����Ǵ�?�ͺ��� ����.
 		const FVector SpawnLocation{ GetActorLocation() + (GetActorForwardVector() * 50.0f) };
 		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
 
@@ -459,7 +475,7 @@ void AEPlayer::InitializeDelegate()
 {
 	//AttributeSet->OnOutOfHealth.AddDynamic(this, &ThisClass::OnOutOfHealth);
 	const UECharacterAttributeSet* CurrentAttributeSet = ASC->GetSet<UECharacterAttributeSet>();
-	// mutable로 제외를 델리게이트 등록이 가능
+	// mutable�??�외�??�리게이???�록??가??
 	if (CurrentAttributeSet)
 	{
 		CurrentAttributeSet->OnOutOfHealth.AddDynamic(this, &AEPlayer::OnOutOfHealth);
@@ -491,14 +507,14 @@ void AEPlayer::InitializeMontage()
 		InteractMontage = INTERACTMONTAGE.Object;
 	}
 
-	ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACKMONTAGE(TEXT("/Script/Engine.AnimMontage'/Game/Character/Player/Animation/Staff/AM_Staff_Attack.AM_Staff_Attack'"));
+	ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACKMONTAGE(TEXT("/Script/Engine.AnimMontage'/Game/Character/Player/Animation/Fighter/AM_Fighter_GroundPunch.AM_Fighter_GroundPunch'"));
 	if (ATTACKMONTAGE.Succeeded())
 	{
 		//SetMontage(AttackMontage, TEMPMONTAGE.Object);
 		AttackMontage = ATTACKMONTAGE.Object;
 	}
 
-	ConstructorHelpers::FObjectFinder<UAnimMontage> SKILLMONTAGE(TEXT("/Script/Engine.AnimMontage'/Game/Character/Player/Animation/Staff/AM_Staff_Skill.AM_Staff_Skill'"));
+	ConstructorHelpers::FObjectFinder<UAnimMontage> SKILLMONTAGE(TEXT("/Script/Engine.AnimMontage'/Game/Character/Player/Animation/Fighter/AM_Fighter_RushPunches.AM_Fighter_RushPunches'"));
 	if (SKILLMONTAGE.Succeeded())
 	{
 		SkillMontage = SKILLMONTAGE.Object;
@@ -510,7 +526,7 @@ void AEPlayer::InitializeMontage()
 		SpecialSkillMontage = SPECIALSKILLMONTAGE.Object;
 	}
 
-	ConstructorHelpers::FObjectFinder<UAnimMontage> DASHMONTAGE(TEXT("/Script/Engine.AnimMontage'/Game/Character/Player/Animation/Staff/AM_Staff_Dash.AM_Staff_Dash'"));
+	ConstructorHelpers::FObjectFinder<UAnimMontage> DASHMONTAGE(TEXT("/Script/Engine.AnimMontage'/Game/Character/Player/Animation/Fighter/AM_Fighter_DashPunch.AM_Fighter_DashPunch'"));
 	if (DASHMONTAGE.Succeeded())
 	{
 		DashMontage = DASHMONTAGE.Object;

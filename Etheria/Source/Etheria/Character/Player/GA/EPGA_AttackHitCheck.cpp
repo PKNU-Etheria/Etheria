@@ -32,12 +32,10 @@ void UEPGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 0);
 		UE_LOG(LogTemp, Warning, TEXT("UEPGA_AttackHitCheck : Target %s Detected"), *(HitResult.GetActor()->GetName()));
 
-		// GE 사용
+		// GE ?�용
 		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
 		if (EffectSpecHandle.IsValid())
 		{
-			// Source로부터 Target(HitResult)에게 GE를 발동시키라는 함수
-			// 인자 (GA의 핸들, 액터 정보, 어빌리티 발동 정보, 발동시킬 GE 정보, 콜백 함수 타겟 핸들 정보)
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
 		}
 

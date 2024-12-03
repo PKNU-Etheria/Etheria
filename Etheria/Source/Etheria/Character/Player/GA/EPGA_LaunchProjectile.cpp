@@ -33,34 +33,34 @@ void UEPGA_LaunchProjectile::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 		PlayAttackTask->OnInterrupted.AddDynamic(this, &UEPGA_LaunchProjectile::OnInterruptedCallback);
 
 		// 투사체 발사
-		UE_LOG(LogTemp, Warning, TEXT("UEPGA_LaunchProjectile : Launch!"));
+		//UE_LOG(LogTemp, Warning, TEXT("UEPGA_LaunchProjectile : Launch!"));
 
-		UWorld* world = EPlayer->GetWorld();
+		//UWorld* world = EPlayer->GetWorld();
 
-		float launchSpeed = 3000.0f;
-		float gravityScale = 1.0f;
+		//float launchSpeed = 2200.0f;
+		//float gravityScale = 0.2f;
 
-		if (world)
-		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = EPlayer;
-			SpawnParams.Instigator = EPlayer;
+		//if (world)
+		//{
+		//	FActorSpawnParameters SpawnParams;
+		//	SpawnParams.Owner = EPlayer;
+		//	SpawnParams.Instigator = EPlayer;
 
-			FVector muzzleLocation = EPlayer->GetMesh()->GetSocketLocation(FName("Projectile_Socket"));
-			FRotator muzzleRotation = EPlayer->GetMesh()->GetSocketRotation(FName("Projectile_Socket"));
+		//	FVector muzzleLocation = EPlayer->GetMesh()->GetSocketLocation(FName("Projectile_Socket"));
+		//	FRotator muzzleRotation = EPlayer->GetMesh()->GetSocketRotation(FName("Projectile_Socket"));
 
-			// spawn fireball
-			Projectile = world->SpawnActor<AEProjectile>(BP_Projectile, muzzleLocation, muzzleRotation, SpawnParams);
-		}
+		//	// spawn fireball
+		//	Projectile = world->SpawnActor<AEProjectile>(BP_Projectile, muzzleLocation, muzzleRotation, SpawnParams);
+		//}
 
-		// projectile launch
-		if (IsValid(Projectile))
-		{
-			Projectile->DetachAllSceneComponents(EPlayer->GetMesh(), FDetachmentTransformRules::KeepWorldTransform);
-			Projectile->FireInDirection(EPlayer->GetActorForwardVector() * 0.5f, launchSpeed, gravityScale);
+		//// projectile launch
+		//if (IsValid(Projectile))
+		//{
+		//	Projectile->DetachAllSceneComponents(EPlayer->GetMesh(), FDetachmentTransformRules::KeepWorldTransform);
+		//	Projectile->FireInDirection(EPlayer->GetActorForwardVector(), launchSpeed, gravityScale);
+		//}
 
-			PlayAttackTask->ReadyForActivation();
-		}
+		PlayAttackTask->ReadyForActivation();
 	}
 }
 
