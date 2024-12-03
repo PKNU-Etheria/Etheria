@@ -68,7 +68,7 @@ FGameplayAbilityTargetDataHandle AEPTA_Trace::MakeTargetData() const
 	FGameplayAbilityTargetDataHandle DataHandle;
 	if (HitDetected)
 	{
-		// 단일 대상 Hit
+		// ?�일 ?�??Hit
 		FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit(OutHitResult);
 		DataHandle.Add(TargetData);
 	}

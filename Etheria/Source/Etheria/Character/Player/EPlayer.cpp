@@ -131,11 +131,11 @@ void AEPlayer::BeginPlay()
 
 	if (DefaultWeaponClass && !Weapon)
 	{
-		//Weapon = GetWorld()->SpawnActor<AEWeaponBase>(DefaultWeaponClass, FTransform::Identity);
-		//if (Weapon)
-		//{
-		//	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sword_Start"));
-		//}
+		Weapon = GetWorld()->SpawnActor<AEWeaponBase>(DefaultWeaponClass, FTransform::Identity);
+		if (Weapon)
+		{
+			Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sword_Start"));
+		}
 	}
 
 }
