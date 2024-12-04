@@ -28,6 +28,22 @@
 		{
 			"Name": "GameplayAbilities",
 			"Enabled": true
+		},
+		{
+			"Name": "Plugin_ForglarMap",
+			"Enabled": false
+		},
+		{
+			"Name": "Plugin_CityofBrass",
+			"Enabled": false
+		},
+		{
+			"Name": "Landmass",
+			"Enabled": true
+		},
+		{
+			"Name": "Water",
+			"Enabled": true
 		}
 	]
 }
