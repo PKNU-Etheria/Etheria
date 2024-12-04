@@ -17,7 +17,7 @@ void UEPGA_EnemyAttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle
 	UE_LOG(LogTemp, Log, TEXT("UEPGA_EnemyAttackHitCheck : ActivateAbility"));
 
 	CurrentLevel = TriggerEventData->EventMagnitude;
-
+	
 	UEPAT_Trace* AttackTraceTask = UEPAT_Trace::CreateTask(this, AEPTA_Trace::StaticClass());
 
 	AttackTraceTask->OnComplete.AddDynamic(this, &UEPGA_EnemyAttackHitCheck::OnTraceResultCallback);
@@ -29,19 +29,12 @@ void UEPGA_EnemyAttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTarg
 	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(TargetDataHandle, 0))
 	{
 		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 0);
-		UE_LOG(LogTemp, Log, TEXT("UEPGA_EnemyAttackHitCheck : Target %s Detected"), *(HitResult.GetActor()->GetName()));
 
-		// GE ?¬ìš©
-		//FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
-		//if (EffectSpecHandle.IsValid())
-		//{
-		//	ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
-		//}
-
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UEPGA_AttackHitCheck : Target Not Detected"));
+		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
+		if (EffectSpecHandle.IsValid())
+		{
+			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
+		}
 	}
 
 	bool bReplicatedEndAbility = true;
