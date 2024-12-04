@@ -12,6 +12,7 @@ UItemBase::UItemBase() : bIsCopy(false), bIsPickup(false)
 	Quantity = 0;
 	ID = "";
 	ItemType = EItemType::Default;
+	WeaponType = EWeaponType::Default;
 	ItemQuality = EItemQuality::Normal;
 	NumericData = FItemNumericData();
 	TextData = FItemTextData();
@@ -32,6 +33,7 @@ UItemBase* UItemBase::CreateItemCopy() const
 	ItemCopy->Quantity = this->Quantity;
 	ItemCopy->ItemQuality = this->ItemQuality;
 	ItemCopy->ItemType = this->ItemType;
+	ItemCopy->WeaponType = this->WeaponType;
 	ItemCopy->TextData = this->TextData;
 	ItemCopy->NumericData = this->NumericData;
 	ItemCopy->ItemStatistics = this->ItemStatistics;

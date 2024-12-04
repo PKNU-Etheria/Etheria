@@ -64,5 +64,5 @@ protected:
 	class UInventoryWeaponSlot* CaneSlot;
 
 	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
-	TArray<TObjectPtr<UInventoryWeaponSlot>> InventoryWeaponSlot;
+	TArray<TObjectPtr<UInventoryWeaponSlot>> InventoryWeaponSlots;
 };

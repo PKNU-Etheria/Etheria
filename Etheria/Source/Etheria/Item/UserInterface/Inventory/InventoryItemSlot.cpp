@@ -13,6 +13,20 @@
 #include "Input/Reply.h"
 #include "Input/Events.h"
 
+void UInventoryItemSlot::UpdateData()
+{
+	ItemIcon->SetBrushFromTexture(ItemReference->AssetData.Icon);
+
+	if (ItemReference->NumericData.bIsStackable)
+	{
+		ItemQuantity->SetText(FText::AsNumber(ItemReference->Quantity));
+	}
+	else
+	{	// 스택이지 않은 아이템은 수량을 보여줄 필요없음. (장비같은)
+		ItemQuantity->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
 void UInventoryItemSlot::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();

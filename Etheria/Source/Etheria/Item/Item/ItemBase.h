@@ -35,6 +35,9 @@ public:
 	EItemType ItemType;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
+	EWeaponType WeaponType = EWeaponType::Default;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item")
 	EItemQuality ItemQuality;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")

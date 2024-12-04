@@ -227,6 +227,9 @@ struct FItemData : public FTableRowBase
 	EItemType ItemType;
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")
+	EWeaponType WeaponType;
+
+	UPROPERTY(EditAnywhere, Category = "Item Data")
 	EItemQuality ItemQuality;
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")

@@ -29,9 +29,6 @@ public:
 	class UItemBase* ItemReference;
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	int32 Quantity;
-
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	FName ID;	// 기본 데이터 테이블 검색 필드 역할
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
@@ -41,8 +38,6 @@ public:
 	/// Functions
 	/// </summary>
 	UWeaponBase();
-
-	void ResetItemFlags();
 
 	UWeaponBase* CreateItemCopy() const;
 

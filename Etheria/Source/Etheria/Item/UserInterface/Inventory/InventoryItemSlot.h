@@ -23,6 +23,7 @@ class ETHERIA_API UInventoryItemSlot : public UUserWidget
 public:
 	FORCEINLINE void SetItemReference(UItemBase* ItemIn) { ItemReference = ItemIn; };
 	FORCEINLINE UItemBase* GetItemReference() const { return ItemReference; };
+	void UpdateData();
 protected:
 	/// <summary>
 	/// Functions

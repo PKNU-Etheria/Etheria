@@ -48,6 +48,9 @@ protected:
 	UPROPERTY(EditInstanceOnly, Category = "Pickup | Item Initialization")
 	UDataTable* ItemDataTable;
 
+	UPROPERTY(EditInstanceOnly, Category = "Pickup | Weapon Initialization")
+	UDataTable* WeaponDataTable;
+
 	UPROPERTY(EditInstanceOnly, Category = "Pickup | Item Initialization")
 	FName DesiredItemID;
 

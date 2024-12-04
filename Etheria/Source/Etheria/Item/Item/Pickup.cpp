@@ -5,6 +5,7 @@
 #include "Character/Player/EPlayer.h"
 #include "Components/InventoryComponent.h"
 #include "Components/InteractComponent.h"
+#include "Weapon/WeaponBase.h"
 
 // Sets default values
 APickup::APickup()
@@ -33,13 +34,14 @@ void APickup::InitializePickup(const TSubclassOf<UItemBase> BaseClass, const int
 
 		ItemReference = NewObject<UItemBase>(this, BaseClass);
 
-		ItemReference->ID = ItemData->ID;
+		ItemReference->ID = ItemData->ID;	// 지금 여기서 nullptr
 		ItemReference->ItemType = ItemData->ItemType;
+		ItemReference->WeaponType = ItemData->WeaponType;
 		ItemReference->ItemQuality = ItemData->ItemQuality;
 		ItemReference->NumericData = ItemData->NumericData;
 		ItemReference->TextData = ItemData->TextData;
 		ItemReference->AssetData = ItemData->AssetData;
-
+		
 		ItemReference->NumericData.bIsStackable = (ItemData->NumericData.MaxStackSize > 1);
 		InQuantity <= 0 ? ItemReference->SetQuantity(1) : ItemReference->SetQuantity(InQuantity);
 

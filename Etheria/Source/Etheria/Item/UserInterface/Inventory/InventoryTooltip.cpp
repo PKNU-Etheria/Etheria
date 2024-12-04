@@ -12,6 +12,7 @@ void UInventoryTooltip::NativeConstruct()
 
 	const UItemBase* ItemBeingHovered = InventorySlotBeingHovered->GetItemReference();
 
+	if (ItemBeingHovered == nullptr) return;
 	switch (ItemBeingHovered->ItemType)
 	{
 	case EItemType::Weapon:

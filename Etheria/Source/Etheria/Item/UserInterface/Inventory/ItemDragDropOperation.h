@@ -25,4 +25,7 @@ public:
 
 	UPROPERTY()
 	UInventoryComponent* SourceInventory;
+
+	UPROPERTY()
+	bool bIsEquip = false;	// if Equip Slot State Equip Item -> this detect on copyItem in Inventory
 };

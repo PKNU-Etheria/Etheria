@@ -66,6 +66,10 @@ void UWeaponWheelComponent::BeginPlay()
 	OnWeaponWheelUpdated.Broadcast();
 }
 
+void UWeaponWheelComponent::ChangeWeapon(UItemBase* Item)
+{
+}
+
 
 // Called every frame
 void UWeaponWheelComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

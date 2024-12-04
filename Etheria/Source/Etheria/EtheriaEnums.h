@@ -49,5 +49,6 @@ enum class EWeaponType : uint8
 	Sword UMETA(DisplayName = "Bow"),
 	Spear UMETA(DisplayName = "Spear"),
 	Gauntlet UMETA(DisplayName = "Gauntlet"),
-	Cane UMETA(DisplayName = "Sword")
+	Cane UMETA(DisplayName = "Sword"),
+	Default UMETA(DisplayName = "Default")	// is same null
 };
