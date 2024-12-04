@@ -1,0 +1,128 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "EAIController.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Etheria/Character/ECharacter.h"
+#include "Etheria/Character/NPC/AIController/BlackboardKeys.h"
+#include "Character/NPC/Enemy/Enemy_Base.h"
+#include "Character/Player/Tag/EPlayerGameAbilityTag.h"
+#include "AbilitySystemComponent.h"
+
+AEAIController::AEAIController(FObjectInitializer const& ObjectInitializer)
+{
+	PrimaryActorTick.bCanEverTick = false;
+
+	BehaviorTreeComponent = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComponent"));
+	Blackboard = ObjectInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("Blackboard"));
+
+	SetupPerceptionSystem();
+}
+
+void AEAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (BehaviorTree)
+	{
+		
+		BehaviorTreeComponent->StartTree(*BehaviorTree);
+	}
+}
+
+void AEAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	if (BehaviorTree && Blackboard)
+	{
+		// UE_LOG(LogTemp, Log, TEXT("EAIController : Blackboard Initialize Success!"));
+		Blackboard->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	}
+}
+
+void AEAIController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	UpdateState();
+
+}
+
+FRotator AEAIController::GetControlRotation() const
+{
+	if (!GetPawn())
+	{
+		return FRotator(0.f, 0.f, 0.f);
+	}
+
+	return FRotator(0.f, GetPawn()->GetActorRotation().Yaw, 0.f);
+}
+
+void AEAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
+{
+	for (size_t i = 0; i < DetectedPawns.Num(); i++)
+	{
+		DistanceToPlayer = GetPawn()->GetDistanceTo(DetectedPawns[i]);
+	}
+
+	bIsPlayerDetected = true;
+}
+
+void AEAIController::OnTargetDetected(AActor* Actor, const FAIStimulus Stimulus)
+{
+	//UE_LOG(LogTemp, Log, TEXT("EAIController : Find Player!!"));
+
+	if (auto const character = Cast<AECharacter>(Actor))
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Find Player!!");
+		Blackboard->SetValueAsBool(BlackboardKeys::CanSeePlayer, Stimulus.WasSuccessfullySensed());
+	}
+}
+
+UBlackboardComponent* AEAIController::GetBlackboard() const
+{
+	return Blackboard;
+}
+
+void AEAIController::SetupPerceptionSystem()
+{
+	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
+	SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component")));
+
+	SightConfig->SightRadius = AISightRadius;
+	SightConfig->LoseSightRadius = AILoseSightRadius;
+	SightConfig->PeripheralVisionAngleDegrees = AIFieldOfView;
+	SightConfig->SetMaxAge(AISightAge);
+
+	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+
+	GetPerceptionComponent()->SetDominantSense(*SightConfig->GetSenseImplementation());
+	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEAIController::OnTargetDetected);
+	GetPerceptionComponent()->ConfigureSense(*SightConfig);
+}
+
+void AEAIController::UpdateState()
+{
+	AEnemy_Base* Enemy = Cast<AEnemy_Base>(GetPawn());
+
+	if (!Enemy)
+		return;
+
+	auto ASC = Enemy->GetAbilitySystemComponent();
+
+	if (ASC->HasMatchingGameplayTag(PLAYERTAG_STATE_ISDEAD))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Dead"));
+		BehaviorTreeComponent->StopTree();
+	}
+}

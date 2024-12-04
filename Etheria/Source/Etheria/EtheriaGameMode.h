@@ -13,6 +13,8 @@ class AEtheriaGameMode : public AGameModeBase
 
 public:
 	AEtheriaGameMode();
+
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 };
 
 
