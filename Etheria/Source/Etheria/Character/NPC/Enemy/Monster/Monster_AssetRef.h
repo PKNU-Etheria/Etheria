@@ -12,8 +12,8 @@
 #define CHEST_ATTACK_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/ChestMonster/ChestMonster_Attack01_ANIM.ChestMonster_Attack01_ANIM'")
 #define CHEST_GETHIT_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/ChestMonster/ChestMonster_GetHit_ANIM.ChestMonster_GetHit_ANIM'")
 
-#define MUSHROOM_DEAD_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/Mushroom/SmileVersion/Mushroom_DieSmile_ANIM.Mushroom_DieSmile_ANIM'")
-#define MUSHROOM_ATTACK_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/Mushroom/SmileVersion/Mushroom_Attack01Smile_ANIM.Mushroom_Attack01Smile_ANIM'")
+#define MUSHROOM_DEAD_MOTION TEXT("/Script/Engine.AnimMontage'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/PBR/Mushroom/SmileVersion/Mushroom_DieSmile_ANIM_Montage.Mushroom_DieSmile_ANIM_Montage'")
+#define MUSHROOM_ATTACK_MOTION TEXT("/Script/Engine.AnimMontage'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/PBR/Mushroom/SmileVersion/Mushroom_Attack01Smile_ANIM_Montage.Mushroom_Attack01Smile_ANIM_Montage'")
 #define MUSHROOM_GETHIT_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/Mushroom/SmileVersion/Mushroom_GetHitSmile_ANIM.Mushroom_GetHitSmile_ANIM'")
 
 #define SLIME_DEAD_MOTION TEXT("/Script/Engine.AnimSequence'/Plugins_AssetShare/MonsterForSurvivalGame/Animation/Polyart/Slime/Slime_Die_ANIM.Slime_Die_ANIM'")

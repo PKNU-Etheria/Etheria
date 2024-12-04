@@ -4,6 +4,7 @@
 #include "Character/NPC/Enemy/Monster/GA/EPGA_MonsterMeleeAttack.h"
 #include "Character/NPC/Enemy/Monster/Monster_Base.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UEPGA_MonsterMeleeAttack::UEPGA_MonsterMeleeAttack()
 {
@@ -15,6 +16,7 @@ void UEPGA_MonsterMeleeAttack::ActivateAbility(FGameplayAbilitySpecHandle Handle
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	AMonster_Base* Monster = CastChecked<AMonster_Base>(ActorInfo->AvatarActor.Get());
+	Monster->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
 	// TODO : Montage Null check
 
@@ -33,6 +35,8 @@ void UEPGA_MonsterMeleeAttack::CancelAbility(const FGameplayAbilitySpecHandle Ha
 void UEPGA_MonsterMeleeAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	AMonster_Base* Monster = CastChecked<AMonster_Base>(ActorInfo->AvatarActor.Get());
+	Monster->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
 
 
