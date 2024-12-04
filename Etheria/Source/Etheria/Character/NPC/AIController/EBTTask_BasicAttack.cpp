@@ -14,6 +14,7 @@
 #include "Animation/AnimInstance.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BlackboardKeys.h"
+#include "Character/Player/Tag/EPlayerGameAbilityTag.h"
 #include "AIController.h"
 
 UEBTTask_BasicAttack::UEBTTask_BasicAttack(FObjectInitializer const& ObjectInitializer)
@@ -29,7 +30,7 @@ EBTNodeResult::Type UEBTTask_BasicAttack::ExecuteTask(UBehaviorTreeComponent& Ow
 	if (Controller->GetBlackboard()->GetValueAsBool(BlackboardKeys::PlayerIsInAttackRange)) 
 	{
 		auto const ASC = Enemy->GetAbilitySystemComponent();
-		if (ASC)
+		if (ASC && !ASC->HasMatchingGameplayTag(PLAYERTAG_STATE_ISDEAD))
 		{
 			FGameplayAbilitySpec* BasicAttackSpec = ASC->FindAbilitySpecFromClass(UEPGA_MonsterMeleeAttack::StaticClass());
 
@@ -38,13 +39,6 @@ EBTNodeResult::Type UEBTTask_BasicAttack::ExecuteTask(UBehaviorTreeComponent& Ow
 				ASC->TryActivateAbility(BasicAttackSpec->Handle);
 			}
 		}
-		/*if (IECombatInterface* const iCombat = Cast<IECombatInterface>(Enemy))
-		{
-			if (MontageHasFinished(Enemy))
-			{
-				iCombat->Execute_BasicAttack(Enemy);
-			}
-		}*/
 	}
 	
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

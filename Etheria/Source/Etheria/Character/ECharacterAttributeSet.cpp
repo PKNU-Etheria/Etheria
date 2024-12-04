@@ -11,7 +11,7 @@ UECharacterAttributeSet::UECharacterAttributeSet() :
 	MaxHealth(1000.0f),
 	GroundSpeed(1000.0f),
 	MaxGroundSpeed(2000.0f),
-	AttackPow(50.0f),
+	AttackPow(1000.0f),
 	MaxAttackPow(1000.0f),
 	Defense(50.0f),
 	MaxDefense(1000.0f),

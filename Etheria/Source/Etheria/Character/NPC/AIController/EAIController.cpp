@@ -13,6 +13,9 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Etheria/Character/ECharacter.h"
 #include "Etheria/Character/NPC/AIController/BlackboardKeys.h"
+#include "Character/NPC/Enemy/Enemy_Base.h"
+#include "Character/Player/Tag/EPlayerGameAbilityTag.h"
+#include "AbilitySystemComponent.h"
 
 AEAIController::AEAIController(FObjectInitializer const& ObjectInitializer)
 {
@@ -30,7 +33,7 @@ void AEAIController::BeginPlay()
 
 	if (BehaviorTree)
 	{
-		RunBehaviorTree(BehaviorTree);
+		
 		BehaviorTreeComponent->StartTree(*BehaviorTree);
 	}
 }
@@ -49,6 +52,7 @@ void AEAIController::OnPossess(APawn* InPawn)
 void AEAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	UpdateState();
 
 }
 
@@ -105,4 +109,20 @@ void AEAIController::SetupPerceptionSystem()
 	GetPerceptionComponent()->SetDominantSense(*SightConfig->GetSenseImplementation());
 	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEAIController::OnTargetDetected);
 	GetPerceptionComponent()->ConfigureSense(*SightConfig);
+}
+
+void AEAIController::UpdateState()
+{
+	AEnemy_Base* Enemy = Cast<AEnemy_Base>(GetPawn());
+
+	if (!Enemy)
+		return;
+
+	auto ASC = Enemy->GetAbilitySystemComponent();
+
+	if (ASC->HasMatchingGameplayTag(PLAYERTAG_STATE_ISDEAD))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Dead"));
+		BehaviorTreeComponent->StopTree();
+	}
 }
