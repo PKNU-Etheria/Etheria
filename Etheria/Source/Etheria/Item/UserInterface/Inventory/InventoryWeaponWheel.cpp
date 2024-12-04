@@ -40,8 +40,8 @@ void UInventoryWeaponWheel::NativeOnInitialized()
 	SpearSlot->SetSlotType(EWeaponType::Spear);
 	InventoryWeaponSlots.Add(GauntletSlot);
 	GauntletSlot->SetSlotType(EWeaponType::Gauntlet);
-	InventoryWeaponSlots.Add(CaneSlot);
-	CaneSlot->SetSlotType(EWeaponType::Cane);
+	InventoryWeaponSlots.Add(BowSlot);
+	BowSlot->SetSlotType(EWeaponType::Bow);
 }
 
 bool UInventoryWeaponWheel::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)

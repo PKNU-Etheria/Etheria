@@ -61,7 +61,7 @@ protected:
 	class UInventoryWeaponSlot* GauntletSlot;
 
 	UPROPERTY(meta = (BindWidget))
-	class UInventoryWeaponSlot* CaneSlot;
+	class UInventoryWeaponSlot* BowSlot;
 
 	UPROPERTY(BlueprintReadOnly, Category = "WeaponWheel")
 	TArray<TObjectPtr<UInventoryWeaponSlot>> InventoryWeaponSlots;
