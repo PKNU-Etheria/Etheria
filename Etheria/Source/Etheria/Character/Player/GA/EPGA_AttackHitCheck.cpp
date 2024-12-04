@@ -5,6 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectTypes.h"
 #include "Character/ECharacterAttributeSet.h"
+#include "Character/NPC/Enemy/Monster/GA/EPGA_EnemyGetHit.h"
 
 UEPGA_AttackHitCheck::UEPGA_AttackHitCheck()
 {
@@ -49,6 +50,8 @@ void UEPGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 	{
 		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 0);
 		UE_LOG(LogTemp, Warning, TEXT("UEPGA_AttackHitCheck : Target %s Detected"), *(HitResult.GetActor()->GetName()));
+
+
 
 		// GE ?¬ìš©
 		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);

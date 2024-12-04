@@ -34,8 +34,11 @@ public:
 	void SetupStimulus();
 
 protected:
-	virtual void SetDead();
+	virtual void SetDead() override;
 	void PlayDeadAnimation();
+
+	UFUNCTION()
+	void OnOutOfHealth();
 
 public:
 	// AI

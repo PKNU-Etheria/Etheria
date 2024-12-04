@@ -35,6 +35,7 @@ public:
 
 protected:
 	void SetupPerceptionSystem();
+	void UpdateState();
 
 
 public:
@@ -53,6 +54,8 @@ public:
 	bool bIsPlayerDetected = false;
 
 	float DistanceToPlayer;
+
+	bool bIsDead = false;
 
 protected:
 	class UAISenseConfig_Sight* SightConfig;
