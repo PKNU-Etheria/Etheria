@@ -29,7 +29,7 @@ public:
 	void FinializeTargetActor();
 
 protected:
-	//TA의 델리게이트 구독을 위한 함수
+	//TA???�리게이??구독???�한 ?�수
 	void OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHandle);
 	
 public:

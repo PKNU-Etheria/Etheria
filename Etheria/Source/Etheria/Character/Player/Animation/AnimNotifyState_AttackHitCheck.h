@@ -49,4 +49,9 @@ private:
 	class USkeletalMeshComponent* MeshComponent;
 	bool TimeDilationApplied = false;
 	FTimerHandle TimeDilationHandle;
+
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TSubclassOf<class UGameplayEffect> AttackDamageEffect;
+
+	float CurrentLevel;
 };

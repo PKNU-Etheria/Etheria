@@ -41,7 +41,6 @@ void UEPAT_Trace::SpawnAndInitializeTargetActor()
 	SpawnedTargetActor = Cast<AEPTA_Trace>(Ability->GetWorld()->SpawnActorDeferred<AGameplayAbilityTargetActor>(TargetActorClass, FTransform::Identity, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
 	if (SpawnedTargetActor)
 	{
-		SpawnedTargetActor->SetShowDebug(true);
 		SpawnedTargetActor->TargetDataReadyDelegate.AddUObject(this, &UEPAT_Trace::OnTargetDataReadyCallback);
 	}
 }

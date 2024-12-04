@@ -3,8 +3,7 @@
 
 #include "Character/Player/GA/EPGA_AttackHitCheck.h"
 #include "AbilitySystemBlueprintLibrary.h"
-#include "AT/EPAT_Trace.h"
-#include "TA/EPTA_Trace.h"
+#include "GameplayEffectTypes.h"
 #include "Character/ECharacterAttributeSet.h"
 
 UEPGA_AttackHitCheck::UEPGA_AttackHitCheck()
@@ -19,10 +18,29 @@ void UEPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 	CurrentLevel = TriggerEventData->EventMagnitude;
 
-	UEPAT_Trace* AttackTraceTask = UEPAT_Trace::CreateTask(this, AEPTA_Trace::StaticClass());
+	FHitResult OutHitResult;
 
-	AttackTraceTask->OnComplete.AddDynamic(this, &UEPGA_AttackHitCheck::OnTraceResultCallback);
-	AttackTraceTask->ReadyForActivation();
+	if (TriggerEventData && TriggerEventData->TargetData.Num() > 0)
+	{
+		TSharedPtr<FGameplayAbilityTargetData> SharedTargetData = TriggerEventData->TargetData.Data[0];
+		if (SharedTargetData.IsValid() && SharedTargetData->GetScriptStruct() == FGameplayAbilityTargetData_SingleTargetHit::StaticStruct())
+		{
+			const FGameplayAbilityTargetData_SingleTargetHit* SingleTargetData =
+				static_cast<const FGameplayAbilityTargetData_SingleTargetHit*>(SharedTargetData.Get());
+
+			if (SingleTargetData)
+			{
+				OutHitResult = SingleTargetData->HitResult;
+			}
+		}
+	}
+
+	FGameplayAbilityTargetDataHandle DataHandle;
+
+	FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit(OutHitResult);
+	DataHandle.Add(TargetData);
+
+	OnTraceResultCallback(DataHandle);
 }
 
 void UEPGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
