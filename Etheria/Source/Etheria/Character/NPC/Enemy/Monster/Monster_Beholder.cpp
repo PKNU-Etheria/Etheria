@@ -7,5 +7,21 @@
 
 AMonster_Beholder::AMonster_Beholder()
 {
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DeadMontageRef(BEHOLDER_DEAD_MOTION);
+	if (DeadMontageRef.Object)
+	{
+		DeadMontage = DeadMontageRef.Object;
+	}
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> AttackActionMontageRef(BEHOLDER_ATTACK_MOTION);
+	if (AttackActionMontageRef.Object)
+	{
+		AttackActionMontage = AttackActionMontageRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> GetHitMontageRef(BEHOLDER_GETHIT_MOTION);
+	if (GetHitMontageRef.Object)
+	{
+		GetHitMontage = GetHitMontageRef.Object;
+	}
 }

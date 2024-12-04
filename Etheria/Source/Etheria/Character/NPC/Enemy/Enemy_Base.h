@@ -25,7 +25,8 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	FORCEINLINE class UAnimMontage* GetDeadMontage() const { return DeadMontage; }
-	FORCEINLINE virtual class UAnimMontage* GetAttackActionMontage() const { return AttackActionMontage; }
+	FORCEINLINE class UAnimMontage* GetGetHitMontage() const { return GetHitMontage; }
+	FORCEINLINE class UAnimMontage* GetAttackActionMontage() const { return AttackActionMontage; }
 
 	int BasicAttack_Implementation() override;
 
@@ -44,9 +45,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation, Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Animation, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> DeadMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Animation, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> AttackActionMontage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Animation, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UAnimMontage> GetHitMontage;
 };

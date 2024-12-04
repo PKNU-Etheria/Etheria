@@ -74,7 +74,7 @@ void AEAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
 
 void AEAIController::OnTargetDetected(AActor* Actor, const FAIStimulus Stimulus)
 {
-	UE_LOG(LogTemp, Log, TEXT("EAIController : Find Player!!"));
+	//UE_LOG(LogTemp, Log, TEXT("EAIController : Find Player!!"));
 
 	if (auto const character = Cast<AECharacter>(Actor))
 	{
