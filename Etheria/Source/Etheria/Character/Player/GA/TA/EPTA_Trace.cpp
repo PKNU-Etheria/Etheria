@@ -50,38 +50,35 @@ FGameplayAbilityTargetDataHandle AEPTA_Trace::MakeTargetData() const
 	}
 
 	FHitResult OutHitResult;
-	const float AttackRange = 100.0f;
-	const float AttackRadius = 50.0f;
 
-	/*
-	const float AttackRange = AttributeSet->GetAttackRange();
-	const float AttackRadius = AttributeSet->GetAttackRadius();
-	*/
+	//FCollisionQueryParams Params(SCENE_QUERY_STAT(UEPTA_Trace), false, Character);
+	//const FVector Forward = Character->GetActorForwardVector();
+	//const FVector Start = Character->GetActorLocation() + Forward * Character->GetCapsuleComponent()->GetScaledCapsuleRadius();
+	//const FVector End = Start + Forward * AttackRange;
 
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(UEPTA_Trace), false, Character);
-	const FVector Forward = Character->GetActorForwardVector();
-	const FVector Start = Character->GetActorLocation() + Forward * Character->GetCapsuleComponent()->GetScaledCapsuleRadius();
-	const FVector End = Start + Forward * AttackRange;
-
-	bool HitDetected = GetWorld()->SweepSingleByChannel(OutHitResult, Start, End, FQuat::Identity, ECollisionChannel::ECC_Pawn, FCollisionShape::MakeSphere(AttackRadius), Params);
+	//bool HitDetected = GetWorld()->SweepSingleByChannel(OutHitResult, Start, End, FQuat::Identity, ECollisionChannel::ECC_Pawn, FCollisionShape::MakeSphere(AttackRadius), Params);
 	
 	FGameplayAbilityTargetDataHandle DataHandle;
-	if (HitDetected)
-	{
-		// ?®Ïùº ?Ä??Hit
-		FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit(OutHitResult);
-		DataHandle.Add(TargetData);
-	}
+
+	FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit(OutHitResult);
+	DataHandle.Add(TargetData);
+
+	//if (HitDetected)
+	//{
+	//	// ?®Ïùº ?Ä??Hit
+	//	FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit(OutHitResult);
+	//	DataHandle.Add(TargetData);
+	//}
 
 #if ENABLE_DRAW_DEBUG
 	
-	if (bShowDebug)
-	{
-		FVector CapsuleOrigin = Start + (End - Start) * 0.5f;
-		float CapsuleHalfHeight = AttackRange * 0.5f;
-		FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
-		DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, AttackRadius, FRotationMatrix::MakeFromZ(Forward).ToQuat(), DrawColor, false, 5.0f);
-	}
+	//if (bShowDebug)
+	//{
+	//	FVector CapsuleOrigin = Start + (End - Start) * 0.5f;
+	//	float CapsuleHalfHeight = AttackRange * 0.5f;
+	//	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
+	//	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, AttackRadius, FRotationMatrix::MakeFromZ(Forward).ToQuat(), DrawColor, false, 5.0f);
+	//}
 
 	return DataHandle;
 

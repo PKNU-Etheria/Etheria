@@ -17,11 +17,10 @@ void UEPGA_EnemyAttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle
 	UE_LOG(LogTemp, Log, TEXT("UEPGA_EnemyAttackHitCheck : ActivateAbility"));
 
 	CurrentLevel = TriggerEventData->EventMagnitude;
-	
-	UEPAT_Trace* AttackTraceTask = UEPAT_Trace::CreateTask(this, AEPTA_Trace::StaticClass());
+	//UEPAT_Trace* AttackTraceTask = UEPAT_Trace::CreateTask(this, AEPTA_Trace::StaticClass());
 
-	AttackTraceTask->OnComplete.AddDynamic(this, &UEPGA_EnemyAttackHitCheck::OnTraceResultCallback);
-	AttackTraceTask->ReadyForActivation();
+	//AttackTraceTask->OnComplete.AddDynamic(this, &UEPGA_EnemyAttackHitCheck::OnTraceResultCallback);
+	//AttackTraceTask->ReadyForActivation();
 }
 
 void UEPGA_EnemyAttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
