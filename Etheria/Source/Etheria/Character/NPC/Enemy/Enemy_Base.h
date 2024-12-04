@@ -7,6 +7,7 @@
 #include "Etheria/Character/ECharacter.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
+#include "Character/NPC/AIController/ECombatInterface.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Enemy_Base.generated.h"
 
@@ -14,16 +15,19 @@
  * 
  */
 UCLASS()
-class ETHERIA_API AEnemy_Base : public AECharacter
+class ETHERIA_API AEnemy_Base : public AECharacter, public IECombatInterface
 {
 	GENERATED_BODY()
 
 public:
 	AEnemy_Base();
 
+	virtual void PossessedBy(AController* NewController) override;
+
 	FORCEINLINE class UAnimMontage* GetDeadMontage() const { return DeadMontage; }
+	FORCEINLINE virtual class UAnimMontage* GetAttackActionMontage() const { return AttackActionMontage; }
 
-
+	int BasicAttack_Implementation() override;
 
 	// AI
 	void SetupStimulus();
@@ -36,9 +40,13 @@ public:
 	// AI
 	class UAIPerceptionStimuliSourceComponent* Stimulus;
 
-
-
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> DeadMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UAnimMontage> AttackActionMontage;
 };

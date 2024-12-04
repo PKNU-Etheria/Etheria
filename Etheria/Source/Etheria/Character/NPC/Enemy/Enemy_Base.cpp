@@ -6,11 +6,36 @@
 #include "Components/ArrowComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Character/Player/EPlayerState.h"
+#include "Character/ECharacterAttributeSet.h"
+#include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 AEnemy_Base::AEnemy_Base()
 {
+	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
+	AttributeSet = CreateDefaultSubobject<UECharacterAttributeSet>(TEXT("AttributeSet"));
 	SetupStimulus();
+}
+
+void AEnemy_Base::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!ASC) 
+	{
+		return;
+	}
+
+	ASC->InitAbilityActorInfo(this, this);
+	
+
+	for (const auto& StartAbility : StartAbilities)
+	{
+		FGameplayAbilitySpec StartSpec(StartAbility);
+		ASC->GiveAbility(StartSpec);
+	}
+	
 }
 
 // AI perception component Stimulus(磊必) 备炼眉 积己
@@ -37,4 +62,14 @@ void AEnemy_Base::PlayDeadAnimation()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->StopAllMontages(0.0f);
 	AnimInstance->Montage_Play(DeadMontage, 1.0f);
+}
+
+int AEnemy_Base::BasicAttack_Implementation()
+{
+	if (AttackActionMontage)
+	{
+		PlayAnimMontage(AttackActionMontage);
+	}
+
+	return 0;
 }

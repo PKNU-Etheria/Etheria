@@ -17,14 +17,8 @@ class ETHERIA_API AMonster_Base : public AEnemy_Base
 public:
 	AMonster_Base();
 
-	FORCEINLINE virtual class UAnimMontage* GetAttackActionMontage() const { return AttackActionMontage; }
-
 protected:
 
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
-	TObjectPtr<class UAnimMontage> AttackActionMontage;
-
-	float DeadEventDelayTime = 5.0f;
 };
