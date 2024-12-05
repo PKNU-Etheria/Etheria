@@ -4,7 +4,7 @@
 #include "EtheriaLevelTransferVolume.h"
 
 #include "Components/BoxComponent.h"
-#include "EtheriaCharacter.h"
+#include "Character/Player/EPlayer.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -26,7 +26,7 @@ void AEtheriaLevelTransferVolume::BeginPlay()
 
 void AEtheriaLevelTransferVolume::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	if(AEtheriaCharacter* Character = Cast<AEtheriaCharacter>(OtherActor))
+	if(AEPlayer* Character = Cast<AEPlayer>(OtherActor))
 	{
 		UGameplayStatics::OpenLevel(GetWorld(), FName(TransferLevelName));
 	}

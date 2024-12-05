@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Character/ECharacter.h"
-//#include "Character/ECharacterAttributeSet.h"
+#include "Perception/AISense_Sight.h"
+#include "Character/ECharacterAttributeSet.h"
+
 
 // Sets default values
 AECharacter::AECharacter()
@@ -40,3 +41,12 @@ void AECharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+void AECharacter::InitializeDelegate()
+{
+	
+}
+
+void AECharacter::SetDead()
+{
+	UE_LOG(LogTemp, Warning, TEXT("SetDead"));
+}

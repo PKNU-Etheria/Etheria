@@ -37,20 +37,20 @@ void AE_TestItem::BeginPlay()
     ItemMesh->SetEnableGravity(false);
 
     // 디버그 구체 그리기
-    if (GetWorld())
-    {
-        DrawDebugSphere(
-            GetWorld(),
-            GetActorLocation(),
-            DetectionRadius,
-            32,  // 구체의 세그먼트 수
-            FColor::Green,
-            false,  // 지속적으로 표시
-            -1,    // 지속 시간 (영구적)
-            0,     // 뎁스 우선순위
-            1      // 두께
-        );
-    }
+    //if (GetWorld())
+    //{
+    //    DrawDebugSphere(
+    //        GetWorld(),
+    //        GetActorLocation(),
+    //        DetectionRadius,
+    //        32,  // 구체의 세그먼트 수
+    //        FColor::Green,
+    //        false,  // 지속적으로 표시
+    //        -1,    // 지속 시간 (영구적)
+    //        0,     // 뎁스 우선순위
+    //        1      // 두께
+    //    );
+    //}
 }
 
 void AE_TestItem::Tick(float DeltaTime)
@@ -72,20 +72,20 @@ void AE_TestItem::Tick(float DeltaTime)
     }
 
     // 매 프레임마다 디버그 구체 그리기
-    if (GetWorld())
-    {
-        DrawDebugSphere(
-            GetWorld(),
-            GetActorLocation(),
-            DetectionRadius,
-            32,
-            FColor::Green,
-            false,  // 지속적으로 표시하지 않음
-            -1,
-            0,
-            1  // 두께를 1로 설정
-        );
-    }
+    //if (GetWorld())
+    //{
+    //    DrawDebugSphere(
+    //        GetWorld(),
+    //        GetActorLocation(),
+    //        DetectionRadius,
+    //        32,
+    //        FColor::Green,
+    //        false,  // 지속적으로 표시하지 않음
+    //        -1,
+    //        0,
+    //        1  // 두께를 1로 설정
+    //    );
+    //}
 }
 
 void AE_TestItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
